@@ -1,6 +1,5 @@
 'use client';
 
-
 export const ErrorFallback = ({
                                 error,
                                 resetErrorBoundary,

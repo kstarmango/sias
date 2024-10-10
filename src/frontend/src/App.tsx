@@ -1,9 +1,9 @@
 import './App.css';
-import { ErrorInfo, Suspense } from 'react';
-import { ErrorBoundary } from 'react-error-boundary';
-import { useRoutes } from 'react-router-dom';
+import {ErrorInfo, Suspense} from 'react';
+import {ErrorBoundary} from 'react-error-boundary';
+import {useRoutes} from 'react-router-dom';
 import routes from '~react-pages';
-import { ErrorFallback } from '@src/components/shared';
+import {ErrorFallback} from '@src/components/shared';
 
 const logError = (error: Error, info: ErrorInfo) => {
   console.log(error, info);
@@ -12,7 +12,7 @@ const logError = (error: Error, info: ErrorInfo) => {
 function App() {
   return (
     <>
-      <ErrorBoundary FallbackComponent={ErrorFallback} onError={logError}>
+      <ErrorBoundary onError={logError} FallbackComponent={ErrorFallback}>
         <Suspense>{useRoutes(routes)}</Suspense>
       </ErrorBoundary>
     </>
