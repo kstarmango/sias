@@ -1,0 +1,28 @@
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  tomcat:
+    relaxed-query-chars: "|,{,},[,]"
+
+spring:
+  application:
+    name: Spatial Information Analysis System
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: jn.sias.domain
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.SQL_SLOW: info
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace

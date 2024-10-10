@@ -1,0 +1,1 @@
+insert into user_info (username, email) values ('John Doe', 'test@mail.com');
