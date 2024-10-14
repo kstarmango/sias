@@ -1,4 +1,5 @@
 import { atom } from "recoil";
+import * as Cesium from "cesium";
 
 export const PrintPotalOpenState = atom<boolean>({
   key: 'PrintPotalOpenState',
@@ -35,4 +36,10 @@ export type ToolStatus = "angles" | "length" | "area" | "composite" | "search" |
 export const ToolStatusState = atom<ToolStatus>({
   key: 'ToolStatusState',
   default: null
+});
+
+// 1. Recoil Atom 생성
+export const viewerState = atom<Cesium.Viewer | null>({
+  key: 'Cesium.Viewer.State', // 고유 키
+  default: null,
 });

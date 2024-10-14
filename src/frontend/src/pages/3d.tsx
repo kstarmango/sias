@@ -1,6 +1,5 @@
-import {getInstance, GlobeControllerProvider, MapView3D} from "@src/components/map3d";
-
-const globeController = getInstance();
+import {MapView3D} from "@src/components/map3d";
+import ExampleComponent from "@src/components/map3d/ExampleComponent.tsx";
 
 /**
  * 3D 지도 페이지
@@ -8,11 +7,11 @@ const globeController = getInstance();
 const Index3DPage = () => {
   return (
     <main>
-      <GlobeControllerProvider globeController={globeController}>
-        <div id="map">
-          <MapView3D/>
-        </div>
-      </GlobeControllerProvider>
+      <div id="map" style={{width: "500px", height: "100vh"}}>
+        <MapView3D>
+          <ExampleComponent/>
+        </MapView3D>
+      </div>
     </main>
   );
 };

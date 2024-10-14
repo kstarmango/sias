@@ -8,7 +8,7 @@ import cesium from 'vite-plugin-cesium';
 export default defineConfig({
   plugins: [
     react(), // 리액트 플러그인
-    cesium(),
+    cesium(), // cesium 플러그인
     Pages(), // 파일 기반 라우팅
   ],
   resolve: {
