@@ -5,7 +5,6 @@ import {useNavigate} from "react-router-dom";
  */
 const IndexPage = () => {
   const navigate = useNavigate();
-
   return (
     <main>
       <button onClick={() => navigate('2d')}>2D</button>

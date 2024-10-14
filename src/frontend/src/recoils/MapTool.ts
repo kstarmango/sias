@@ -1,5 +1,13 @@
-import { atom } from "recoil";
+import {atom} from "recoil";
 import * as Cesium from "cesium";
+import persistAtom from "@src/recoils/RecoilPersist.ts";
+import {Authentication} from "@src/hooks/useAuth.tsx";
+
+export const AuthState = atom<Authentication|undefined>({
+  key: 'AuthState',
+  default: undefined,
+  effects_UNSTABLE: [persistAtom],
+});
 
 export const PrintPotalOpenState = atom<boolean>({
   key: 'PrintPotalOpenState',

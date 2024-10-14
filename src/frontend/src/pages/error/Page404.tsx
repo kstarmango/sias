@@ -1,7 +1,4 @@
-/**
- * 404 페이지
- */
-const NotFoundPage = () => {
+export const Page404 = () => {
   return (
     <div>
       <h1>404</h1>
@@ -10,5 +7,3 @@ const NotFoundPage = () => {
     </div>
   );
 };
-
-export default NotFoundPage;

@@ -23,7 +23,7 @@
 ```text
 src/
 ├── pages/
-│   ├── index.tsx
+│   ├── indexPage.tsx
 │   ├── about.tsx
 │   └── users/
 │       └── [id].tsx
@@ -31,6 +31,6 @@ src/
 
 위 구조에 따라 라우트는 다음과 같이 자동으로 생성됩니다:
 
-- `/` -> `pages/index.tsx`
+- `/` -> `pages/indexPage.tsx`
 - `/about` -> `pages/about.tsx`
 - `/users/:id` -> `pages/users/[id].tsx` (동적 경로)
