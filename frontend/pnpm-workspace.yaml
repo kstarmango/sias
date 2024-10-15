@@ -1,0 +1,7 @@
+packages:
+  - './packages/**'
+
+catalog:
+  ol: ^10.2.1
+  olcs: ^2.22.0
+

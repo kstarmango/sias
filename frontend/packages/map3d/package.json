@@ -1,0 +1,20 @@
+{
+  "name": "@sias/map3d",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview",
+    "orval": "orval --config orval.config.ts"
+  },
+  "dependencies": {
+    "cesium": "^1.122.0",
+    "resium": "^1.18.2"
+  },
+  "devDependencies": {
+    "vite-plugin-cesium": "^1.2.23"
+  }
+}

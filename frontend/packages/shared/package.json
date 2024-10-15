@@ -1,0 +1,17 @@
+{
+  "name": "@sias/shared",
+  "main": "./src/index.ts",
+  "description": "공통 모듈",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "scripts": {
+    "lint": "eslint ."
+  },
+  "dependencies": {
+    "web-vitals": "^4.2.3"
+  },
+  "devDependencies": {
+
+  }
+}
