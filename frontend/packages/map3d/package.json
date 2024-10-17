@@ -11,8 +11,14 @@
     "orval": "orval --config orval.config.ts"
   },
   "dependencies": {
+    "@adobe/react-spectrum": "^3.37.1",
     "cesium": "^1.122.0",
-    "resium": "^1.18.2"
+    "resium": "^1.18.3",
+    "@turf/area": "^6.5.0",
+    "@turf/helpers": "^6.5.0",
+    "@turf/intersect": "^6.5.0",
+    "@turf/random": "^6.5.0",
+    "@turf/voronoi": "^6.5.0"
   },
   "devDependencies": {
     "vite-plugin-cesium": "^1.2.23"

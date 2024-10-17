@@ -2,13 +2,12 @@ import './App.css';
 import {ErrorInfo} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import {Route, Routes} from 'react-router-dom';
-import {ErrorFallback} from '@src/components/shared';
 import MainIndexPage from "@src/pages/indexPage.tsx";
 import {LoginPage} from "@src/pages/LoginPage.tsx";
 import MainLayout from "@src/pages/MainLayout.tsx";
-import {Map3DIndexPage, Map3DLayoutPage} from "@src/pages/map3d";
-import {Page403, Page404} from "@src/pages/error";
 import {ProtectedRoute} from "@shared/components/routes";
+import {ErrorFallback} from "@shared/components";
+import {Page403, Page404} from "@shared/pages";
 
 const logError = (error: Error, info: ErrorInfo) => {
   console.log(error, info);
@@ -23,11 +22,6 @@ function App() {
             <Route element={<ProtectedRoute/>}>
               { /* 메인 인덱스 페이지 */}
               <Route index element={<MainIndexPage/>}/>
-
-              { /* 3D 지도 페이지 */}
-              <Route path="/3d" element={<Map3DLayoutPage/>}>
-                <Route index element={<Map3DIndexPage/>}/>
-              </Route>
             </Route>
 
             { /* 로그인 페이지 */}

@@ -7,6 +7,7 @@ import App from '@src/App.tsx';
 import {QueryClient, QueryClientProvider} from '@tanstack/react-query';
 import {AuthProvider} from "@shared/auth";
 import {reportWebVitals} from "@shared/utils";
+import {defaultTheme, Provider as ThemeProvider} from '@adobe/react-spectrum';
 
 const queryClient = new QueryClient();
 
@@ -16,7 +17,9 @@ createRoot(document.getElementById('root')!).render(
       <Router>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
-            <App/>
+            <ThemeProvider theme={defaultTheme}>
+              <App/>
+            </ThemeProvider>
           </QueryClientProvider>
         </AuthProvider>
       </Router>
