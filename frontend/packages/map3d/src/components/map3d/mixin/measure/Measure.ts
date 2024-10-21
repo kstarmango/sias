@@ -12,9 +12,8 @@ import {
 import type { Units } from '@turf/helpers';
 import type { Cartesian3, Entity, Viewer } from 'cesium';
 import { formatArea, formatLength } from './utils';
-import {DrawOption} from "@src/components/map3d/mixin/drawer/typings.ts";
 import MouseTooltip from "@src/components/map3d/mixin/tooltip/MouseTooltip.ts";
-import Drawer from "@src/components/map3d/mixin/drawer/drawer.ts";
+import Drawer, {DrawOption} from "@carped99/cesium-drawer";
 
 export type MeasureUnits = Units;
 
@@ -175,11 +174,6 @@ export default class Measure {
 
   start() {}
 
-  /**
-   * 开始绘制
-   * @param {string} type 绘制图形类型
-   * @param {boolean} clampToGround 是否贴地
-   */
   protected _start(
     type: 'POLYGON' | 'POLYLINE' | 'POINT' | 'CIRCLE' | 'RECTANGLE',
     options?: {
