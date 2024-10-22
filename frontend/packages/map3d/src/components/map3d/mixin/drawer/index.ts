@@ -1,5 +1,5 @@
-import Drawer from "@src/components/map3d/mixin/drawer/drawer.ts";
 import {Viewer} from "cesium";
+import Drawer from "@carped99/cesium-drawer";
 
 declare module "cesium" {
   interface Viewer {
@@ -10,7 +10,9 @@ declare module "cesium" {
 export default function (viewer: Viewer) {
   Object.defineProperties(Viewer.prototype, Object.freeze({
     drawer: {
-      value: new Drawer(viewer),
+      value: new Drawer(viewer, {
+        sameStyle: false,
+      }),
       writable: true
     },
   }));
