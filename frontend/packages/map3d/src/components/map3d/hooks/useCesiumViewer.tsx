@@ -1,25 +1,5 @@
-import * as Cesium from "cesium";
-import {createContext, PropsWithChildren, useContext, useMemo, useState} from "react";
-
-interface CesiumViewerContextProps {
-  viewer?: Cesium.Viewer;
-  setViewer: (viewer: Cesium.Viewer) => void;
-}
-
-const CesiumViewerContext = createContext<CesiumViewerContextProps | undefined>(undefined);
-
-export const CesiumViewerProvider = ({children}: PropsWithChildren) => {
-  const [viewer, setViewer] = useState<Cesium.Viewer>();
-
-  const contextValue = useMemo(() => ({
-    viewer,
-    setViewer,
-  }), [viewer, setViewer]);
-
-  return (
-    <CesiumViewerContext.Provider value={contextValue}>{children}</CesiumViewerContext.Provider>
-  );
-};
+import {useContext} from "react";
+import {CesiumViewerContext} from "@src/components/map3d/context/CesiumViewerContext.tsx";
 
 export const useCesiumViewer = () => {
   const context = useContext(CesiumViewerContext);

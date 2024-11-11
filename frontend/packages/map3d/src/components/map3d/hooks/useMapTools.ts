@@ -1,7 +1,6 @@
 import {useCallback} from "react";
 import {useCesiumViewer} from "@src/components/map3d";
 import {SceneMode} from "cesium";
-import * as BlobUtil from "@shared/utils/BlobUtil.ts";
 
 export const useMapTools = () => {
   const {viewer} = useCesiumViewer();
@@ -12,12 +11,6 @@ export const useMapTools = () => {
     }
   }, [viewer]);
 
-  const captureScreenshot = useCallback(() => {
-    viewer?.captureScreenshot('image/png').then((blob) => {
-      BlobUtil.download(blob, "screenshot.png").then(console.log);
-    });
-  }, [viewer]);
-
   // const sceneMode = useCallback((mode: SceneMode) => {
   //   if (viewer) {
   //     viewer.scene.mode = mode;
@@ -26,6 +19,5 @@ export const useMapTools = () => {
 
   return {
     toggleSceneMode,
-    captureScreenshot,
   };
 };

@@ -1,6 +1,7 @@
 import {Grid, View} from "@adobe/react-spectrum";
-import {CesiumViewer, CesiumViewerProvider} from "@src/components/map3d";
+import {CesiumViewer} from "@src/components/map3d";
 import ToolBox from "@src/components/map3d/ToolBox";
+import {CesiumViewerProvider} from "@src/components/map3d/context/CesiumViewerContext.tsx";
 
 /**
  * 메인 인덱스 페이지

@@ -7,36 +7,38 @@
     "map3d": "pnpm -F @sias/map3d",
     "shared": "pnpm -F @sias/shared",
     "dev": "pnpm -r dev",
-    "build": "pnpm -r build"
+    "build": "pnpm -r build",
+    "clean": "pnpx rimraf --glob **/node_modules **/dist"
   },
   "dependencies": {
-    "@hookform/resolvers": "^3.9.0",
-    "@tanstack/react-query": "^5.59.15",
+    "@hookform/resolvers": "^3.9.1",
+    "@tanstack/react-query": "^5.59.20",
     "axios": "^1.7.7",
     "immer": "^10.1.1",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "react-error-boundary": "^4.1.1",
-    "react-hook-form": "^7.53.0",
-    "react-router-dom": "^6.27.0",
+    "react-error-boundary": "^4.1.2",
+    "react-hook-form": "^7.53.2",
+    "react-router-dom": "^6.28.0",
     "recoil": "^0.7.7",
     "recoil-persist": "^5.1.0",
     "streamsaver": "^2.0.6",
     "zod": "^3.23.8"
   },
   "devDependencies": {
-    "@eslint/js": "^9.12.0",
-    "@types/react": "^18.3.11",
+    "@eslint/js": "^9.14.0",
+    "@types/react": "^18.3.12",
     "@types/react-dom": "^18.3.1",
-    "@vitejs/plugin-react": "^4.3.2",
+    "@vitejs/plugin-react": "^4.3.3",
     "@vitejs/plugin-react-swc": "^3.7.1",
     "eslint-plugin-react-hooks": "5.1.0-rc-fb9a90fa48-20240614",
-    "eslint-plugin-react-refresh": "^0.4.12",
-    "globals": "^15.11.0",
-    "orval": "^7.1.1",
+    "eslint-plugin-react-refresh": "^0.4.14",
+    "globals": "^15.12.0",
+    "orval": "^7.2.0",
     "prettier": "^3.3.3",
+    "rimraf": "^6.0.1",
     "typescript": "^5.6.3",
-    "typescript-eslint": "^8.9.0",
-    "vite": "^5.4.9"
+    "typescript-eslint": "^8.13.0",
+    "vite": "^5.4.10"
   }
 }

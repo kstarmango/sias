@@ -1,6 +1,7 @@
 import { useState } from "react";
 import {useAuth} from "@shared/auth";
-export const LoginPage = () => {
+
+const LoginPage = () => {
   const { setAuth } = useAuth();
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -41,3 +42,5 @@ export const LoginPage = () => {
     </div>
   );
 };
+
+export default LoginPage;

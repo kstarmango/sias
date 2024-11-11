@@ -13,7 +13,7 @@ const queryClient = new QueryClient();
 createRoot(document.getElementById('root')!).render(
   <StrictMode>
     <RecoilRoot>
-      <Router>
+      <Router basename={import.meta.env.BASE_URL}>
         <AuthProvider>
           <QueryClientProvider client={queryClient}>
             <App/>

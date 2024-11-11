@@ -2,11 +2,11 @@
   "extends": "../../tsconfig.base.json",
   "compilerOptions": {
     "baseUrl": ".",
-    "paths":
+    "paths": {
+      "@src/*": ["./src/*"],
       "@shared/*": ["../shared/src/*"]
     }
   },
-  "references": [{ "path": "./tsconfig.node.json" }],
   "include": ["./src"],
   "exclude": ["node_modules", "dist"]
 }

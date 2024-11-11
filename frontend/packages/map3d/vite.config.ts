@@ -5,10 +5,8 @@ import cesium from 'vite-plugin-cesium';
 
 // https://vitejs.dev/config/
 export default defineConfig({
-  plugins: [
-    react(), // 리액트 플러그인
-    cesium(), // cesium 플러그인
-  ],
+  base: '/map3d/',
+  plugins: [react(), cesium(),],
   resolve: {
     alias: [
       { find: '@src', replacement: path.resolve(__dirname, './src') },

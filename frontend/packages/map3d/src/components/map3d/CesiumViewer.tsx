@@ -1,8 +1,7 @@
 import {CSSProperties, PropsWithChildren, useEffect} from "react";
 import {useCesiumViewer} from "@src/components/map3d";
 import {useCesium, Viewer} from "resium";
-import {measure, screenshot, vworld} from "@src/components/map3d/mixin";
-import drawer from "@src/components/map3d/mixin/drawer";
+import {vworld} from "@src/components/map3d/mixin";
 
 interface MapView3DProps {
   style?: CSSProperties;
@@ -26,7 +25,7 @@ export const CesiumViewer = ({
                              }: PropsWithChildren<MapView3DProps>) => {
   return (
     <Viewer
-      extend={[screenshot, measure, vworld, drawer]}>
+      extend={[vworld]}>
       {children}
       <CesiumViewerSetter/>
     </Viewer>

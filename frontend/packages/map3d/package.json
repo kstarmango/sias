@@ -11,7 +11,6 @@
     "orval": "orval --config orval.config.ts"
   },
   "dependencies": {
-    "@carped99/cesium-drawer": "^0.0.2-alpha.0",
     "@adobe/react-spectrum": "^3.37.1",
     "cesium": "^1.122.0",
     "resium": "^1.18.3",
