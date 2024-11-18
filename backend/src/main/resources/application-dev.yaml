@@ -9,10 +9,6 @@ server:
 spring:
   application:
     name: Spatial Information Analysis System
-#  cache:
-#    type: ehcache
-#    ehcache:
-#      config: ehcache.xml
 
   datasource:
     driver-class-name: org.postgresql.Driver

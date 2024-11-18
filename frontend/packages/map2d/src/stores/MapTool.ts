@@ -30,6 +30,7 @@ export const SearchCoordinateOpenState = atom<boolean>({
   default: false
 });
 
+
 export type ToolStatus = "angles" | "length" | "area" | "composite" | "search" | null;
 
 export const ToolStatusState = atom<ToolStatus>({
