@@ -1,0 +1,101 @@
+
+$font-path: '../font';
+
+$font-sizes: (
+    'large-title': 20px,
+    'big-title':17px,
+    'title': 16px,   
+    '2xlarge': 15px, 
+    'xlarge': 14px,
+    'large': 13px,
+    'regular': 12px,
+    'small': 11px,
+    'xsmall': 10px
+);
+
+$font-families: (
+    'light': 's-core-light',
+    'regular': 's-core-regular',
+    'medium': 's-core-medium',
+    'bold': 's-core-bold',
+    'sbaggro' : 'sbaggro'
+);
+
+// 에스코어 폰트
+@font-face {
+    font-family: 's-core-light';
+    src: url('#{$font-path}/scdream3-webfont.woff2') format('woff2'),
+         url('#{$font-path}/scdream3-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 's-core-regular';
+    src: url('#{$font-path}/scdream4-webfont.woff2') format('woff2'),
+         url('#{$font-path}/scdream4-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 's-core-medium';
+    src: url('#{$font-path}/scdream5-webfont.woff2') format('woff2'),
+         url('#{$font-path}/scdream5-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 's-core-bold';
+    src: url('#{$font-path}/scdream6-webfont.woff2') format('woff2'),
+         url('#{$font-path}/scdream6-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+@font-face {
+    font-family: 'sbaggro';
+    src: url('#{$font-path}/SBAggroMedium.woff2') format('woff2'),
+         url('#{$font-path}/SBAggroMedium.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+// Montserrat 폰트
+@font-face {
+    font-family: "Montserrat-regular";
+    font-weight: 400;
+    font-style: normal;
+    src: url("#{$font-path}/Montserrat-Regular.woff2") format("woff2"),
+         url("#{$font-path}/Montserrat-Regular.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Montserrat-medium";
+    font-weight: 500;
+    font-style: normal;
+    src: url("#{$font-path}/Montserrat-Medium.woff2") format("woff2"),
+         url("#{$font-path}/Montserrat-Medium.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Montserrat-semibold";
+    font-weight: 600;
+    font-style: normal;
+    src: url("#{$font-path}/Montserrat-SemiBold.woff2") format("woff2"),
+         url("#{$font-path}/Montserrat-SemiBold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Montserrat-exbold";
+    font-weight: 800;
+    font-style: normal;
+    src: url("#{$font-path}/Montserrat-ExtraBold.woff2") format("woff2"),
+         url("#{$font-path}/Montserrat-ExtraBold.woff") format("woff");
+}
+
+@font-face {
+    font-family: "Montserrat-black";
+    font-weight: 900;
+    font-style: normal;
+    src: url("#{$font-path}/Montserrat-Black.woff2") format("woff2"),
+         url("#{$font-path}/Montserrat-Black.woff") format("woff");
+}
+

@@ -17,7 +17,7 @@ export const MapView2D = ({
                           }: MapView2DProps) => {
   const {authenticated} = useAuth();
 
-  console.log(authenticated)
+  console.log(authenticated);
 
   useEffect(() => {
     const map = new Map({
@@ -38,5 +38,5 @@ export const MapView2D = ({
       map.setTarget(undefined);
     };
   }, []);
-  return <div id="map" style={{width: "1000px", height: "400px"}}/>;
+  return <div id="map" style={{width: "100%", height: "100%"}}/>;
 }

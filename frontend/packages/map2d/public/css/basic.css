@@ -65,7 +65,7 @@ input[type="date"] {-webkit-user-select:none;-moz-user-select:none;-ms-user-sele
 /* input[type="date"]::-webkit-clear-button,input[type="date"]::-webkit-inner-spin-button {display: none;}
 input[type="date"]::-webkit-calendar-picker-indicator {background: transparent; z-index: 1;} */
 input[type="checkbox"] { margin-bottom:5px; margin-right:2px;}
-input[type=number], input[type="text"] {border:1px solid #e4e4e4; height:32px; text-indent:3px;}.
+input[type=number], input[type="text"] {border:1px solid #e4e4e4; height:32px; text-indent:3px;}
 select::-ms-expand {display: none;}
 button {cursor:pointer;}
 .blind {display:none;}
