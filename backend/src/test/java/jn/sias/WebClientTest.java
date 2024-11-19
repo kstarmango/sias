@@ -3,11 +3,8 @@ package jn.sias;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import jn.sias.dto.vworld.AddressItem;
-import jn.sias.dto.vworld.Item;
-import jn.sias.dto.vworld.Page;
+import jn.sias.dto.vworld.*;
 import jn.sias.dto.vworld.Record;
-import jn.sias.dto.vworld.VWorldAPISearchResultDto;
 import jn.sias.service.APISearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -130,7 +127,11 @@ public class WebClientTest {
     @Test
     void testSearchRoadAddress() throws Exception {
 
-        List<AddressItem> roadAddressList = apiSearchService.searchRoadAddress("여수시", "나진1길", "36");
+        SearchAPIDto searchDto = SearchAPIDto.builder()
+                .sgg("여수시").keyword("나진1길").detail("36")
+                                        .build();
+
+        List<AddressItem> roadAddressList = apiSearchService.searchRoadAddress(searchDto);
 
         log.info("result size : {}", roadAddressList.size());
         log.info("result : {}", Arrays.toString(roadAddressList.stream().toArray()));

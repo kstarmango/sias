@@ -119,16 +119,19 @@ public class APISearchService {
                 AddressItem.class, Comparator.comparing(Item::getId));
     }
 
-    public List<AddressItem> searchRoadAddress(String sgg, String road, String detail) throws Exception {
+    public List<AddressItem> searchRoadAddress(SearchAPIDto searchDto) throws Exception {
 
-        String queryStr = String.format("%s %s %s %s", sido, sgg, road, detail);
+        String queryStr = String.format("%s %s %s %s", sido, searchDto.getSgg(),
+                                                        searchDto.getKeyword(), searchDto.getDetail());
         return searchDistrictDetails(addressType, queryStr, roadCategory,
                 AddressItem.class, Comparator.comparing(AddressItem::getRoad));
     }
 
     public List<AddressItem> searchPlace(String name) throws Exception {
 
-        return searchDistrictDetails(placeType, name, placeType,
+        String queryStr = String.format("%s %s", sido, name);
+
+        return searchDistrictDetails(placeType, queryStr, placeType,
                 AddressItem.class, Comparator.comparing(AddressItem::getRoad));
     }
 
@@ -203,5 +206,12 @@ public class APISearchService {
                             .totalCounts(Integer.parseInt(record.total))
                             .totalPages(Integer.parseInt(page.total))
                             .build();
+    }
+
+    public List<AddressItem> searchEMDParcel(SearchAPIDto searchDto) throws Exception {
+
+        String queryStr = String.format("%s %s %s %s", sido, searchDto.getSgg(), searchDto.getKeyword(), searchDto.getDetail());
+        return searchDistrictDetails(addressType, queryStr, parcelCategory,
+                AddressItem.class, Comparator.comparing(Item::getId));
     }
 }
