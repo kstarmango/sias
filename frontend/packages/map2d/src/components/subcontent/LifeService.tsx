@@ -1,13 +1,11 @@
 import "ol/ol.css";
 import { MapOptions } from "ol/Map";
 
-export interface LifeProps extends MapOptions {
-
-  selectedTab: string;
+export interface LifeServiceProps extends MapOptions {
 
 }
 
-export const Life = ({ selectedTab }: LifeProps) => {
+export const LifeService = () => {
   return (
     <div>
       <div className="information">
@@ -43,15 +41,12 @@ export const Life = ({ selectedTab }: LifeProps) => {
           <div className="condition-list mar-left-13">
             <label>시각화 방법</label>
             <div className="custom-select">
-              <span>포인트</span>
-              <div className="select-option display-block">
-                <div className="select-scroll">
-                  <div className="list">포인트</div>
-                  <div className="list">단계구분</div>
-                  <div className="list">히트맵</div>
-                  <div className="list">클러스터</div>
-                </div>
-              </div>
+              <select className="select-scroll">
+                <option className="list"><a>포인트</a></option>
+                <option className="list"><a>단계구분</a></option>
+                <option className="list"><a>히트맵</a></option>
+                <option className="list"><a>클러스터</a></option>
+              </select>
             </div>
           </div>
         </div>

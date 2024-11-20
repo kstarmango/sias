@@ -1,7 +1,8 @@
 import "ol/ol.css";
-import { Population } from "./subcontent/Population";
-import { Life } from "./subcontent/Life";
-import { Etc } from "./subcontent/Etc";
+import { LifeService } from "./subcontent/LifeService";
+import { LifeVulnArea } from "./subcontent/LifeVulnArea";
+import { LifeTrafficAccidentArea } from "./subcontent/LifeTrafficAccidentArea";
+import { LifeShortDistanceFac } from "./subcontent/LifeShortDistanceFac";
 import { useEffect, useState } from "react";
 /**
  * 좌측 분석기능 검색 조건 창
@@ -32,14 +33,16 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
     }
   }, [tabItems]); 
 
-  const contentComponent = (key: string, selectedTab: string) => {
-    switch (key) {
-      case 'population':
-        return <Population selectedTab={selectedTab}/>;
-      case 'life':
-      return <Life selectedTab={selectedTab}/>;
-      case 'etc':
-        return <Etc selectedTab={selectedTab}/>;
+  const contentComponent = (selectedTab: string) => {
+    switch (selectedTab) {
+      case '생활서비스 조회':
+        return <LifeService/>;
+      case '교통사고 다발지역 조회':
+        return <LifeTrafficAccidentArea/>;
+      case '취약지역 조회':
+        return <LifeVulnArea/>;
+      case '최단거리 시설 분석':
+        return <LifeShortDistanceFac/>;
       default:
         return null;
     }
@@ -60,11 +63,7 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
             </button>
           ))}
         </div>
-        {Object.entries(tabArr).map(([key]) => (
-          <div>
-            {key === selectedNav && contentComponent(key, selectedTab)}
-          </div>
-        ))}
+        {contentComponent(selectedTab)}
       </div>
     </div>
   );
