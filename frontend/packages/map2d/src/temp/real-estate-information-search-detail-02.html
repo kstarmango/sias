@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="ko">
+    <head>
+        <meta charset="UTF-8" /> 
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <title>전라남도 공간정보분석시스템</title>
+        <link rel="stylesheet" href="css/basic.css">
+    </head>
+    <body>
+        <div class="map">
+            <img src="images/background-map.png" />
+        </div>
+        <main>            
+            <!-- logo -->
+            <div class="logo-wrapper">                
+                <h1 class="logo">전라남도 공간정보분석시스템</h1>
+            </div>
+            <!-- nav -->
+            <nav>                
+                <button type="button" class="selected">
+                    <span class="icon real-estate selected"></span>
+                    <span class="title">부동산<br />정보</span>
+                </button>
+                <button type="button">
+                    <span class="icon mobility-analysis"></span>
+                    <span class="title">유동인구<br />분석</span>
+                </button>
+                <button type="button">
+                    <span class="icon lifestyle-information"></span>
+                    <span class="title">생활정보</span>
+                </button>
+                <button type="button">
+                    <span class="icon administrative-information"></span>
+                    <span class="title">행정정보</span>
+                </button>
+                <button type="button">
+                    <span class="icon other-analysis "></span>
+                    <span class="title">기타분석</span>
+                </button>
+            </nav>            
+            <!-- nav 끝-->
+            <!-- 컨텐츠 -->  
+            <div class="sub-contents">
+                <button type="button" class="close sub-content"></button>
+                <div class="content-wrapper">
+                    <div class="tabmenu">
+                        <button type="button" class="selected"><span class="title">토지행정</span></button>
+                        <button type="button"><span class="title">토지거래현황</span></button>
+                        <button type="button"><span class="title">지가변동률</span></button>
+                    </div>
+                    <div class="information">
+                        <div class="title info-icon">토지행정 서비스</div>
+                        <div class="explanation">지적을 검색하여 일필지 정보를 검색하고 조회하는 서비스입니다.</div>
+                    </div>
+                </div>
+            </div>            
+            <!-- 컨텐츠 끝--> 
+            <!-- search --> 
+            <div class="location-search">
+                <input type="text" id="searchInput" placeholder="검색어를 입력하세요">
+                <button type="button" class="button common-search"></button>
+                <button type="button" class="button detail-search selected"></button>  
+                <!-- search result -->
+                <div class="location-search-result">
+                    <div class="sub-tabmenu">
+                        <button type="button">지번</button>
+                        <button type="button" class="selected">도로명</button>
+                        <button type="button">명칭</button>
+                    </div>
+                    <div class="search-condition mar-top-20">
+                        <div class="condition-list">                            
+                            <label>시군구</label>
+                            <div class="custom-select">
+                                <span>목포시</span>
+                            </div>
+                        </div>
+                        <div class="condition-list">                            
+                            <label>선택</label>
+                            <div class="custom-select">
+                                <span>나진</span>
+                            </div>
+                            <div class="custom-select">
+                                <span>나진1길</span>
+                            </div>
+                        </div>
+                        <div class="condition-list">   
+                            <label>도로명</label>
+                            <input type="text" class="width-240" />
+                        </div>
+                        <div class="condition-list">   
+                            <label><input type="checkbox" /> 산</label>
+                            <input type="text" class="width-50" />
+                            <span class="smaller">~</span>
+                            <input type="text" class="width-50" />
+                        </div>
+                    </div>
+                    <div class="button-wrapper">
+                        <button type="button" class="normal-button cancel">초기화</button>
+                        <button type="button" class="normal-button apply">검색</button>
+                    </div>
+                    <div class="result-list-wrapper">
+                        <ul>
+                            <li>
+                                <div class="title">
+                                    <span class="icon-gis"></span>
+                                    <span class="keyword">나진1길</span>
+                                </div>   
+                                <div class="address">전남 여수시 화영면 나진리</div>  
+                            </li>
+                            <li>
+                                <div class="title">
+                                    <span class="icon-gis"></span>
+                                    전남 여수시 화양면 <span class="keyword">나진1길 1</span>0 나진초등학교
+                                </div> 
+                            </li>
+                        </ul>
+                    </div>
+                </div>   
+            </div>       
+            <!-- search 끝 -->      
+            <!-- 툴박스 -->  
+            <div class="toolbox">  
+                <button type="button" class="map-type selected">
+                    <div class="toolbox-description-content">
+                        <div class="title">배경지도</div>
+                    </div>
+                </button>
+                <button type="button" class="layer">
+                    <div class="toolbox-description-content">
+                        <div class="title">레이어</div>
+                    </div>
+                </button>
+                <button type="button" class="legend">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">범례</div>
+                    </div>
+                </button>                
+                <button type="button" class="reset mar-top-50">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">초기화</div>
+                    </div>
+                </button>
+                <button type="button" class="distance">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">거리측정</div>
+                    </div>
+                </button>
+                <button type="button" class="area">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">면적측정</div>
+                    </div>
+                </button>
+                <button type="button" class="information">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">정보보기</div>
+                    </div>
+                </button>
+                <button type="button" class="print">                    
+                    <div class="toolbox-description-content">
+                        <div class="title">출력</div>
+                    </div>
+                </button>
+            </div>   
+            <div class="toolbox zoom">  
+                <button type="button" class="zoom-in">
+                    <div class="toolbox-description-content">
+                        <div class="title">확대</div>
+                    </div>
+                </button>
+                <button type="button" class="zoom-out">
+                    <div class="toolbox-description-content">
+                        <div class="title">축소</div>
+                    </div>
+                </button>
+            </div>          
+            <!-- 툴박스 끝 -->    
+        </main>
+    </body>
+</html>
