@@ -16,6 +16,7 @@ export const RealEstate = () => {
 
   return (
     <div className="content-wrapper">
+      <h3>부동산정보</h3>
       <div className="tabmenu">
         <button type="button" className="selected"><span className="title">토지행정</span></button>
         <button type="button"><span className="title">토지거래현황</span></button>
