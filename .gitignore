@@ -39,3 +39,7 @@ out/
 .DS_Store
 .AppleDouble
 .LSOverride
+
+### npm ###
+.npmrc
+package-lock.json
