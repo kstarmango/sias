@@ -1,10 +1,10 @@
 import { useState } from "react";
 
 import {MapView2D} from "@src/components";
-import { Nav } from "@src/components/Nav";
-import { Search } from "@src/components/Search";
-import { SubContent } from "@src/components/SubContent";
-import ToolBox from "@src/components/ToolBox";
+import { Nav } from "@src/components/common/Nav";
+import { Search } from "@src/components/common/Search";
+import { SubContent } from "@src/components/common/SubContent";
+import ToolBox from "@src/components/common/ToolBox";
 import "../index.css";
 
 

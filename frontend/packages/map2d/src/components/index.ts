@@ -1,1 +1,1 @@
-export * from './MapView2D'
+export * from './common/MapView2D'

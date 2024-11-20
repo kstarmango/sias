@@ -1687,6 +1687,7 @@ input[type=text] {
   padding-right: 10px !important;
   margin-right: 3px;
 }
+
 .custom-select span {
   font-size: var(--font-size-regular);
 }
@@ -1701,7 +1702,7 @@ input[type=text] {
 }
 
 .select-option {
-  display: none !important;
+  /* display: none !important; 망고 수정 */
   position: absolute;
   background: black;
   left: 0;

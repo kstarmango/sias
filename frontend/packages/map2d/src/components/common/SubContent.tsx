@@ -1,9 +1,10 @@
 import "ol/ol.css";
-import { LifeService } from "./subcontent/LifeService";
-import { LifeVulnArea } from "./subcontent/LifeVulnArea";
-import { LifeTrafficAccidentArea } from "./subcontent/LifeTrafficAccidentArea";
-import { LifeShortDistanceFac } from "./subcontent/LifeShortDistanceFac";
+
 import { useEffect, useState } from "react";
+import { LifeTrafficAccidentArea } from "../subcontent/LifeTrafficAccidentArea";
+import { LifeVulnArea } from "../subcontent/LifeVulnArea";
+import { LifeService } from "../subcontent/LifeService";
+import { LifeShortDistanceFac } from "../subcontent/LifeShortDistanceFac";
 /**
  * 좌측 분석기능 검색 조건 창
  */
