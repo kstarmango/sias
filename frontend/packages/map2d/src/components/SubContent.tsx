@@ -47,9 +47,8 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
 
   return (
     <div className="sub-contents">
-      <button type="button"></button>
+      <button className="close sub-content" type="button" ></button>
       <div className="content-wrapper">
-        <h3>분석서비스</h3>
         <div className="tabmenu">
           {tabItems.map((item) => (
             <button

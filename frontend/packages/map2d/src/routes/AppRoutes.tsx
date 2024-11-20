@@ -10,7 +10,7 @@ const AppRoutes = () => {
     <Routes>
       <Route element={<MainLayout/>}>
         <Route element={<ProtectedRoute/>}>
-          <Route index element={<IndexPage/>}/>
+          <Route path="/" index element={<IndexPage/>}/>
         </Route>
 
         { /* 로그인 페이지 */}

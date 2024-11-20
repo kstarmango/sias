@@ -13,15 +13,19 @@ const LoginPage = () => {
     e.preventDefault();
     // Here you would usually send a request to your backend to authenticate the user
     // For the sake of this example, we're using a mock authentication
-    if (username === "user" && password === "password") {
-      // Replace with actual authentication logic
-      setAuth({ username });
+    navigate("/");
+    /**
+      if (username === "user" && password === "password") {
+        // Replace with actual authentication logic
+        setAuth({ username });
 
-      // auth 확인 후, index page로 이동
-      navigate("");
-    } else {
-      alert("Invalid username or password");
-    }
+        // auth 확인 후, index page로 이동
+        navigate("");
+      } else {
+        alert("Invalid username or password");
+      }
+     */
+
   };
   return (
     <div>
