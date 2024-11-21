@@ -1,0 +1,113 @@
+server:
+  compression:
+    enabled: true
+    mime-types: application/json,application/xml,text/html,text/xml,text/plain
+    min-response-size: 1024
+  tomcat:
+    relaxed-query-chars: "|,{,},[,]"
+
+spring:
+  application:
+    name: Spatial Information Analysis System
+
+  datasource:
+    driver-class-name: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: postgres
+
+search-api:
+  jn-bbox: 125.0958943496122231,33.9716070112166975,127.8215384749895946,36.2986821617731721
+  vworld:
+    url: https://api.vworld.kr
+    key: 4FA25B73-F1BA-398E-9152-0DB07832F215
+
+layer-groups:
+  - name: 행정구역
+    layers:
+      - name: 시군
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+      - name: 읍면동
+        geo_layer: district_emd
+        type: polygon
+        color: "#770055"
+      - name: 리
+        geo_layer: district_ri
+        type: polygon
+        color: "#770055"
+  - name: 연속지적도
+    layers:
+      - name: 연속지적도
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+  - name: 투자지구
+    layers:
+      - name: 시군
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+      - name: 읍면동
+        geo_layer: district_emd
+        type: polygon
+        color: "#770055"
+      - name: 리
+        geo_layer: district_ri
+        type: polygon
+        color: "#770055"
+  - name: 용도지역지구
+    layers:
+      - name: 시군
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+      - name: 읍면동
+        geo_layer: district_emd
+        type: polygon
+        color: "#770055"
+      - name: 리
+        geo_layer: district_ri
+        type: polygon
+        color: "#770055"
+  - name: 생활인구
+    layers:
+      - name: 시군
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+      - name: 읍면동
+        geo_layer: district_emd
+        type: polygon
+        color: "#770055"
+      - name: 리
+        geo_layer: district_ri
+        type: polygon
+        color: "#770055"
+  - name: 숲 속의 전남
+    layers:
+      - name: 시군
+        geo_layer: district_sgg
+        type: polyline
+        color: "#770055"
+      - name: 읍면동
+        geo_layer: district_emd
+        type: polygon
+        color: "#770055"
+      - name: 리
+        geo_layer: district_ri
+        type: polygon
+        color: "#770055"
+
+
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: jn.sias.domain
+
+logging:
+  level:
+    org.hibernate.SQL: debug
+    org.hibernate.SQL_SLOW: info
+    org.hibernate.orm.jdbc.bind: trace
+    org.hibernate.type.descriptor.sql: trace
