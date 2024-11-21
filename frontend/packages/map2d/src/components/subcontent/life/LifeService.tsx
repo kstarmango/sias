@@ -8,6 +8,11 @@ export interface LifeServiceProps {
   analysisConditions: AnalysisCondition;
 
 }
+/**
+ * 생활서비스 조회 컴포넌트
+ * 
+ * @param analysisConditions 분석조건
+ */
 
 export const LifeService = ({ analysisConditions }: LifeServiceProps) => {
 
@@ -46,7 +51,7 @@ export const LifeService = ({ analysisConditions }: LifeServiceProps) => {
         <div className="analysis-title">분석조건 설정</div>
         <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
-            <label>생활서비스 시설</label>
+            <label style={{whiteSpace: 'nowrap'}}>생활서비스 시설</label>
             <CustomSelect options={TEMP_SERVICE_LIST} selectedOptionState={[service, setService]} onSelect={(e) => setService(e)} />
           </div>
           <div className="condition-list mar-left-13">

@@ -6,8 +6,15 @@ export interface LifeTrafficAccidentAreaProps {
     analysisConditions: AnalysisCondition;
 }
 
+/**
+ * 교통사고 다발지역 조회 컴포넌트
+ * 
+ * @param analysisConditions 분석조건
+ */
+
 export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccidentAreaProps) => {
 
+    // 분석조건 상태
     const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
     const [weather, setWeather] = useState<boolean>(false);
 
@@ -70,7 +77,8 @@ export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccid
                 <div className="analysis-title">분석조건 설정</div>
                 <div className="analysis-content search-condition">
                     <label>
-                        <input type="checkbox" onChange={handleWeatherChange} /> 날씨
+                        <input type="checkbox" style={{marginRight: '10px'}} onChange={handleWeatherChange} />
+                        <span>날씨</span>
                     </label>
                 </div>
             </div>

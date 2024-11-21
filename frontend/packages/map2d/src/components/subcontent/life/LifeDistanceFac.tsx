@@ -3,14 +3,21 @@ import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
 import { useState } from "react";
 
-export interface LifeShortDistanceFacProps {
+export interface LifeDistanceFacProps {
 
     analysisConditions: AnalysisCondition;
 
 }
 
-export const LifeShortDistanceFac = ({ analysisConditions }: LifeShortDistanceFacProps) => {
+/**
+ * 취약지역 조회 컴포넌트
+ * 
+ * @param analysisConditions 분석조건
+ */
 
+export const LifeDistanceFac = ({ analysisConditions }: LifeDistanceFacProps) => {
+
+    // 분석조건 상태
     const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
     const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
     const [analysisArriveFac, setAnalysisArriveFac] = useState<string>(analysisConditions.analysisArriveFac);
@@ -65,7 +72,7 @@ export const LifeShortDistanceFac = ({ analysisConditions }: LifeShortDistanceFa
                 <div className="analysis-content search-condition">
                     <div className="condition-list mar-left-13">
                         <label>출발지점</label>
-                        <div  style={{ backgroundColor: "black", borderRadius: '6px', border: '1px solid rgb(125, 125, 125)', padding: '5px 0', minWidth: '80px', maxWidth: '150px', fontSize: 'var(--font-size-regular)', fontFamily: 'var(--font-family-light)'}}>
+                        <div style={{ backgroundColor: "black", borderRadius: '6px', border: '1px solid rgb(125, 125, 125)', padding: '5px 0', minWidth: '80px', maxWidth: '150px', fontSize: 'var(--font-size-regular)', fontFamily: 'var(--font-family-light)', paddingLeft: '5px'}}>
                             <span>선택(포인트)</span>
                         </div>
                     </div>

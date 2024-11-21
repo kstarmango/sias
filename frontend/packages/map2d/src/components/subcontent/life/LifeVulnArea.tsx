@@ -7,6 +7,12 @@ export interface LifeVulnAreaProps {
   analysisConditions: AnalysisCondition;
 }
 
+/**
+ * 최단거리 시설 분석 컴포넌트
+ * 
+ * @param analysisConditions 분석조건
+ */
+
 export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
 
   // 분석조건 상태
@@ -104,7 +110,8 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
         <div className="analysis-title">인구정보 설정</div>
         <div className="analysis-content search-condition">
           <label>
-            <input type="checkbox" onChange={handlePopIncludeChange}/>인구 포함
+            <input type="checkbox" onChange={handlePopIncludeChange} style={{marginRight: '10px'}}/>
+            <span>인구 포함</span>
           </label>
         </div>
         <div className="clear-both search-condition mar-top-10">
@@ -121,8 +128,9 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">부가정보 설정</div>
         <div className="analysis-content search-condition" >
-          <label>
-            <input type="checkbox" onChange={handleGwangjuIncludeChange}/>광주광역시 포함
+          <label style={{whiteSpace: 'nowrap'}}>
+            <input type="checkbox" onChange={handleGwangjuIncludeChange} style={{marginRight: '10px'}}/>
+            <span>광주광역시 포함</span>
           </label>
         </div>
       </div>
