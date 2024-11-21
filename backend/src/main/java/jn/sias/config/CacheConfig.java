@@ -1,25 +1,40 @@
 package jn.sias.config;
 
 import org.springframework.cache.CacheManager;
+import org.springframework.cache.caffeine.CaffeineCache;
+import org.springframework.cache.caffeine.CaffeineCacheManager;
+import org.springframework.cache.support.SimpleCacheManager;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import com.github.benmanes.caffeine.cache.Caffeine;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.TimeUnit;
+import java.util.stream.Collectors;
 
 @Configuration
 //@EnableCaching
 public class CacheConfig {
 
-//    @Bean
-//    public CacheManager cacheManager() {
-//        return CacheManagerBuilder.newCacheManagerBuilder()
-//                .withCache("searchCache",
-//                        CacheConfigurationBuilder.newCacheConfigurationBuilder(
-//                                        String.class, List.class, // Key: String, Value: List<String>
-//                                        org.ehcache.config.builders.ResourcePoolsBuilder.heap(100)) // 최대 100개 항목
-//                        .withExpiry(ExpiryPolicyBuilder.timeToLiveExpiration(Duration.ofHours(10))) // 10시간 만료
-//                )
-//                .build(true);
-//    }
+    @Bean
+    public CacheManager cacheManager() {
+        SimpleCacheManager cacheManager = new SimpleCacheManager();   // SimpleCacheManager 사용
+        // 각 캐시 타입에 대한 설정 적용
+        List<CaffeineCache> caches = Arrays.stream(CacheType.values())
+                .map(
+                        cache -> new CaffeineCache(cache.getCacheName(),
+                                Caffeine.newBuilder()
+                                        .expireAfterWrite(cache.getExpiredAfterWrite(), TimeUnit.SECONDS)
+                                        .maximumSize(cache.getMaximumSize())
+                                        .build()
+                        )
+                )
+                .collect(Collectors.toList());
+        cacheManager.setCaches(caches);
 
+        return cacheManager;
+    }
 
 
 }

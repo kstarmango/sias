@@ -104,15 +104,17 @@ public class WebClientTest {
 
         log.info("result size : {}", sggList.size());
         log.info("result : {}", Arrays.toString(sggList.stream().toArray()));
+
     }
 
     @Test
     void testSearchEMDList() throws Exception {
 
-        List<String> emdList = apiSearchService.getEMDList("여수시");
+        List<List<String>> emdList = apiSearchService.getEMDList("여수시");
 
         log.info("result size : {}", emdList.size());
-        log.info("result : {}", Arrays.toString(emdList.stream().toArray()));
+        log.info("name result : {}", Arrays.toString(emdList.get(0).stream().toArray()));
+        log.info("code result : {}", Arrays.toString(emdList.get(1).stream().toArray()));
     }
 
     @Test

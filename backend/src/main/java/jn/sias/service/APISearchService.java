@@ -7,6 +7,7 @@ import jn.sias.dto.vworld.*;
 import jn.sias.dto.vworld.Record;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import org.checkerframework.checker.units.qual.C;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
@@ -16,6 +17,7 @@ import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Mono;
 
+import java.util.ArrayList;
 import java.util.Comparator;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -24,8 +26,6 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class APISearchService {
-
-//    private final CacheManager  cacheManager;
 
     @Value("${search-api.vworld.key}")
     String key;
@@ -59,6 +59,10 @@ public class APISearchService {
         return getDistrictList(districtType, sido, sggCategory, Item.class);
     }
 
+    public String getAPIKey() throws Exception {
+        return this.key;
+    }
+
     /**
      *
      * @param type
@@ -67,17 +71,19 @@ public class APISearchService {
      * @return
      * @throws Exception
      */
+    @Cacheable(cacheNames = "cacheDistrickList", key = "#type" + "_" + "#query" + "_" + "#category")
     public<T extends Item> List<String> getDistrictList(String type, String query,
                                         String category, Class<T> clazz) throws Exception {
 
-        VWorldAPISearchDistrictDto queryObj = VWorldAPISearchDistrictDto.builder()
-                .query(query)
-                .category(category)
-                .type(type)
-                .key(key)
-                .build();
-
-        VWorldAPISearchResultDto<T> resultDto = search(queryObj, clazz);
+//        VWorldAPISearchDistrictDto queryObj = VWorldAPISearchDistrictDto.builder()
+//                .query(query)
+//                .category(category)
+//                .type(type)
+//                .key(key)
+//                .build();
+//
+//        VWorldAPISearchResultDto<T> resultDto = search(queryObj, clazz);
+        VWorldAPISearchResultDto<T> resultDto = _searchDistrict(type, query, category, clazz);
         List<String> districtList = resultDto.getItems().stream()
                 .map( item -> item.removePrefix(query))
                 .distinct()
@@ -87,10 +93,21 @@ public class APISearchService {
         return districtList;
     }
 
+    @Cacheable(cacheNames = "cacheDistrickDetails", key = "#type" + "_" + "#query" + "_" + "#category")
     public<T extends Item> List<T> searchDistrictDetails(String type, String query,
                                                         String category, Class<T> clazz,
                                                          Comparator<T> comparator) throws Exception {
 
+
+        VWorldAPISearchResultDto<T> resultDto = _searchDistrict(type, query, category, clazz);
+        List<T> districtList = resultDto.getItems().stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+
+        return districtList;
+    }
+
+    protected  <T extends Item> VWorldAPISearchResultDto<T> _searchDistrict(String type, String query, String category, Class<T> clazz) throws Exception {
         VWorldAPISearchDistrictDto queryObj = VWorldAPISearchDistrictDto.builder()
                 .query(query)
                 .category(category)
@@ -99,19 +116,46 @@ public class APISearchService {
                 .build();
 
         VWorldAPISearchResultDto<T> resultDto = search(queryObj, clazz);
-        List<T> districtList = resultDto.getItems().stream()
-                .sorted(comparator)
-                .collect(Collectors.toList());
-
-        return districtList;
+        return resultDto;
     }
 
-    public List<String> getEMDList(String sgg) throws Exception {
+    public List<List<String>> getEMDList(String sgg) throws Exception {
 
         String queryStr = sido +  " " + sgg;
-        return getDistrictList(districtType, queryStr, emdCategory, Item.class);
+//        return getDistrictList(districtType, queryStr, emdCategory, Item.class);
+        VWorldAPISearchResultDto<Item> resultDto = _searchDistrict(districtType, queryStr,
+                                                                    emdCategory, Item.class);
+
+        List<String> nameList = new ArrayList<>();
+        List<String> codeList = new ArrayList<>();
+
+        List<CodeItem> districtList = resultDto.getItems().stream()
+
+                .map( item -> {
+                    return CodeItem.builder()
+                            .name(item.removePrefix(queryStr))
+                            .code(item.id)
+                            .build();
+
+                })
+                .sorted(Comparator.comparing(CodeItem::getName))
+                .collect(Collectors.toList());
+
+        districtList.forEach(item -> {
+            nameList.add(item.getName());
+            codeList.add(item.getCode());
+
+//            log.info("name : {}, code : {}", item.getName(), item.getCode());
+        });
+
+        List<List<String>> results = new ArrayList<>();
+        results.add(nameList);
+        results.add(codeList);
+
+        return results;
     }
 
+    @Cacheable(cacheNames = "cacheEmd", key = "#sgg")
     public List<AddressItem> searchEMDParcel(String sgg, String emd, String detail) throws Exception {
 
         String queryStr = String.format("%s %s %s %s", sido, sgg, emd, detail);

@@ -15,6 +15,8 @@ dependencies {
 	implementation("org.springframework.boot:spring-boot-starter-json")
 	implementation("org.springframework.boot:spring-boot-starter-webflux")
 	implementation("org.springframework.boot:spring-boot-starter-cache")
+	implementation("com.github.ben-manes.caffeine:caffeine")
+
 //	implementation("net.sf.ehcache:ehcache")
 	implementation("org.mybatis.spring.boot:mybatis-spring-boot-starter:2.3.2")
 	implementation("org.springdoc:springdoc-openapi-ui:1.8.0")
