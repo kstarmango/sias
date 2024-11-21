@@ -1,7 +1,7 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../types/analysis-condition";
-import CustomSelect from "../ui/CustomSelect";
+import { AnalysisCondition } from "../../../types/analysis-condition";
+import CustomSelect from "../../ui/CustomSelect";
 
 /**
  * 유동인구현황 컴포넌트
@@ -63,8 +63,8 @@ export const PopFlow = ({ analysisConditions }: { analysisConditions: AnalysisCo
               <button type="button" className="square"></button> 
               <button type="button" className="pentagon"></button>  
             </div> 
-            <div className="button-area">
-              <button type="button" className="reset">초기화</button>
+            <div className="button-wrapper">
+              <button type="button" className="normal-button apply">초기화</button>
             </div>                        
           </div>
         )}

@@ -8,6 +8,7 @@ export const analysisConditionState = atom<AnalysisCondition>({
     sgg: '전체',
     emd: '전체',
     year: '2024년',
-    month: '1월'
+    month: '1월',
+    business: '전체'
   }
 });

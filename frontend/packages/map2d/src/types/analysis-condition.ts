@@ -5,6 +5,7 @@ export interface AnalysisCondition {
   year: string;
   month: string;
   service: string;
+  business: string;
   visualType: string;
   analysisFac: string;
   analysisPop: string;

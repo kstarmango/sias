@@ -1,6 +1,7 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../types/analysis-condition";
+import { AnalysisCondition } from "../../../types/analysis-condition";
+import CustomSelect from "@src/components/ui/CustomSelect";
 
 /**
  * 유입인구현황 컴포넌트
@@ -17,10 +18,6 @@ export const InflowPop = ({ analysisConditions }: { analysisConditions: Analysis
 
   // 이벤트 핸들러
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value);
-  const handleYearChange = (e: React.ChangeEvent<HTMLSelectElement>) => setYear(e.target.value);
-  const handleMonthChange = (e: React.ChangeEvent<HTMLSelectElement>) => setMonth(e.target.value);
-  const handleSggChange = (e: React.ChangeEvent<HTMLSelectElement>) => setSgg(e.target.value);
-  const handleEmdChange = (e: React.ChangeEvent<HTMLSelectElement>) => setEmd(e.target.value);
 
   // 임시 데이터 목록
   const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
@@ -51,19 +48,11 @@ export const InflowPop = ({ analysisConditions }: { analysisConditions: Analysis
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
             <label>시군구</label>
-            <select className="custom-select width-100" onChange={handleSggChange}>
-              {TEMP_SGG_LIST.map((sgg) => (
-                <option value={sgg}><span>{sgg}</span></option>
-              ))}
-            </select>
+            <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)}/>
           </div>    
           <div className="condition-list mar-left-13">                            
             <label>읍면동</label>
-            <select className="custom-select width-100" onChange={handleEmdChange}>
-              {TEMP_EMD_LIST.map((emd) => (
-                <option value={emd}><span>{emd}</span></option>
-              ))}
-            </select>
+            <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)}/>
           </div>                                  
         </div> 
         )}
@@ -86,16 +75,8 @@ export const InflowPop = ({ analysisConditions }: { analysisConditions: Analysis
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>기간 선택</label>
-            <select defaultValue="2024년" className="custom-select" onChange={handleYearChange}>
-              {YEAR_LIST.map((year) => (
-                <option value={year}><span>{year}</span></option>
-              ))}
-            </select>
-            <select defaultValue="1월" className="custom-select" onChange={handleMonthChange}>
-              {MONTH_LIST.map((month) => (
-                <option value={month}><span>{month}</span></option>
-              ))}
-            </select>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={MONTH_LIST} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>

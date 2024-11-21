@@ -1,19 +1,19 @@
 import "ol/ol.css";
 
 import { useEffect, useState } from "react";
-import { LifeTrafficAccidentArea } from "../subcontent/LifeTrafficAccidentArea";
-import { LifeVulnArea } from "../subcontent/LifeVulnArea";
-import { LifeService } from "../subcontent/LifeService";
-import { LifeShortDistanceFac } from "../subcontent/LifeShortDistanceFac";
+import { LifeTrafficAccidentArea } from "../subcontent/life/LifeTrafficAccidentArea";
+import { LifeVulnArea } from "../subcontent/life/LifeVulnArea";
+import { LifeService } from "../subcontent/life/LifeService";
+import { LifeShortDistanceFac } from "../subcontent/life/LifeShortDistanceFac";
+import { FestivalRevenue } from "../subcontent/comm/FestivalRevenue";
 /**
  * 좌측 분석기능 검색 조건 창
  */
 interface SubContentProps {
-
   selectedNav: string;
-  
 }
 
+//  * 각 버튼들을 배열로 만들어서 객체의 값으로 넣어놓는 구조
 const tabArr = {
   'population': ['유동인구현황', '유입인구현황', '매출현황'],
   'life': ['생활서비스 조회','교통사고 다발지역 조회', '취약지역 조회', '최단거리 시설 분석'],
@@ -33,11 +33,11 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
     analysisFac: '분석 시설',
     analysisPop: '분류',
     analysisPopDetail: '세부 분류',
-    analysisArriveFac: '도착 시설'
+    analysisArriveFac: '도착 시설',
+    business: '업종'
   });
 
   const tabItems: string[] = tabArr[selectedNav] || [];
-
   const [selectedTab, setSelectedTab] = useState<string>('');
 
   useEffect(() => {
@@ -77,6 +77,7 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
           ))}
         </div>
         {contentComponent(selectedTab)}
+        <FestivalRevenue analysisConditions={analysisConditions}/>
       </div>
     </div>
   );

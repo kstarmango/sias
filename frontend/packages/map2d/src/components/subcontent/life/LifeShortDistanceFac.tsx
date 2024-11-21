@@ -1,7 +1,7 @@
+import CustomSelect from "@src/components/ui/CustomSelect";
 import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
 import { useState } from "react";
-import CustomSelect from "../ui/CustomSelect";
 
 export interface LifeShortDistanceFacProps {
 

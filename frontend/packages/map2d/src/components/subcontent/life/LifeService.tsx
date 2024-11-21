@@ -1,6 +1,6 @@
+import CustomSelect from "@src/components/ui/CustomSelect";
+import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
-import { AnalysisCondition } from "../../types/analysis-condition";
-import CustomSelect from "../ui/CustomSelect";
 import { useState } from "react";
 
 export interface LifeServiceProps {
