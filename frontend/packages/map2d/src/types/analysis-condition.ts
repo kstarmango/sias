@@ -4,4 +4,10 @@ export interface AnalysisCondition {
   emd: string;
   year: string;
   month: string;
+  service: string;
+  visualType: string;
+  analysisFac: string;
+  analysisPop: string;
+  analysisPopDetail: string;
+  analysisArriveFac: string;
 }

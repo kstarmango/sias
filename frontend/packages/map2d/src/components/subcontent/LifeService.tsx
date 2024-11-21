@@ -1,11 +1,28 @@
 import "ol/ol.css";
-import { MapOptions } from "ol/Map";
+import { AnalysisCondition } from "../../types/analysis-condition";
+import CustomSelect from "../ui/CustomSelect";
+import { useState } from "react";
 
-export interface LifeServiceProps extends MapOptions {
+export interface LifeServiceProps {
+  
+  analysisConditions: AnalysisCondition;
 
 }
 
-export const LifeService = () => {
+export const LifeService = ({ analysisConditions }: LifeServiceProps) => {
+
+  // 분석조건 상태
+  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
+  const [emd, setEmd] = useState<string>(analysisConditions.emd);
+  const [service, setService] = useState<string>(analysisConditions.service);
+  const [visualType, setVisualType] = useState<string>(analysisConditions.visualType);
+
+  // 임시 데이터 목록
+  const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
+  const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
+  const TEMP_SERVICE_LIST = ['약국', '병원', '어린이집', '장애인시설', '시장', '대형마트', '경로당'];
+  const VISUAL_LIST = ['포인트', '단계구분', '히트맵', '클러스터']
+
   return (
     <div>
       <div className="information">
@@ -14,40 +31,27 @@ export const LifeService = () => {
       </div>
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">영역설정</div>
-        <div className="clear-both search-condition">
+        <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label>시군구</label>
-            <div className="custom-select width-100">
-              <span>목포시</span>
-            </div>
+            <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
           </div>
           <div className="condition-list mar-left-13">
             <label>읍면동</label>
-            <div className="custom-select width-100">
-              <span>금화동</span>
-            </div>
+            <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
           </div>
         </div>
       </div>
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">분석조건 설정</div>
-        <div className="clear-both search-condition">
+        <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label>생활서비스 시설</label>
-            <div className="custom-select width-100">
-              <span>목포시</span>
-            </div>
+            <CustomSelect options={TEMP_SERVICE_LIST} selectedOptionState={[service, setService]} onSelect={(e) => setService(e)} />
           </div>
           <div className="condition-list mar-left-13">
             <label>시각화 방법</label>
-            <div className="custom-select">
-              <select className="select-scroll">
-                <option className="list"><a>포인트</a></option>
-                <option className="list"><a>단계구분</a></option>
-                <option className="list"><a>히트맵</a></option>
-                <option className="list"><a>클러스터</a></option>
-              </select>
-            </div>
+            <CustomSelect options={VISUAL_LIST} selectedOptionState={[visualType, setVisualType]} onSelect={(e) => setVisualType(e)} />
           </div>
         </div>
       </div>

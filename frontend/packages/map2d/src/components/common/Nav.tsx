@@ -32,7 +32,7 @@ export const Nav = ({ onNavClick, selectedNav }: NavProps) => {
         <span className="icon real-estate selected"></span>
         <span className="title">행정정보</span>
       </button>
-      <button type="button" onClick={() => onNavClick('etc')} className={getButtonSelected('etc')}>
+      <button type="button" onClick={() => onNavClick('festival')} className={getButtonSelected('festival')}>
         <span className="icon real-estate selected"></span>
         <span className="title">기타분석</span>
       </button>

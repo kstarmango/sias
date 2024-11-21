@@ -1,17 +1,17 @@
+import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
-import { MapOptions } from "ol/Map";
 import { useState } from "react";
 
-export interface LifeTrafficAccidentAreaProps extends MapOptions {
-
+export interface LifeTrafficAccidentAreaProps {
+    analysisConditions: AnalysisCondition;
 }
 
-export const LifeTrafficAccidentArea = () => {
+export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccidentAreaProps) => {
 
-    const [areaType, setAreaType] = useState("bufferSpot");
+    const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
     const [weather, setWeather] = useState<boolean>(false);
 
-    const handleAreaTypeChange = (e) => setAreaType(e.target.value);
+    const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
     const handleWeatherChange = () => setWeather(!weather);
     
     return(
@@ -27,8 +27,8 @@ export const LifeTrafficAccidentArea = () => {
                         <input 
                         type="radio" 
                         name="areaType"
-                        value="bufferSpot"
-                        checked={areaType === 'bufferSpot'}
+                        value="spot"
+                        checked={areaType === 'spot'}
                         onChange={handleAreaTypeChange}
                         />
                         <span className="radio-mark"></span> 지점
@@ -37,39 +37,40 @@ export const LifeTrafficAccidentArea = () => {
                         <input 
                         type="radio" 
                         name="areaType" 
-                        value="area"
-                        checked={areaType === 'area'}
+                        value="user"
+                        checked={areaType === 'user'}
                         onChange={handleAreaTypeChange}
                         />
                         <span className="radio-mark"></span> 영역
                     </label>
                 </div>
-                <div className="condition-list">
-                    {areaType === 'bufferSpot' ? (
+                {areaType === 'spot' && (
+                    <div className="condition-list mar-left-13">
                         <div className="clear-both condition-area mar-top-10">
                             <label>버퍼</label>
-                            <input type="text"/>m
+                            <input type="text"/>
+                            <span>m</span>
                         </div>
-                    ) : (
-                        <div className="clear-both condition-area mar-top-10">
-                            <div className="list-wrapper">      
-                                <button type="button" className="circle"></button>  
-                                <button type="button" className="square"></button> 
-                                <button type="button" className="pentagon"></button>  
-                            </div> 
-                            <div className="button-area">
-                                <button type="button" className="reset">초기화</button>
-                            </div>                        
+                    </div>
+                )}
+                {areaType === 'user' && (
+                    <div id="user-area-select" className="clear-both condition-area mar-top-10">
+                    <div className="list-wrapper">      
+                        <button type="button" className="circle"></button>  
+                        <button type="button" className="square"></button> 
+                        <button type="button" className="pentagon"></button>  
                         </div> 
-                    )}   
-                    
-                </div>
+                        <div className="button-area">
+                        <button type="button" className="reset">초기화</button>
+                        </div>                        
+                    </div>
+                )}
             </div>
             <div className="analysis-condition-wrapper mar-top-30">
                 <div className="analysis-title">분석조건 설정</div>
-                <div className="analysis-content">
+                <div className="analysis-content search-condition">
                     <label>
-                        <input type="checkbox" onChange={handleWeatherChange} />인구 포함
+                        <input type="checkbox" onChange={handleWeatherChange} /> 날씨
                     </label>
                 </div>
             </div>
