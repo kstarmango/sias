@@ -556,6 +556,37 @@ hr {
   height: 460px;
 }
 
+/* 생활정보-교통사고 다발지역조회 제공데이터 표 망고수정 */
+.basic-2col {
+  float: left;
+  clear: both;
+  margin: 0;
+  padding: 0;
+  margin-top: 20px;
+  box-sizing: border-box;
+  table-layout: fixed;
+  width: 100%;
+}
+.basic-2col th, .basic-2col td {
+  font-size: var(--font-size-regular);
+  font-weight: normal;
+  color: white;
+  text-align: center;
+  padding: 3px 0;
+  border-right: 1px solid rgb(119, 119, 119);
+  border-bottom: 1px solid rgb(119, 119, 119);
+}
+.basic-2col th:last-child, .basic-2col td:last-child {
+  border-right: none;
+}
+.basic-2col th {
+  background: black;
+}
+.basic-2col td {
+  background: rgba(255, 255, 255, 0.1);
+}
+/* 망고 수정 끝 */
+
 .basic-3col {
   float: left;
   clear: both;
