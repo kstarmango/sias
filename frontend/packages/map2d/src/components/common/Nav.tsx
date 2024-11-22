@@ -1,5 +1,6 @@
 import "ol/ol.css";
 import { MapOptions } from "ol/Map";
+import tabJSON from '../tab.json';
 
 export interface NavProps extends MapOptions {
 
@@ -16,26 +17,14 @@ export const Nav = ({ onNavClick, selectedNav }: NavProps) => {
 
   return (
     <nav>
-      <button type="button" onClick={() => onNavClick('realEstate')} className={getButtonSelected('realEstate')}>
-        <span className="icon real-estate selected"></span>
-        <span className="title">부동산<br />정보</span>
-      </button>
-      <button type="button" onClick={() => onNavClick('population')} className={getButtonSelected('population')}>
-        <span className="icon mobility-analysis"></span>
-        <span className="title">유동인구<br />분석</span>
-      </button>
-      <button type="button" onClick={() => onNavClick('life')} className={getButtonSelected('life')}>
-        <span className="icon lifestyle-information"></span>
-        <span className="title">생활정보</span>
-      </button>
-      <button type="button" onClick={() => onNavClick('administrative')} className={getButtonSelected('administrative')}>
-        <span className="icon administrative-information"></span>
-        <span className="title">행정정보</span>
-      </button>
-      <button type="button" onClick={() => onNavClick('festival')} className={getButtonSelected('festival')}>
-        <span className="icon other-analysis"></span>
-        <span className="title">상권축제</span>
-      </button>
+      {Object.keys(tabJSON).map((key) => (
+        <button type="button" key={key} onClick={() => onNavClick(key)} className={getButtonSelected(key)}>
+          <span className="icon real-estate selected"></span>
+          <span className="title" style={{whiteSpace: 'pre-line'}} >
+            {tabJSON[key].label.title}
+          </span>
+        </button>
+      ))}
     </nav>
   );
 }
