@@ -26,7 +26,7 @@ export const LifeDistanceFac = ({ analysisConditions }: LifeDistanceFacProps) =>
 
     // 임시 데이터 목록
     const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-    const ALALYSIS_ARRIVE_FAC_LIST = ['응급의료시설', '소아산부인과', '어린이집 보육시설', '생활방범', '소방서'];
+    const ALALYSIS_ARRIVE_FAC_LIST = ['응급의료시설', '소아산부인과', '보육시설', '생활방범', '소방서'];
 
     return(
         <div>
@@ -72,9 +72,7 @@ export const LifeDistanceFac = ({ analysisConditions }: LifeDistanceFacProps) =>
                 <div className="analysis-content search-condition">
                     <div className="condition-list mar-left-13">
                         <label>출발지점</label>
-                        <div style={{ backgroundColor: "black", borderRadius: '6px', border: '1px solid rgb(125, 125, 125)', padding: '5px 0', minWidth: '80px', maxWidth: '150px', fontSize: 'var(--font-size-regular)', fontFamily: 'var(--font-family-light)', paddingLeft: '5px'}}>
-                            <span>선택(포인트)</span>
-                        </div>
+                        <button type="button" className="normal-button cancel">포인트</button>
                     </div>
                     <div className="condition-list mar-left-13">
                         <label>도착시설</label>

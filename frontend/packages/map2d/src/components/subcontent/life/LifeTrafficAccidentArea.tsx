@@ -15,7 +15,7 @@ export interface LifeTrafficAccidentAreaProps {
 export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccidentAreaProps) => {
 
     // 분석조건 상태
-    const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
+    const [areaType, setAreaType] = useState<string>('point');
     const [weather, setWeather] = useState<boolean>(false);
     const [dataPopup, setDataPopup] = useState<boolean>(false);
 
@@ -36,8 +36,8 @@ export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccid
                         <input 
                         type="radio" 
                         name="areaType"
-                        value="spot"
-                        checked={areaType === 'spot'}
+                        value="point"
+                        checked={areaType === 'point'}
                         onChange={handleAreaTypeChange}
                         />
                         <span className="radio-mark"></span> 지점
@@ -53,7 +53,7 @@ export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccid
                         <span className="radio-mark"></span> 영역
                     </label>
                 </div>
-                {areaType === 'spot' && (
+                {areaType === 'point' && (
                     <div className="condition-list mar-left-13">
                         <div className="clear-both condition-area mar-top-10">
                             <label>버퍼</label>

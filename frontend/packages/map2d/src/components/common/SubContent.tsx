@@ -24,7 +24,7 @@ interface SubContentProps {
 export const SubContent = ({ selectedNav }: SubContentProps) => {
 
   const [analysisConditions, setAnalysisConditions] = useState({
-    areaType: '',
+    areaType: 'admin',
     sgg: '전체',
     emd: '전체',
     year: '연도',

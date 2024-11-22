@@ -9,7 +9,7 @@ export interface LifeServiceProps {
 
 }
 /**
- * 생활서비스 조회 컴포넌트
+ * 생활서비스 조회컴포넌트
  * 
  * @param analysisConditions 분석조건
  */

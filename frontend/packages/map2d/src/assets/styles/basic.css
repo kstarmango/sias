@@ -556,7 +556,7 @@ hr {
   height: 460px;
 }
 
-/* 생활정보-교통사고 다발지역조회 제공데이터 표 망고수정 */
+/* 생활정보-교통사고 다발지역조회 제공데이터 표 망고 수정 */
 .basic-2col {
   float: left;
   clear: both;
@@ -747,6 +747,8 @@ hr {
   display: flex;
   justify-content: space-between;
   align-items: row;
+  /* 망고 수정 */
+  overflow: scroll;
 }
 .tabmenu button {
   flex: 1;
@@ -960,9 +962,10 @@ hr {
 }
 .search-condition .custom-select {
   width: auto;
-  min-width: 80px;
+  min-width: 100px; 
   max-width: 150px;
   font-size: var(--font-size-large);
+  text-align: center;
 }
 
 .sub-tabmenu {
@@ -1726,7 +1729,8 @@ input[type=text] {
 .select-scroll {
   padding: 0 0;
   height: auto;
-  width: 80px;
+  /* 망고 수정 */
+  width: auto;
   max-height: 240px;
   overflow-y: auto;
   margin: 0;
@@ -1747,12 +1751,15 @@ input[type=text] {
   padding: 5px 0;
   line-height: 30px;
   border: 1px solid rgb(125, 125, 125);
+  /* 망고 수정 */
+  min-width: 100px;
+  text-align: center;
 }
 .select-option .list {
   display: block;
   font-size: var(--font-size-large);
   color: white;
-  padding: 0 0 0 5px;
+  /* padding: 0 0 0 5px; 망고 수정 */
 }
 .select-option .list a {
   display: block;

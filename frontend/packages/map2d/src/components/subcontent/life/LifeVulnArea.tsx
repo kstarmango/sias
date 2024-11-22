@@ -34,7 +34,7 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
   // 임시 데이터 목록
   const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
   const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
-  const ALALYSIS_FAC_LIST = ['응급의료시설', '소아산부인과', '어린이집 보육시설', '생활방범', '소방서'];
+  const ALALYSIS_FAC_LIST = ['응급의료시설', '소아산부인과', '보육시설', '생활방범', '소방서'];
   const ALAYSIS_POP_LIST = ['총인구', '유소년', '생산가능', '고령', '유아', '학생', '연령'];
 
   const analysisPopDetailArr: Record<string, string[]> = {
@@ -114,7 +114,8 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
             <span>인구 포함</span>
           </label>
         </div>
-        <div className="clear-both search-condition mar-top-10">
+        {popInclude && (
+          <div className="clear-both search-condition mar-top-10">
           <div className="condition-list mar-left-13">
             <label>분류</label>
             <CustomSelect options={ALAYSIS_POP_LIST} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={(e) => setAnalysisPop(e)} />
@@ -124,6 +125,7 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
             <CustomSelect options={analysisPopDetailList} selectedOptionState={[analysisPopDeatil, setAnalysisPopDetail]} onSelect={(e) => setAnalysisPopDetail(e)} />
           </div>
         </div>
+        )}
       </div>
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">부가정보 설정</div>
