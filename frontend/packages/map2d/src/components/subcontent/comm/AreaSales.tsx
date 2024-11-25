@@ -1,7 +1,9 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
+import { AnalysisCondition, AreaSalesAnalysisCondition } from "../../../types/analysis-condition";
 import CustomSelect from "@src/components/ui/CustomSelect";
+import { areaSalesAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { useRecoilState } from "recoil";
 
 
 /**
@@ -9,24 +11,32 @@ import CustomSelect from "@src/components/ui/CustomSelect";
  * 
  * @param analysisConditions 분석조건
  */
-export const AreaSales = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const AreaSales = () => {
   // 분석조건 상태
   const [areaType, setAreaType] = useState<string>('point');
   const [timeType, setTimeType] = useState<string>('month');
-  const [buffer, setBuffer] = useState<string>('100');
-  const [business, setBusiness] = useState<string>('전체');
+  const [areaSalesAnalysisCondition, setAreaSalesAnalysisCondition] = useRecoilState(areaSalesAnalysisConditionState);
+  const { inputWkt, buffer, startDate, endDate, business } = areaSalesAnalysisCondition;
 
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
+  // 그리기 상태
+  const [areaShape, setAreaShape] = useState<string>('circle');
+
+  // 분석조건 상태 변경 함수
+  const setInputWkt = (value: string) => setAreaSalesAnalysisCondition({...areaSalesAnalysisCondition, inputWkt: value});
+  const setBuffer = (value: number) => setAreaSalesAnalysisCondition({...areaSalesAnalysisCondition, buffer: value});
+  const setStartDate = (value: string) => setAreaSalesAnalysisCondition({...areaSalesAnalysisCondition, startDate: value});
+  const setEndDate = (value: string) => setAreaSalesAnalysisCondition({...areaSalesAnalysisCondition, endDate: value});
+  const setBusiness = (value: AreaSalesAnalysisCondition['business']) => setAreaSalesAnalysisCondition({...areaSalesAnalysisCondition, business: value});
 
   // 영역 타입 변경 함수
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setAreaType(e.target.value);
   };
+
+  // 시간 타입 변경 함수
   const handleTimeTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeType(e.target.value);
-  };  
+  };
 
   // 임시 데이터 목록
   const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
@@ -62,7 +72,7 @@ export const AreaSales = ({ analysisConditions }: { analysisConditions: Analysis
               <div className="condition-list mar-left-13">                            
                 <label>버퍼</label>
                 <div>
-                  <input type="text" value={buffer} onChange={(e) => setBuffer(e.target.value)}/>
+                  <input type="number" value={buffer} onChange={e => setBuffer(parseInt(e.target.value))}/>
                   <span style={{marginLeft: '15px'}}>m</span>
                 </div>
               </div> 
@@ -79,9 +89,9 @@ export const AreaSales = ({ analysisConditions }: { analysisConditions: Analysis
           {areaType === 'area' && (
             <div className="clear-both condition-area mar-top-10">  
               <div className="list-wrapper">      
-                <button type="button" className="circle"></button>  
-                <button type="button" className="square"></button> 
-                <button type="button" className="pentagon"></button>  
+                <button type="button" className="circle" onClick={() => setAreaShape('circle')}></button>  
+                <button type="button" className="square" onClick={() => setAreaShape('square')}></button> 
+                <button type="button" className="pentagon" onClick={() => setAreaShape('pentagon')}></button>  
               </div> 
               <div className="button-area">
                 <button type="button" className="reset">초기화</button>
@@ -107,11 +117,11 @@ export const AreaSales = ({ analysisConditions }: { analysisConditions: Analysis
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={setStartDate}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={setEndDate}/>
           </div>
         </div>
       </div>
@@ -121,7 +131,7 @@ export const AreaSales = ({ analysisConditions }: { analysisConditions: Analysis
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>항목 선택</label>
-            <CustomSelect options={BUSINESS_LIST} selectedOptionState={[business, setBusiness]} onSelect={(e) => setBusiness(e)}/>
+            <CustomSelect options={BUSINESS_LIST} selectedOptionState={[business, setBusiness]} onSelect={setBusiness}/>
           </div>
         </div>
       </div>

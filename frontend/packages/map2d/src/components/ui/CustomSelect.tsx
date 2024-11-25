@@ -3,9 +3,9 @@ import { useState } from 'react';
 
 // CustomSelectProps 인터페이스 정의
 interface CustomSelectProps {
-  options: string[];
-  selectedOptionState: [string, React.Dispatch<React.SetStateAction<string>>];
-  onSelect: (option: string) => void;
+  options: string[] | number[];
+  selectedOptionState: [any, React.Dispatch<React.SetStateAction<any>>];
+  onSelect: (option: any) => void;
 }
 
 /**

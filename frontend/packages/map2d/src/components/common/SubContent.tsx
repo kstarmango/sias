@@ -22,21 +22,6 @@ interface SubContentProps {
 }
 
 export const SubContent = ({ selectedNav }: SubContentProps) => {
-
-  const [analysisConditions, setAnalysisConditions] = useState({
-    areaType: 'admin',
-    sgg: '전체',
-    emd: '전체',
-    year: '연도',
-    month: '월',
-    service: '생활 서비스',
-    visualType: '시각화 방법',
-    analysisFac: '분석 시설',
-    analysisPop: '분류',
-    analysisPopDetail: '세부 분류',
-    analysisArriveFac: '도착 시설',
-    business: '업종'
-  });
   
   const tabItems = tabJSON[selectedNav]?.tabs || [];
   const [selectedTab, setSelectedTab] = useState<string>('');
@@ -50,29 +35,29 @@ export const SubContent = ({ selectedNav }: SubContentProps) => {
   const contentComponent = (selectedTab:string) => {
     switch (selectedTab) {
       case 'flow':
-        return <PopFlow analysisConditions={analysisConditions} />;
+        return <PopFlow />;
       case 'inflow':
-        return <InflowPop analysisConditions={analysisConditions} />;
+        return <InflowPop />;
       case 'sales':
-        return <Sales analysisConditions={analysisConditions} />;
+        return <Sales />;
       case 'service':
-        return <LifeService analysisConditions={analysisConditions} />;
+        return <LifeService />;
       case 'traffic':
-        return <LifeTrafficAccidentArea analysisConditions={analysisConditions}/>;
+        return <LifeTrafficAccidentArea />;
       case 'vulnArea':
-        return <LifeVulnArea analysisConditions={analysisConditions}/>;
+        return <LifeVulnArea />;
       case 'distanceFac':
-        return <LifeDistanceFac analysisConditions={analysisConditions}/>;
+        return <LifeDistanceFac />;
       case 'commPop':
-          return <CommPop analysisConditions={analysisConditions}/>;
+        return <CommPop />;
       case 'location':
-        return <Location analysisConditions={analysisConditions}/>;
+        return <Location />;
       case 'areaSales':
-        return <AreaSales analysisConditions={analysisConditions}/>;
+        return <AreaSales />;
       case 'fesInflux':
-        return <FestivalInflux analysisConditions={analysisConditions}/>;
+        return <FestivalInflux/>;
       case 'fesRevenue':
-        return <FestivalRevenue analysisConditions={analysisConditions}/>;
+        return <FestivalRevenue />;
       default:
         return null;
     }

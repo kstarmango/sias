@@ -1,28 +1,23 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
 import CustomSelect from "@src/components/ui/CustomSelect";
 
-
-interface CommAnalysisCondition extends AnalysisCondition {
-  timeType: string;
-}
 
 /**
  * 상권인구 분석 컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
-export const CommPop = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const CommPop = () => {
   // 분석조건 상태
   const [areaType, setAreaType] = useState<string>('admin');
   const [timeType, setTimeType] = useState<string>('month');
   const [buffer, setBuffer] = useState<string>('100');
 
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
-  const [month, setMonth] = useState<string>(analysisConditions.month);
+  const [sgg, setSgg] = useState<string>('');
+  const [emd, setEmd] = useState<string>('');
+  const [year, setYear] = useState<string>('');
+  const [month, setMonth] = useState<string>('');
 
   // 영역 타입 변경 함수
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -49,11 +44,11 @@ export const CommPop = ({ analysisConditions }: { analysisConditions: AnalysisCo
         <div className="analysis-title">영역 설정</div>
         <div className="analysis-content">
           <label className="custom-radio">
-            <input type="radio" value="admin" name="option" checked={areaType === "admin"} onChange={handleAreaTypeChange}/>
+            <input type="radio" value="admin" name="areaType" checked={areaType === "admin"} onChange={handleAreaTypeChange}/>
             <span className="radio-mark"></span> 행정구역
           </label>
           <label className="custom-radio">
-            <input type="radio" value="user" name="option" checked={areaType === "user"} onChange={handleAreaTypeChange}/>
+            <input type="radio" value="user" name="areaType" checked={areaType === "user"} onChange={handleAreaTypeChange}/>
             <span className="radio-mark"></span> 사용자 지정
           </label>                                                   
         </div>
@@ -100,11 +95,11 @@ export const CommPop = ({ analysisConditions }: { analysisConditions: AnalysisCo
         <div className="analysis-title">분석기간 설정</div>
         <div className="analysis-content ">
           <label className="custom-radio">
-            <input type="radio" value="month" name="option" checked={timeType === "month"} onChange={handleTimeTypeChange}/>
+            <input type="radio" value="month" name="timeType" checked={timeType === "month"} onChange={handleTimeTypeChange}/>
             <span className="radio-mark"></span> 월
           </label>
           <label className="custom-radio">
-            <input type="radio" value="day" name="option" checked={timeType === "day"} onChange={handleTimeTypeChange}/>
+            <input type="radio" value="day" name="timeType" checked={timeType === "day"} onChange={handleTimeTypeChange}/>
             <span className="radio-mark"></span> 일
           </label>                                                   
         </div>
