@@ -1,10 +1,9 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition, AreaSalesAnalysisCondition } from "../../../types/analysis-condition";
+import { AreaSalesAnalysisCondition } from "@src/types/analysis-condition";
 import CustomSelect from "@src/components/ui/CustomSelect";
 import { areaSalesAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { useRecoilState } from "recoil";
-
 
 /**
  * 상권 매출 분석 컴포넌트
@@ -15,7 +14,7 @@ export const AreaSales = () => {
   // 분석조건 상태
   const [areaType, setAreaType] = useState<string>('point');
   const [timeType, setTimeType] = useState<string>('month');
-  const [areaSalesAnalysisCondition, setAreaSalesAnalysisCondition] = useRecoilState(areaSalesAnalysisConditionState);
+  const [areaSalesAnalysisCondition, setAreaSalesAnalysisCondition] = useRecoilState<AreaSalesAnalysisCondition>(areaSalesAnalysisConditionState);
   const { inputWkt, buffer, startDate, endDate, business } = areaSalesAnalysisCondition;
 
   // 그리기 상태

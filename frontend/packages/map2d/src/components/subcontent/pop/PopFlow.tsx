@@ -1,20 +1,26 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
 import CustomSelect from "../../ui/CustomSelect";
+import { useRecoilState } from "recoil";
+import { popFlowAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 /**
  * 유동인구현황 컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
-export const PopFlow = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const PopFlow = () => {
   // 분석조건 상태
-  const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
-  const [month, setMonth] = useState<string>(analysisConditions.month);
+  const [popFlowAnalysisCondition, setPopFlowAnalysisCondition] = useRecoilState(popFlowAnalysisConditionState);
+  const { inputWkt, sgg, emd, year, month } = popFlowAnalysisCondition;
+
+  const setInputWkt = (value: string) => setPopFlowAnalysisCondition({...popFlowAnalysisCondition, inputWkt: value});
+  const setSgg = (value: string) => setPopFlowAnalysisCondition({...popFlowAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setPopFlowAnalysisCondition({...popFlowAnalysisCondition, emd: value});
+  const setYear = (value: number) => setPopFlowAnalysisCondition({...popFlowAnalysisCondition, year: value});
+  const setMonth = (value: number) => setPopFlowAnalysisCondition({...popFlowAnalysisCondition, month: value});
+
+  const [areaType, setAreaType] = useState<string>('admin');
 
   // 이벤트 핸들러
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 

@@ -1,22 +1,29 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
-import CustomSelect from "../../ui/CustomSelect";
+import { useRecoilState } from "recoil";
+
+import CustomSelect from "@src/components/ui/CustomSelect";
+import { salesAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 /**
  * 매출현황 컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
-export const Sales = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const Sales = () => {
+  
   // 분석조건 상태
-  const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
-  const [month, setMonth] = useState<string>(analysisConditions.month);
-  const [business, setBusiness] = useState<string>(analysisConditions.business);
+  const [salesAnalysisCondition, setSalesAnalysisCondition] = useRecoilState(salesAnalysisConditionState);
+  const { inputWkt, sgg, emd, year, month, business } = salesAnalysisCondition;
 
+  const setInputWkt = (value: string) => setSalesAnalysisCondition({...salesAnalysisCondition, inputWkt: value});
+  const setSgg = (value: string) => setSalesAnalysisCondition({...salesAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setSalesAnalysisCondition({...salesAnalysisCondition, emd: value});
+  const setYear = (value: number) => setSalesAnalysisCondition({...salesAnalysisCondition, year: value});
+  const setMonth = (value: number) => setSalesAnalysisCondition({...salesAnalysisCondition, month: value});
+  const setBusiness = (value: typeof salesAnalysisCondition['business']) => setSalesAnalysisCondition({...salesAnalysisCondition, business: value});
+
+  const [areaType, setAreaType] = useState<string>('admin');
 
   // 이벤트 핸들러
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
@@ -26,6 +33,7 @@ export const Sales = ({ analysisConditions }: { analysisConditions: AnalysisCond
   const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
   const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
   const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
+
   // 국세청 표준산업분류 연계 업종 대분류 - 18종, 15종 확인후, 수정
   const BUSINESS_LIST = ['전체', '농업, 임업 및 어업', '광업', '제조업', '전기, 가스, 증기 및 공기 조절 공급업', '부동산업', '건설업', '사업시설 관리, 사업 지원 및 임대 서비스업', '수도, 하수 및 폐기물 처리, 원료 재생업', '도매 및 소매업', '예술, 스포츠 및 여가관련 서비스업', '교육서비스업', '정보통신업', '금융 및 보험업', '운수 및 창고업', '공공 행정, 국방 및 사회보장 행정', '숙박 및 음식점업', '전문, 과학 및 기술 서비스업', '협회 및 단체, 수리 및 기타 개인 서비스업'];
 

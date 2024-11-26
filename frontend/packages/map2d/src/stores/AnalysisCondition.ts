@@ -22,7 +22,8 @@ export const inflowPopAnalysisConditionState = atom<InflowPopAnalysisCondition>(
     month: null,
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    isSggInclude: false
+    isSggInclude: false,
+    isJeollanamDoInclude: false
   }
 });
 
@@ -133,7 +134,7 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
     buffer: 0,
     startDate: null,
     endDate: null,
-    sgg: false,
+    isSggInclude: false,
     weight: false
   }
 });
@@ -142,9 +143,9 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
 export const festivalRevenueAnalysisConditionState = atom<FestivalRevenueAnalysisCondition>({
   key: 'festivalRevenueAnalysisConditionState',
   default: {
-    festival: 'ENTIRE',
     inputWkt: '',
     buffer: 0,
+    festival: 'ENTIRE',
     startDate: null,
     endDate: null
   }

@@ -1,29 +1,28 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
-import CustomSelect from "@src/components/ui/CustomSelect";
 
+import { useRecoilState } from "recoil";
+import { locationAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import CustomSelect from "@src/components/ui/CustomSelect";
 
 /**
  * 지점 분석 컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
-export const Location = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const Location = () => {
   // 분석조건 상태
-  const [areaType, setAreaType] = useState<string>('admin');
-  const [timeType, setTimeType] = useState<string>('month');
-  const [buffer, setBuffer] = useState<string>('100');
+  const [locationAnalysisCondition, setLocationAnalysisCondition] = useRecoilState(locationAnalysisConditionState);
+  const { inputWkt, startDate, endDate, weight } = locationAnalysisCondition;
 
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
-  const [month, setMonth] = useState<string>(analysisConditions.month);
+  const setInputWkt = (value: string) => setLocationAnalysisCondition({...locationAnalysisCondition, inputWkt: value});
+  const setStartDate = (value: string) => setLocationAnalysisCondition({...locationAnalysisCondition, startDate: value});
+  const setEndDate = (value: string) => setLocationAnalysisCondition({...locationAnalysisCondition, endDate: value});
+  const setWeight = (value: boolean) => setLocationAnalysisCondition({...locationAnalysisCondition, weight: value});
+
+  const [timeType, setTimeType] = useState<string>('month');
 
   // 영역 타입 변경 함수
-  const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setAreaType(e.target.value);
-  };
   const handleTimeTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeType(e.target.value);
   };  
@@ -31,8 +30,6 @@ export const Location = ({ analysisConditions }: { analysisConditions: AnalysisC
   // 임시 데이터 목록
   const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
   const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
-  const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-  const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
 
   return (
     <div>
@@ -67,11 +64,11 @@ export const Location = ({ analysisConditions }: { analysisConditions: AnalysisC
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
           </div>
         </div>
       </div>
@@ -81,8 +78,8 @@ export const Location = ({ analysisConditions }: { analysisConditions: AnalysisC
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-            <input type="checkbox" style={{marginRight: '10px'}}/>
-            <span>가중치 적용</span>
+            <input type="checkbox" style={{marginRight: '10px'}} checked={weight} onChange={(e) => setWeight(e.target.checked)}/>
+              <span>가중치 적용</span>
             </label>
           </div>
         </div>

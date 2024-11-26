@@ -1,7 +1,8 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
 import CustomSelect from "@src/components/ui/CustomSelect";
+import { useRecoilState } from "recoil";
+import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 
 /**
@@ -9,14 +10,21 @@ import CustomSelect from "@src/components/ui/CustomSelect";
  * 
  * @param analysisConditions 분석조건
  */
-export const FestivalInflux = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const FestivalInflux = () => {
   // 분석조건 상태
+  const [festivalInfluxAnalysisCondition, setFestivalInfluxAnalysisCondition] = useRecoilState(festivalInfluxAnalysisConditionState);
+  const { inputWkt, festival, buffer, startDate, endDate, weight, isSggInclude } = festivalInfluxAnalysisCondition;
+
+  const setInputWkt = (value: string) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, inputWkt: value});
+  const setFestival = (value: string) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, festival: value});
+  const setBuffer = (value: number) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, buffer: value});
+  const setStartDate = (value: string) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, startDate: value});
+  const setEndDate = (value: string) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, endDate: value});
+  const setWeight = (value: boolean) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, weight: value});
+  const setIsSggInclude = (value: boolean) => setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, isSggInclude: value});
+
   const [timeType, setTimeType] = useState<string>('month');
-  const [year, setYear] = useState<string>('2024년');
-  const [month, setMonth] = useState<string>('1월');
   const [pointType, setPointType] = useState<string>('Festival');
-  const [festival, setFestival] = useState<string>('전체');
-  const [buffer, setBuffer] = useState<string>('100');
 
   // 영역 타입 변경 함수
   const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -60,7 +68,7 @@ export const FestivalInflux = ({ analysisConditions }: { analysisConditions: Ana
           <div className="condition-list mar-left-13">
             <label>버퍼</label>
             <div>
-              <input type="text" value={buffer} onChange={(e) => setBuffer(e.target.value)}/>
+              <input type="text" value={buffer} onChange={(e) => setBuffer(Number(e.target.value))}/>
               <span style={{marginLeft: '15px'}}>m</span>
             </div>
           </div>
@@ -72,7 +80,7 @@ export const FestivalInflux = ({ analysisConditions }: { analysisConditions: Ana
             <div className="condition-list mar-left-13">
               <label>버퍼</label>
               <div>
-                <input type="text" value={buffer} onChange={(e) => setBuffer(e.target.value)}/>
+                <input type="text" value={buffer} onChange={(e) => setBuffer(Number(e.target.value))}/>
                 <span style={{marginLeft: '15px'}}>m</span>
               </div>
             </div>
@@ -100,11 +108,11 @@ export const FestivalInflux = ({ analysisConditions }: { analysisConditions: Ana
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)}/>
+            <CustomSelect options={YEAR_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
           </div>
         </div>
       </div>
@@ -114,7 +122,7 @@ export const FestivalInflux = ({ analysisConditions }: { analysisConditions: Ana
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-              <input type="checkbox" style={{marginRight: '10px'}}/>
+              <input type="checkbox" checked={isSggInclude} onChange={(e) => setIsSggInclude(e.target.checked)} style={{marginRight: '10px'}}/>
               <span>현재 시군구 포함</span>
             </label>
           </div>
@@ -126,8 +134,8 @@ export const FestivalInflux = ({ analysisConditions }: { analysisConditions: Ana
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-            <input type="checkbox" style={{marginRight: '10px'}}/>
-            <span>가중치 적용</span>
+              <input type="checkbox" checked={weight} onChange={(e) => setWeight(e.target.checked)} style={{marginRight: '10px'}}/>
+              <span>가중치 적용</span>
             </label>
           </div>
         </div>

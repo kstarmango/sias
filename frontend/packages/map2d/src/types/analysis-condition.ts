@@ -105,7 +105,7 @@ type BufferIncludeAreaCondition = UserAreaCondition & { buffer?: number };
 export type PopFlowAnalysisCondition = AreaCondition & TimeCondition;
 
 /** 유입인구 분석 조건 */
-export type InflowPopAnalysisCondition = AreaCondition & TimeCondition & { isSggInclude: boolean };
+export type InflowPopAnalysisCondition = AreaCondition & TimeCondition & { isSggInclude: boolean, isJeollanamDoInclude: boolean };
 
 /** 매출 분석 조건 */
 export type SalesAnalysisCondition = AreaCondition & TimeCondition & BusinessCondition;
@@ -132,7 +132,7 @@ export type LocationAnalysisCondition = UserAreaCondition & StartEndTimeConditio
 export type AreaSalesAnalysisCondition = BufferIncludeAreaCondition & StartEndTimeCondition & BusinessCondition;
 
 /** 축제 유입 분석 조건 */
-export type FestivalInfluxAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition & { sgg: boolean } & { weight: boolean };
+export type FestivalInfluxAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition & { isSggInclude: boolean } & { weight: boolean };
 
 /** 축제 매출 분석 조건 */
 export type FestivalRevenueAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition;

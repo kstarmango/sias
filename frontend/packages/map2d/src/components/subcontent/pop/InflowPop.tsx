@@ -1,20 +1,27 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { AnalysisCondition } from "../../../types/analysis-condition";
+import { useRecoilState } from "recoil";
+
 import CustomSelect from "@src/components/ui/CustomSelect";
+import { inflowPopAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 /**
- * 유입인구현황 컴포넌트
- * 
- * @param analysisConditions 분석조건
+ * 유입인구현황 컴포넌트 
  */
-export const InflowPop = ({ analysisConditions }: { analysisConditions: AnalysisCondition }) => {
+export const InflowPop = () => {
   // 분석조건 상태
-  const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [year, setYear] = useState<string>(analysisConditions.year);
-  const [month, setMonth] = useState<string>(analysisConditions.month);
+  const [inflowPopAnalysisCondition, setInflowPopAnalysisCondition] = useRecoilState(inflowPopAnalysisConditionState);
+  const { inputWkt, sgg, emd, year, month, isSggInclude, isJeollanamDoInclude } = inflowPopAnalysisCondition;
+
+  const setInputWkt = (value: string) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, inputWkt: value});
+  const setSgg = (value: string) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, emd: value});
+  const setYear = (value: number) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, year: value});
+  const setMonth = (value: number) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, month: value});
+  const setIsSggInclude = (value: boolean) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, isSggInclude: value});
+  const setIsJeollanamDoInclude = (value: boolean) => setInflowPopAnalysisCondition({...inflowPopAnalysisCondition, isJeollanamDoInclude: value});
+
+  const [areaType, setAreaType] = useState<string>('admin');
 
   // 이벤트 핸들러
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value);
@@ -80,8 +87,14 @@ export const InflowPop = ({ analysisConditions }: { analysisConditions: Analysis
           </div>
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-              <input type="checkbox" style={{marginRight: '10px'}}/>
+              <input type="checkbox" checked={isSggInclude} onChange={(e) => setIsSggInclude(e.target.checked)} style={{marginRight: '10px'}}/>
               <span>현재 시군구 포함</span>
+            </label>
+          </div>
+          <div className="condition-list mar-left-13">
+            <label style={{whiteSpace: 'nowrap'}}>
+              <input type="checkbox" checked={isJeollanamDoInclude} onChange={(e) => setIsJeollanamDoInclude(e.target.checked)} style={{marginRight: '10px'}}/>
+              <span>전라남도 포함</span>
             </label>
           </div>
         </div>

@@ -1,7 +1,8 @@
 import "ol/ol.css";
 import { useState } from "react";
 import CustomSelect from "@src/components/ui/CustomSelect";
-
+import { useRecoilState } from "recoil";
+import { commPopAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 /**
  * 상권인구 분석 컴포넌트
@@ -10,14 +11,19 @@ import CustomSelect from "@src/components/ui/CustomSelect";
  */
 export const CommPop = () => {
   // 분석조건 상태
+  const [commPopAnalysisCondition, setCommPopAnalysisCondition] = useRecoilState(commPopAnalysisConditionState);
+  const { buffer, sgg, emd, startDate, endDate, weight } = commPopAnalysisCondition;
+
   const [areaType, setAreaType] = useState<string>('admin');
   const [timeType, setTimeType] = useState<string>('month');
-  const [buffer, setBuffer] = useState<string>('100');
 
-  const [sgg, setSgg] = useState<string>('');
-  const [emd, setEmd] = useState<string>('');
-  const [year, setYear] = useState<string>('');
-  const [month, setMonth] = useState<string>('');
+  // 이벤트 핸들러
+  const setBuffer = (value: number) => setCommPopAnalysisCondition({...commPopAnalysisCondition, buffer: value});
+  const setSgg = (value: string) => setCommPopAnalysisCondition({...commPopAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setCommPopAnalysisCondition({...commPopAnalysisCondition, emd: value});
+  const setStartDate = (value: string) => setCommPopAnalysisCondition({...commPopAnalysisCondition, startDate: value});
+  const setEndDate = (value: string) => setCommPopAnalysisCondition({...commPopAnalysisCondition, endDate: value});
+  const setWeight = (value: boolean) => setCommPopAnalysisCondition({...commPopAnalysisCondition, weight: value});
 
   // 영역 타입 변경 함수
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -36,8 +42,8 @@ export const CommPop = () => {
   return (
     <div>
       <div className="information">
-        <div className="title info-icon">상권 인구현황</div>
-        <div className="explanation">유입인구 현황 조회 및 데이터 시각화를 수행하는 서비스 입니다.</div>
+        <div className="title info-icon">상권 인구 분석</div>
+        <div className="explanation">상권 인구 분석 및 데이터 시각화를 수행하는 서비스 입니다.</div>
       </div>
 
       <div className="analysis-condition-wrapper mar-top-30">
@@ -82,7 +88,7 @@ export const CommPop = () => {
               <div className="condition-list mar-left-13">                            
                 <label>버퍼</label>
                 <div className="input-wrapper">
-                  <input type="text" value={buffer} onChange={(e) => setBuffer(e.target.value)}/>
+                  <input type="text" value={buffer} onChange={(e) => setBuffer(Number(e.target.value))}/>
                   <span style={{marginLeft: '15px'}}>m</span>
                 </div>
               </div>    
@@ -108,8 +114,8 @@ export const CommPop = () => {
           {timeType === "month" && (
             <div className="condition-list mar-left-13">
               <label>기간 선택</label>
-              <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)}/>
-              <CustomSelect options={MONTH_LIST} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)}/>
+              <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+              <CustomSelect options={MONTH_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
             </div>
           )}
         </div>
@@ -120,8 +126,8 @@ export const CommPop = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-            <input type="checkbox" style={{marginRight: '10px'}}/>
-            <span>가중치 적용</span>
+              <input type="checkbox" style={{marginRight: '10px'}} checked={weight} onChange={(e) => setWeight(e.target.checked)}/>
+              <span>가중치 적용</span>
             </label>
           </div>
         </div>
