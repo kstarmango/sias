@@ -5,6 +5,7 @@ import { AreaSalesAnalysisCondition, CommPopAnalysisCondition, FestivalInfluxAna
 export const popFlowAnalysisConditionState = atom<PopFlowAnalysisCondition>({
   key: 'popFlowAnalysisConditionState',
   default: {
+    inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     year: null,
@@ -19,7 +20,9 @@ export const inflowPopAnalysisConditionState = atom<InflowPopAnalysisCondition>(
     inputWkt: '',
     year: null,
     month: null,
-    sgg: false
+    sgg: 'ENTIRE',
+    emd: 'ENTIRE',
+    isSggInclude: false
   }
 });
 
@@ -27,6 +30,7 @@ export const inflowPopAnalysisConditionState = atom<InflowPopAnalysisCondition>(
 export const salesAnalysisConditionState = atom<SalesAnalysisCondition>({
   key: 'salesAnalysisConditionState',
   default: {
+    inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     year: null,
@@ -39,6 +43,7 @@ export const salesAnalysisConditionState = atom<SalesAnalysisCondition>({
 export const lifeAnalysisConditionState = atom<LifeAnalysisCondition>({
   key: 'lifeAnalysisConditionState',
   default: {
+    inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     lifeServiceFacility: 'ENTIRE',
@@ -60,6 +65,7 @@ export const lifeTrafficAnalysisConditionState = atom<LifeTrafficAnalysisConditi
 export const lifeVulnAnalysisConditionState = atom<LifeVulnAnalysisCondition>({
   key: 'lifeVulnAnalysisConditionState',
   default: {
+    inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     gwangju: false,
@@ -73,6 +79,7 @@ export const lifeVulnAnalysisConditionState = atom<LifeVulnAnalysisCondition>({
 export const lifeDistanceFacConditionState = atom<LifeDistanceFacCondition>({
   key: 'lifeDistanceFacConditionState',
   default: {
+    inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     startPoint: '',
@@ -84,6 +91,8 @@ export const lifeDistanceFacConditionState = atom<LifeDistanceFacCondition>({
 export const commPopAnalysisConditionState = atom<CommPopAnalysisCondition>({
   key: 'commPopAnalysisConditionState',
   default: {
+    inputWkt: '',
+    buffer: 0,
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     startDate: null,
@@ -119,6 +128,7 @@ export const areaSalesAnalysisConditionState = atom<AreaSalesAnalysisCondition>(
 export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisCondition>({
   key: 'festivalInfluxAnalysisConditionState',
   default: {
+    festival: 'ENTIRE',
     inputWkt: '',
     buffer: 0,
     startDate: null,
@@ -132,6 +142,7 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
 export const festivalRevenueAnalysisConditionState = atom<FestivalRevenueAnalysisCondition>({
   key: 'festivalRevenueAnalysisConditionState',
   default: {
+    festival: 'ENTIRE',
     inputWkt: '',
     buffer: 0,
     startDate: null,

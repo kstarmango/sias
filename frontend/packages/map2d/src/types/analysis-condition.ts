@@ -93,10 +93,10 @@ export const analysisPopDetailArr: Record<string, string[]> = {
 }
 
 /** 영역 조건 */
-type AreaCondition = AdminstrCondition | UserAreaCondition;
+type AreaCondition = AdminstrCondition & UserAreaCondition;
 
 /** 축제 영역 조건 */
-type FestivalAreaCondition = (FestivalCondition & { buffer: number }) | (UserAreaCondition & { buffer: number });
+type FestivalAreaCondition = FestivalCondition & UserAreaCondition & { buffer: number };
 
 /** 버퍼 포함 영역 조건 */
 type BufferIncludeAreaCondition = UserAreaCondition & { buffer?: number };
@@ -105,7 +105,7 @@ type BufferIncludeAreaCondition = UserAreaCondition & { buffer?: number };
 export type PopFlowAnalysisCondition = AreaCondition & TimeCondition;
 
 /** 유입인구 분석 조건 */
-export type InflowPopAnalysisCondition = AreaCondition & TimeCondition & { sgg: boolean };
+export type InflowPopAnalysisCondition = AreaCondition & TimeCondition & { isSggInclude: boolean };
 
 /** 매출 분석 조건 */
 export type SalesAnalysisCondition = AreaCondition & TimeCondition & BusinessCondition;
@@ -123,7 +123,7 @@ export type LifeVulnAnalysisCondition = AreaCondition & LifeFacilityCondition & 
 export type LifeDistanceFacCondition = AreaCondition & AnalysisStartEndCondition;
 
 /** 상권 인구 분석 조건 */
-export type CommPopAnalysisCondition = AreaCondition & StartEndTimeCondition & { weight: boolean };
+export type CommPopAnalysisCondition = AdminstrCondition & BufferIncludeAreaCondition & StartEndTimeCondition & { weight: boolean };
 
 /** 지점 분석 조건 */
 export type LocationAnalysisCondition = UserAreaCondition & StartEndTimeCondition & { weight: boolean };
@@ -136,4 +136,3 @@ export type FestivalInfluxAnalysisCondition = FestivalAreaCondition & StartEndTi
 
 /** 축제 매출 분석 조건 */
 export type FestivalRevenueAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition;
-
