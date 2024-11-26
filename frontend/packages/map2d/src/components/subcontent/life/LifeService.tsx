@@ -1,26 +1,25 @@
 import CustomSelect from "@src/components/ui/CustomSelect";
-import { AnalysisCondition } from "@src/types/analysis-condition";
+import { LifeAnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
-import { useState } from "react";
+import { useRecoilState } from "recoil";
+import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
-export interface LifeServiceProps {
-  
-  analysisConditions: AnalysisCondition;
-
-}
 /**
  * 생활서비스 조회컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
 
-export const LifeService = ({ analysisConditions }: LifeServiceProps) => {
+export const LifeService = () => {
 
   // 분석조건 상태
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [service, setService] = useState<string>(analysisConditions.service);
-  const [visualType, setVisualType] = useState<string>(analysisConditions.visualType);
+  const [ lifeAnalysisCondition, setLifeAnalysisCondition ] = useRecoilState(lifeAnalysisConditionState);
+  const { sgg, emd, lifeServiceFacility, visualType } = lifeAnalysisCondition;
+
+  const setSgg = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, emd: value});
+  const setLifeServiceFacility = (value: LifeAnalysisCondition['lifeServiceFacility']) => setLifeAnalysisCondition({...lifeAnalysisCondition, lifeServiceFacility: value});
+  const setVisualType = (value: LifeAnalysisCondition['visualType']) => setLifeAnalysisCondition({...lifeAnalysisCondition, visualType: value});
 
   // 임시 데이터 목록
   const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
@@ -52,11 +51,11 @@ export const LifeService = ({ analysisConditions }: LifeServiceProps) => {
         <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>생활서비스 시설</label>
-            <CustomSelect options={TEMP_SERVICE_LIST} selectedOptionState={[service, setService]} onSelect={(e) => setService(e)} />
+            <CustomSelect options={TEMP_SERVICE_LIST} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
           </div>
           <div className="condition-list mar-left-13">
             <label>시각화 방법</label>
-            <CustomSelect options={VISUAL_LIST} selectedOptionState={[visualType, setVisualType]} onSelect={(e) => setVisualType(e)} />
+            <CustomSelect options={VISUAL_LIST} selectedOptionState={[visualType, setVisualType]} onSelect={setVisualType} />
           </div>
         </div>
       </div>

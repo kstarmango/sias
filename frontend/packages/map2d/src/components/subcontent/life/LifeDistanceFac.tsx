@@ -1,13 +1,9 @@
 import CustomSelect from "@src/components/ui/CustomSelect";
-import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
 import { useState } from "react";
-
-export interface LifeDistanceFacProps {
-
-    analysisConditions: AnalysisCondition;
-
-}
+import { useRecoilState } from "recoil";
+import { lifeDistanceFacConditionState } from "@src/stores/AnalysisCondition";
+import { AnalysisStartEndCondition } from "@src/types/analysis-condition";
 
 /**
  * 취약지역 조회 컴포넌트
@@ -15,12 +11,18 @@ export interface LifeDistanceFacProps {
  * @param analysisConditions 분석조건
  */
 
-export const LifeDistanceFac = ({ analysisConditions }: LifeDistanceFacProps) => {
+export const LifeDistanceFac = () => {
 
     // 분석조건 상태
-    const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
-    const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-    const [analysisArriveFac, setAnalysisArriveFac] = useState<string>(analysisConditions.analysisArriveFac);
+    const [areaType, setAreaType] = useState<string>('point');
+    const [lifeDistanceFacCondition, setLifeDistanceFacCondition] = useRecoilState(lifeDistanceFacConditionState);
+    const { inputWkt, sgg, emd, startPoint, endFacility } = lifeDistanceFacCondition;
+
+    const setInputWkt = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, inputWkt: value});
+    const setSgg = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, sgg: value});
+    const setEmd = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, emd: value});
+    const setStartPoint = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, inputWkt: value});
+    const setEndFacility = (value: AnalysisStartEndCondition['endFacility']) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, endFacility: value});
 
     const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
 
@@ -76,7 +78,7 @@ export const LifeDistanceFac = ({ analysisConditions }: LifeDistanceFacProps) =>
                     </div>
                     <div className="condition-list mar-left-13">
                         <label>도착시설</label>
-                        <CustomSelect options={ALALYSIS_ARRIVE_FAC_LIST} selectedOptionState={[analysisArriveFac, setAnalysisArriveFac]} onSelect={(e) => setAnalysisArriveFac(e)} />
+                        <CustomSelect options={ALALYSIS_ARRIVE_FAC_LIST} selectedOptionState={[endFacility, setEndFacility]} onSelect={setEndFacility} />
                     </div>
                 </div>
             </div>

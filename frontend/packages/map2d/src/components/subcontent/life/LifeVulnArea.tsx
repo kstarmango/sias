@@ -1,11 +1,9 @@
 import CustomSelect from "@src/components/ui/CustomSelect";
-import { AnalysisCondition } from "@src/types/analysis-condition";
+import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import "ol/ol.css";
 import { useEffect, useState } from "react";
-
-export interface LifeVulnAreaProps {
-  analysisConditions: AnalysisCondition;
-}
+import { useRecoilState } from "recoil";
+import { AnalysisCondition } from "@src/types/analysis-condition";
 
 /**
  * 최단거리 시설 분석 컴포넌트
@@ -13,23 +11,26 @@ export interface LifeVulnAreaProps {
  * @param analysisConditions 분석조건
  */
 
-export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
+export const LifeVulnArea = () => {
 
   // 분석조건 상태
-  const [sgg, setSgg] = useState<string>(analysisConditions.sgg);
-  const [emd, setEmd] = useState<string>(analysisConditions.emd);
-  const [areaType, setAreaType] = useState<string>(analysisConditions.areaType);
-  const [analysisFac, setAnalysisFac] = useState<string>(analysisConditions.analysisFac);
-  const [analysisPop, setAnalysisPop] = useState<string>(analysisConditions.analysisPop);
-  const [analysisPopDeatil, setAnalysisPopDetail] = useState<string>(analysisConditions.analysisPopDetail);
+  const [ lifeVulnAnalysisCondition, setLifeVulnAnalysisCondition ] = useRecoilState(lifeVulnAnalysisConditionState);
+  const { inputWkt, sgg, emd, gwangju, lifeServiceFacility, popInclude, analysisPop } = lifeVulnAnalysisCondition;
+  const [areaType, setAreaType] = useState<string>('point');
 
   const [analysisPopDetailList, setAnalysisPopDetailList] = useState<string[]>([]);
-  const [popInclude, setPopInclude] = useState<boolean>(false);
-  const [gwangjuInclude, setGwangjuInclude] = useState<boolean>(false);
 
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
   const handlePopIncludeChange = () => setPopInclude(!popInclude);
-  const handleGwangjuIncludeChange = () => setGwangjuInclude(!gwangjuInclude);
+  const handleGwangjuIncludeChange = () => setGwangju(!gwangju);
+
+  const setInputWkt = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, inputWkt: value});
+  const setSgg = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, sgg: value});
+  const setEmd = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, emd: value});
+  const setGwangju = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, gwangju: value});
+  const setLifeServiceFacility = (value: AnalysisCondition['lifeServiceFacility']) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, lifeServiceFacility: value});
+  const setPopInclude = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, popInclude: value});
+  const setAnalysisPop = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, analysisPop: value});
 
   // 임시 데이터 목록
   const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
@@ -50,7 +51,6 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
   useEffect(() => {
     if(analysisPopDetailArr[analysisPop]) {
       setAnalysisPopDetailList(analysisPopDetailArr[analysisPop]);
-      setAnalysisPopDetail('세부 분류');
     }
   }, [analysisPop]);
 
@@ -76,11 +76,11 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+              <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={setSgg} />
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
+              <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={setEmd} />
             </div>                                  
           </div> 
         )}
@@ -102,7 +102,7 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
         <div className="analysis-content search-condition">
           <div className="condition-list">
             <label>분석시설</label>
-            <CustomSelect options={ALALYSIS_FAC_LIST} selectedOptionState={[analysisFac, setAnalysisFac]} onSelect={(e) => setAnalysisFac(e)} />
+            <CustomSelect options={ALALYSIS_FAC_LIST} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
           </div>
         </div>
       </div>
@@ -122,7 +122,7 @@ export const LifeVulnArea = ({ analysisConditions }: LifeVulnAreaProps) => {
           </div>
           <div className="condition-list mar-left-13">
             <label>세부분류</label>
-            <CustomSelect options={analysisPopDetailList} selectedOptionState={[analysisPopDeatil, setAnalysisPopDetail]} onSelect={(e) => setAnalysisPopDetail(e)} />
+            <CustomSelect options={analysisPopDetailList} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={setAnalysisPop} />
           </div>
         </div>
         )}

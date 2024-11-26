@@ -1,10 +1,7 @@
-import { AnalysisCondition } from "@src/types/analysis-condition";
 import "ol/ol.css";
 import { useState } from "react";
-
-export interface LifeTrafficAccidentAreaProps {
-    analysisConditions: AnalysisCondition;
-}
+import { useRecoilState } from "recoil";
+import { lifeTrafficAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
 /**
  * 교통사고 다발지역 조회 컴포넌트
@@ -12,17 +9,23 @@ export interface LifeTrafficAccidentAreaProps {
  * @param analysisConditions 분석조건
  */
 
-export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccidentAreaProps) => {
+export const LifeTrafficAccidentArea = () => {
 
     // 분석조건 상태
     const [areaType, setAreaType] = useState<string>('point');
-    const [weather, setWeather] = useState<boolean>(false);
     const [dataPopup, setDataPopup] = useState<boolean>(false);
 
-    const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
-    const handleWeatherChange = () => setWeather(!weather);
-    const handleDataPopup = () => setDataPopup(!dataPopup);
+    const [lifeTrafficAnalysisCondition, setLifeTrafficAnalysisCondition] = useRecoilState(lifeTrafficAnalysisConditionState);
+    const { inputWkt, buffer, weather } = lifeTrafficAnalysisCondition;
+
+    const setInputWkt = (value: string) => setLifeTrafficAnalysisCondition({...lifeTrafficAnalysisCondition, inputWkt: value});
+    const setBuffer = (value: number) => setLifeTrafficAnalysisCondition({...lifeTrafficAnalysisCondition, buffer: value});
+    const setWeather = (value: boolean) => setLifeTrafficAnalysisCondition({...lifeTrafficAnalysisCondition, weather: value});
     
+    const handleWeatherChange = () => setWeather(!weather);
+    const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
+    const handleDataPopup = () => setDataPopup(!dataPopup);
+
     return(
         <div>
             <div className="information">
@@ -57,7 +60,7 @@ export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccid
                     <div className="condition-list mar-left-13">
                         <div className="clear-both condition-area mar-top-10">
                             <label>버퍼</label>
-                            <input type="text"/>
+                            <input type="number" value={buffer} onChange={e => setBuffer(parseInt(e.target.value))}/>
                             <span>m</span>
                         </div>
                     </div>
@@ -79,7 +82,7 @@ export const LifeTrafficAccidentArea = ({ analysisConditions }: LifeTrafficAccid
                 <div className="analysis-title">분석조건 설정</div>
                 <div className="analysis-content search-condition">
                     <label>
-                        <input type="checkbox" style={{marginRight: '10px'}} onChange={handleWeatherChange} />
+                        <input type="checkbox" style={{marginRight: '10px'}} onChange={handleWeatherChange}/>
                         <span>날씨</span>
                     </label>
                 </div>
