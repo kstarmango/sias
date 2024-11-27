@@ -1,9 +1,8 @@
 // src/components/CustomSelect.tsx
 import { useState } from 'react';
 
-// CustomSelectProps 인터페이스 정의
 interface CustomSelectProps {
-  options: string[] | number[];
+  options: any;
   selectedOptionState: [any, React.Dispatch<React.SetStateAction<any>>];
   onSelect: (option: any) => void;
 }
@@ -44,13 +43,13 @@ function CustomSelect({ options, selectedOptionState, onSelect }: CustomSelectPr
       {isOpen && (
         <div className="select-option">
           <div className="select-scroll">
-            {options.map((option, idx) => (
+            {options.map(([key, value], idx) => (
               <div
                 key={idx}
                 className="list"
-                onClick={(event) => handleOptionClick(option, event)}
+                onClick={(event) => handleOptionClick(key, event)}
               >
-                {option}
+                {value}
               </div>
             ))}
           </div>

@@ -1,9 +1,10 @@
 import "ol/ol.css";
 import { useState } from "react";
-import CustomSelect from "@src/components/ui/CustomSelect";
 import { useRecoilState } from "recoil";
-import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
+import CustomSelect from "@src/components/ui/CustomSelect";
+import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { TEMP_FESTIVAL, YEAR } from "@src/utils/analysis-constant";
 
 /**
  * 축제 유입 분석 컴포넌트
@@ -26,18 +27,12 @@ export const FestivalInflux = () => {
   const [timeType, setTimeType] = useState<string>('month');
   const [pointType, setPointType] = useState<string>('Festival');
 
-  // 영역 타입 변경 함수
   const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPointType(e.target.value);
   };
   const handleTimeTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeType(e.target.value);
   }; 
-
-  // 임시 데이터 목록
-  const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-  const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
-  const TEMP_FESTIVAL_LIST = ['전체', '목포문화축제', '여수문화축제', '순천문화축제', '완도문화축제', '진도문화축제'];
 
   return (
     <div>
@@ -63,7 +58,7 @@ export const FestivalInflux = () => {
           <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>축제</label>
-            <CustomSelect options={TEMP_FESTIVAL_LIST} selectedOptionState={[festival, setFestival]} onSelect={(e) => setFestival(e)} />
+            <CustomSelect options={Object.entries(TEMP_FESTIVAL)} selectedOptionState={[festival, setFestival]} onSelect={(e) => setFestival(e)} />
           </div>
           <div className="condition-list mar-left-13">
             <label>버퍼</label>
@@ -108,11 +103,11 @@ export const FestivalInflux = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
           </div>
         </div>
       </div>

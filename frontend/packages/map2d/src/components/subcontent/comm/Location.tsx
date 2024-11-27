@@ -1,9 +1,10 @@
 import "ol/ol.css";
 import { useState } from "react";
 
+import CustomSelect from "@src/components/ui/CustomSelect";
+import { YEAR } from "@src/utils/analysis-constant";
 import { useRecoilState } from "recoil";
 import { locationAnalysisConditionState } from "@src/stores/AnalysisCondition";
-import CustomSelect from "@src/components/ui/CustomSelect";
 
 /**
  * 지점 분석 컴포넌트
@@ -26,10 +27,6 @@ export const Location = () => {
   const handleTimeTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTimeType(e.target.value);
   };  
-
-  // 임시 데이터 목록
-  const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-  const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
 
   return (
     <div>
@@ -64,11 +61,11 @@ export const Location = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
           </div>
         </div>
       </div>

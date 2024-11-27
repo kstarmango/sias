@@ -49,26 +49,26 @@ interface BusinessCondition  {
 
 /** 인구 정보 그룹 */
 const populationGroups = {
-  total: ['Total Population (All)', 'Total Population (Male)', 'Total Population (Female)'],
-  youth: ['Youth Population (All)', 'Youth Population (Male)', 'Youth Population (Female)'],
-  workingAge: ['Working Age Population (All)', 'Working Age Population (Male)', 'Working Age Population (Female)'],
-  elderly: ['Elderly Population (All)', 'Elderly Population (Male)', 'Elderly Population (Female)'],
-  infants: ['Infant Population (All)', 'Infant Population (Male)', 'Infant Population (Female)'],
+  total: ['Total_Population_All', 'Total_Population_Male', 'Total_Population_Female'],
+  youth: ['Youth_Population_All', 'Youth_Population_Male', 'Youth_Population_Female'],
+  workingAge: ['Working_Age_Population_All', 'Working_Age_Population_Male', 'Working_Age_Population_Female'],
+  elderly: ['Elderly_Population_All', 'Elderly_Population_Male', 'Elderly_Population_Female'],
+  infants: ['Infant_Population_All', 'Infant_Population_Male', 'Infant_Population_Female'],
   students: [
-    'Elementary School Students (All)', 'Elementary School Students (Male)', 'Elementary School Students (Female)',
-    'Middle School Students (All)', 'Middle School Students (Male)', 'Middle School Students (Female)',
-    'High School Students (All)', 'High School Students (Male)', 'High School Students (Female)'
+    'Elementary_School_Students_All', 'Elementary_School_Students_Male', 'Elementary_School_Students_Female',
+    'Middle_School_Students_All', 'Middle_School_Students_Male', 'Middle_School_Students_Female',
+    'High_School_Students_All', 'High_School_Students_Male', 'High_School_Students_Female'
   ],
   ageGroups: [
-    '20s Population (All)', '20s Population (Male)', '20s Population (Female)',
-    '30s Population (All)', '30s Population (Male)', '30s Population (Female)',
-    '40s Population (All)', '40s Population (Male)', '40s Population (Female)',
-    '50s Population (All)', '50s Population (Male)', '50s Population (Female)',
-    '60s Population (All)', '60s Population (Male)', '60s Population (Female)',
-    '70s Population (All)', '70s Population (Male)', '70s Population (Female)',
-    '80s Population (All)', '80s Population (Male)', '80s Population (Female)',
-    '90s Population (All)', '90s Population (Male)', '90s Population (Female)',
-    '100+ Population (All)', '100+ Population (Male)', '100+ Population (Female)'
+    'Pop_20s_All', 'Pop_20s_Male', 'Pop_20s_Female',
+    'Pop_30s_All', 'Pop_30s_Male', 'Pop_30s_Female',
+    'Pop_40s_All', 'Pop_40s_Male', 'Pop_40s_Female',
+    'Pop_50s_All', 'Pop_50s_Male', 'Pop_50s_Female',
+    'Pop_60s_All', 'Pop_60s_Male', 'Pop_60s_Female',
+    'Pop_70s_All', 'Pop_70s_Male', 'Pop_70s_Female',
+    'Pop_80s_All', 'Pop_80s_Male', 'Pop_80s_Female',
+    'Pop_90s_All', 'Pop_90s_Male', 'Pop_90s_Female',
+    'Pop_100_All', 'Pop_100_Male', 'Pop_100_Female'
   ]
 }
 

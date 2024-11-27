@@ -1,9 +1,11 @@
-import CustomSelect from "@src/components/ui/CustomSelect";
 import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
+
+import CustomSelect from "@src/components/ui/CustomSelect";
 import { lifeDistanceFacConditionState } from "@src/stores/AnalysisCondition";
-import { AnalysisStartEndCondition } from "@src/types/analysis-condition";
+import { LifeDistanceFacCondition } from "@src/types/analysis-condition";
+import { ALALYSIS_ARRIVE_FAC, TEMP_SGG } from "@src/utils/analysis-constant";
 
 /**
  * 취약지역 조회 컴포넌트
@@ -22,13 +24,9 @@ export const LifeDistanceFac = () => {
     const setSgg = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, sgg: value});
     const setEmd = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, emd: value});
     const setStartPoint = (value: string) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, inputWkt: value});
-    const setEndFacility = (value: AnalysisStartEndCondition['endFacility']) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, endFacility: value});
+    const setEndFacility = (value: LifeDistanceFacCondition['endFacility']) => setLifeDistanceFacCondition({...lifeDistanceFacCondition, endFacility: value});
 
     const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
-
-    // 임시 데이터 목록
-    const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-    const ALALYSIS_ARRIVE_FAC_LIST = ['응급의료시설', '소아산부인과', '보육시설', '생활방범', '소방서'];
 
     return(
         <div>
@@ -52,7 +50,7 @@ export const LifeDistanceFac = () => {
                 <div id="admin-area-select" className="clear-both search-condition mar-top-10">
                     <div className="condition-list mar-left-13">                            
                         <label>시군구</label>
-                        <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+                        <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
                     </div>                               
                 </div> 
                 )}
@@ -78,7 +76,7 @@ export const LifeDistanceFac = () => {
                     </div>
                     <div className="condition-list mar-left-13">
                         <label>도착시설</label>
-                        <CustomSelect options={ALALYSIS_ARRIVE_FAC_LIST} selectedOptionState={[endFacility, setEndFacility]} onSelect={setEndFacility} />
+                        <CustomSelect options={Object.entries(ALALYSIS_ARRIVE_FAC)} selectedOptionState={[endFacility, setEndFacility]} onSelect={setEndFacility} />
                     </div>
                 </div>
             </div>

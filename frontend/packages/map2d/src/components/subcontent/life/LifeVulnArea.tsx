@@ -1,9 +1,11 @@
+import "ol/ol.css";
+import { useState } from "react";
+import { useRecoilState } from "recoil";
+
 import CustomSelect from "@src/components/ui/CustomSelect";
 import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
-import "ol/ol.css";
-import { useEffect, useState } from "react";
-import { useRecoilState } from "recoil";
-import { AnalysisCondition } from "@src/types/analysis-condition";
+import { LifeVulnAnalysisCondition } from "@src/types/analysis-condition";
+import { ANALYSIS_FAC, ANALYSIS_POP, ANALYSIS_POP_DETAIL } from "@src/utils/analysis-constant";
 
 /**
  * 최단거리 시설 분석 컴포넌트
@@ -16,49 +18,32 @@ export const LifeVulnArea = () => {
   // 분석조건 상태
   const [ lifeVulnAnalysisCondition, setLifeVulnAnalysisCondition ] = useRecoilState(lifeVulnAnalysisConditionState);
   const { inputWkt, sgg, emd, gwangju, lifeServiceFacility, popInclude, analysisPop } = lifeVulnAnalysisCondition;
+  
   const [areaType, setAreaType] = useState<string>('point');
-
-  const [analysisPopDetailList, setAnalysisPopDetailList] = useState<string[]>([]);
+  const [analysisPopClassification, setAnalysisPopClassification] = useState<string[]>([]);
 
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
-  const handlePopIncludeChange = () => setPopInclude(!popInclude);
-  const handleGwangjuIncludeChange = () => setGwangju(!gwangju);
 
+  // 분석조건 상태 설정 함수
   const setInputWkt = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, inputWkt: value});
   const setSgg = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, sgg: value});
   const setEmd = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, emd: value});
   const setGwangju = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, gwangju: value});
-  const setLifeServiceFacility = (value: AnalysisCondition['lifeServiceFacility']) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, lifeServiceFacility: value});
+  const setLifeServiceFacility = (value: LifeVulnAnalysisCondition['lifeServiceFacility']) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, lifeServiceFacility: value});
   const setPopInclude = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, popInclude: value});
   const setAnalysisPop = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, analysisPop: value});
 
   // 임시 데이터 목록
   const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
   const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
-  const ALALYSIS_FAC_LIST = ['응급의료시설', '소아산부인과', '보육시설', '생활방범', '소방서'];
-  const ALAYSIS_POP_LIST = ['총인구', '유소년', '생산가능', '고령', '유아', '학생', '연령'];
-
-  const analysisPopDetailArr: Record<string, string[]> = {
-    '총인구': ['총 인구 수(전체)', '총 인구 수(남자)', '총 인구 수 (여자)'],
-    '유소년': ['유소년 인구 수(전체)', '유소년 인구 수(남자)', '유소년 인구 수(여자)'],
-    '생산가능': ['생산가능 인구 수(전체)', '생산가능 인구 수(남자)', '생산가능 인구 수(여자)'],
-    '고령': ['고령 인구 수(전체)', '고령 인구 수(남자)', '고령 인구 수(여자)'],
-    '유아': ['유아 인구 수(전체)', '유아 인구 수(남자)', '유아 인구 수(여자)'],
-    '학생': ['초등학생 인구 수(전체)', '초등학생 인구 수(남자)', '초등학생 인구 수(여자)', '중학생 인구 수(전체)', '중학생 인구 수(남자)', '중학생 인구 수(여자)', '고등학생 인구 수(전체)', '고등학생 인구 수(남자)', '고등학생 인구 수(여자)'],
-    '연령': ['20대 인구 수(전체)', '20대 인구 수(남자)', '20대 인구 수(여자)', '30대 인구 수(전체)', '30대 인구 수(남자)', '30대 인구 수(여자)', '40대 인구 수(전체)', '40대 인구 수(남자)', '40대 인구 수(여자)', '50대 인구 수(전체)', '50대 인구 수(남자)', '50대 인구 수(여자)','60대 인구 수(전체)', '60대 인구 수(남자)', '60대 인구 수(여자)','70대 인구 수(전체)', '70대 인구 수(남자)', '70대 인구 수(여자)','80대 인구 수(전체)', '80대 인구 수(남자)', '80대 인구 수(여자)','90대 인구 수(전체)', '90대 인구 수(남자)', '90대 인구 수(여자)', '100세이상 인구 수(전체)', '100세이상 인구 수(남자)', '100세이상 인구 수(여자)']
-  };
-
-  useEffect(() => {
-    if(analysisPopDetailArr[analysisPop]) {
-      setAnalysisPopDetailList(analysisPopDetailArr[analysisPop]);
-    }
-  }, [analysisPop]);
 
   return (
     <div>
       <div className="information">
         <div className="title info-icon">서비스 취약지역</div>
-        <div className="explanation">분석시설(학교, 어린이집, 문화시설, 소방서, 병원)으로 부터 접근성이 취약한 지역을 조회하고 특정지점으로 부터 대상지까지 네트워크 분석을 수행하는 서비스 입니다.</div>
+        <div className="explanation">
+          분석시설(학교, 어린이집, 문화시설, 소방서, 병원)으로 부터 접근성이 취약한 지역을 조회하고 특정지점으로 부터 대상지까지 네트워크 분석을 수행하는 서비스 입니다.
+        </div>
       </div>
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">영역 설정</div>
@@ -70,7 +55,7 @@ export const LifeVulnArea = () => {
           <label className="custom-radio">
             <input type="radio" value="user" name="option" checked={areaType === 'user'} onChange={handleAreaTypeChange}/>
             <span className="radio-mark"></span> 사용자영역
-          </label>                                                   
+          </label>                                      
         </div>
         {areaType === 'admin' && (  
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
@@ -102,7 +87,7 @@ export const LifeVulnArea = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list">
             <label>분석시설</label>
-            <CustomSelect options={ALALYSIS_FAC_LIST} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
+            <CustomSelect options={Object.entries(ANALYSIS_FAC)} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
           </div>
         </div>
       </div>
@@ -110,28 +95,28 @@ export const LifeVulnArea = () => {
         <div className="analysis-title">인구정보 설정</div>
         <div className="analysis-content search-condition">
           <label>
-            <input type="checkbox" onChange={handlePopIncludeChange} style={{marginRight: '10px'}}/>
+            <input type="checkbox" onChange={() => setPopInclude(!popInclude)} style={{marginRight: '10px'}}/>
             <span>인구 포함</span>
           </label>
         </div>
         {popInclude && (
           <div className="clear-both search-condition mar-top-10">
-          <div className="condition-list mar-left-13">
-            <label>분류</label>
-            <CustomSelect options={ALAYSIS_POP_LIST} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={(e) => setAnalysisPop(e)} />
+            <div className="condition-list mar-left-13">
+              <label>분류</label>
+              <CustomSelect options={Object.entries(ANALYSIS_POP)} selectedOptionState={[analysisPop, setAnalysisPopClassification]} onSelect={setAnalysisPopClassification} />
+            </div>
+            <div className="condition-list mar-left-13">
+              <label>세부분류</label>
+              <CustomSelect options={Object.entries(ANALYSIS_POP_DETAIL)} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={setAnalysisPop} />
+            </div>
           </div>
-          <div className="condition-list mar-left-13">
-            <label>세부분류</label>
-            <CustomSelect options={analysisPopDetailList} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={setAnalysisPop} />
-          </div>
-        </div>
         )}
       </div>
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">부가정보 설정</div>
         <div className="analysis-content search-condition" >
           <label style={{whiteSpace: 'nowrap'}}>
-            <input type="checkbox" onChange={handleGwangjuIncludeChange} style={{marginRight: '10px'}}/>
+            <input type="checkbox" onChange={() => setGwangju(!gwangju)} style={{marginRight: '10px'}}/>
             <span>광주광역시 포함</span>
           </label>
         </div>

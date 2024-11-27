@@ -4,6 +4,7 @@ import { useRecoilState } from "recoil";
 
 import CustomSelect from "@src/components/ui/CustomSelect";
 import { salesAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { BUSINESS, MONTH, TEMP_EMD, TEMP_SGG, YEAR } from "@src/utils/analysis-constant";
 
 /**
  * 매출현황 컴포넌트
@@ -28,15 +29,6 @@ export const Sales = () => {
   // 이벤트 핸들러
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
 
-  // 임시 데이터 목록
-  const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-  const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
-  const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-  const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
-
-  // 국세청 표준산업분류 연계 업종 대분류 - 18종, 15종 확인후, 수정
-  const BUSINESS_LIST = ['전체', '농업, 임업 및 어업', '광업', '제조업', '전기, 가스, 증기 및 공기 조절 공급업', '부동산업', '건설업', '사업시설 관리, 사업 지원 및 임대 서비스업', '수도, 하수 및 폐기물 처리, 원료 재생업', '도매 및 소매업', '예술, 스포츠 및 여가관련 서비스업', '교육서비스업', '정보통신업', '금융 및 보험업', '운수 및 창고업', '공공 행정, 국방 및 사회보장 행정', '숙박 및 음식점업', '전문, 과학 및 기술 서비스업', '협회 및 단체, 수리 및 기타 개인 서비스업'];
-
   return (
     <div>
       <div className="information">
@@ -60,11 +52,11 @@ export const Sales = () => {
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+              <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
+              <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
             </div>                                  
           </div> 
         )}
@@ -87,12 +79,12 @@ export const Sales = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>기간 선택</label>
-            <CustomSelect options={YEAR_LIST} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)} />
-            <CustomSelect options={MONTH_LIST} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)} />
+            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)} />
+            <CustomSelect options={Object.entries(MONTH)} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)} />
           </div>
           <div className="condition-list mar-left-13">
             <label>항목 선택</label>
-            <CustomSelect options={BUSINESS_LIST} selectedOptionState={[business, setBusiness]} onSelect={(e) => setBusiness(e)} />
+            <CustomSelect options={Object.entries(BUSINESS)} selectedOptionState={[business, setBusiness]} onSelect={(e) => setBusiness(e)} />
           </div>
         </div>
       </div> 

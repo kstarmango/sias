@@ -3,6 +3,8 @@ import { useState } from "react";
 import CustomSelect from "@src/components/ui/CustomSelect";
 import { useRecoilState } from "recoil";
 import { commPopAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { MONTH, TEMP_EMD, TEMP_SGG } from "@src/utils/analysis-constant";
+import { YEAR } from "@src/utils/analysis-constant";
 
 /**
  * 상권인구 분석 컴포넌트
@@ -33,12 +35,6 @@ export const CommPop = () => {
     setTimeType(e.target.value);
   };  
 
-  // 임시 데이터 목록
-  const MONTH_LIST = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'];
-  const YEAR_LIST = ['2024년', '2023년', '2022년', '2021년', '2020년', '2019년', '2018년', '2017년', '2016년', '2015년'];
-  const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-  const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
-
   return (
     <div>
       <div className="information">
@@ -63,11 +59,11 @@ export const CommPop = () => {
           <div className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)}/>
+              <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)}/>
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)}/>
+              <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)}/>
             </div>                                  
           </div> 
         )}
@@ -114,8 +110,8 @@ export const CommPop = () => {
           {timeType === "month" && (
             <div className="condition-list mar-left-13">
               <label>기간 선택</label>
-              <CustomSelect options={YEAR_LIST} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
-              <CustomSelect options={MONTH_LIST} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+              <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+              <CustomSelect options={Object.entries(MONTH)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
             </div>
           )}
         </div>
