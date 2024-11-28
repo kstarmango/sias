@@ -9,10 +9,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequiredArgsConstructor
 public class UserController {
-    private final UserService userService;
-
-    @GetMapping
-    public UserDto test() {
-        return userService.test();
-    }
+//    private final UserService userService;
+//
+//    @GetMapping
+//    public UserDto test() {
+//        return userService.test();
+//    }
 }

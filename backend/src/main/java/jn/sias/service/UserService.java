@@ -7,7 +7,7 @@ import jn.sias.service.mapper.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
-@Service
+//@Service
 @RequiredArgsConstructor
 public class UserService {
     private final UserRepository userRepository;

@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jn.sias.repository.LanduseAnalysisRepository">
+
+    <resultMap type="landuseAnalysisResultDto" id="landuseAnalysisResultDto">
+        <result column="pnu" property="pnu"/>
+        <result column="geom" property="geomText"/>
+        <result column="code" property="code"/>
+        <result column="code_nm" property="code_nm"/>
+        <result column="area" property="area"/>
+    </resultMap>
+
+    <!-- umd code를 이용한 토지지목 분석 -->
+    <select id="findJimkByAdm" resultType="landuseAnalysisResultDto">
+        SELECT
+            jk.pnu,
+            ST_AsText(jk.geom) AS geomText,
+            jk.jimk as code,
+            jk.jimk_nm as code_nm,
+            jk.area
+        FROM
+            public.vw_lrgtn101_jimk jk
+        WHERE
+            ST_Intersects(
+                ST_SetSRID(jk.geom, 5186),
+                (
+                    SELECT
+                        ST_Transform(geom, 5186) AS transformed_geom
+                    FROM
+                        public.adm
+                    WHERE
+                        adm.sp_b_code = #{umdCode}  <!-- 매개변수 바인딩 -->
+                    LIMIT 1
+                )
+            )
+    </select>
+
+
+    <!-- umd code를 이용한 소유자 타입 분석 -->
+    <select id="findOwnByAdm" resultType="landuseAnalysisResultDto">
+        SELECT
+            jk.pnu,
+            ST_AsText(jk.geom) AS geomText,
+            jk.own_gbn as code,
+            jk.own_code_nm as code_nm,
+            jk.area
+        FROM
+            public.vw_lrgtn101_own jk
+        WHERE
+            ST_Intersects(
+                ST_SetSRID(jk.geom, 5186),
+                (
+                    SELECT
+                        ST_Transform(geom, 5186) AS transformed_geom
+                    FROM
+                        public.adm
+                    WHERE
+                        adm.sp_b_code = #{umdCode}  <!-- 매개변수 바인딩 -->
+                    LIMIT 1
+                )
+            )
+    </select>
+
+    <!-- umd code를 이용한 소유자 타입 분석 -->
+    <select id="findJimkByUserDraw" resultType="landuseAnalysisResultDto">
+        SELECT
+            jk.pnu,
+            ST_AsText(jk.geom) AS geomText,
+            jk.jimk as code,
+            jk.jimk_nm as code_nm,
+            jk.area
+        FROM
+            public.vw_lrgtn101_jimk jk
+        WHERE
+            ST_Intersects(
+                ST_SetSRID(jk.geom, 5186),
+                ST_Transform(
+                ST_GeomFromText('${geomText}', 3857),
+                5186)
+            )
+    </select>
+
+
+    <!-- umd code를 이용한 소유자 타입 분석 -->
+    <select id="findOwnByUserDraw" resultType="landuseAnalysisResultDto">
+        SELECT
+        jk.pnu,
+        ST_AsText(jk.geom) AS geomText,
+        jk.own_gbn as code,
+        jk.own_code_nm as code_nm,
+        jk.area
+        FROM
+        public.vw_lrgtn101_own jk
+        WHERE
+        ST_Intersects(
+        ST_SetSRID(jk.geom, 5186),
+        ST_Transform(
+        ST_GeomFromText('${geomText}', 3857),
+        5186)
+        )
+    </select>
+
+</mapper>

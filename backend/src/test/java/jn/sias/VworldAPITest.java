@@ -1,10 +1,6 @@
 package jn.sias;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.JsonNode;
-import com.fasterxml.jackson.databind.ObjectMapper;
 import jn.sias.dto.vworld.*;
-import jn.sias.dto.vworld.Record;
 import jn.sias.service.APISearchService;
 import lombok.extern.slf4j.Slf4j;
 import org.junit.jupiter.api.Test;
@@ -19,10 +15,11 @@ import java.util.List;
 @Slf4j
 @ExtendWith(SpringExtension.class)
 @SpringBootTest
-public class WebClientTest {
+public class VworldAPITest {
 
     @Autowired
     private APISearchService apiSearchService;
+
 //
 //    protected <T> T convertJsonToObject(String json, String key, Class<T> clazz) throws Exception {
 //
@@ -96,6 +93,8 @@ public class WebClientTest {
 //        log.info("result : {}", Arrays.toString(emdList.stream().toArray()));
 //
 //    }
+
+
 
     @Test
     void testSearchSGGList() throws Exception {

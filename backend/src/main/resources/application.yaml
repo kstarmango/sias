@@ -9,14 +9,9 @@ server:
 spring:
   application:
     name: Spatial Information Analysis System
-#  cache:
-#    type: ehcache
-#    ehcache:
-#      config: ehcache.xml
-
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/postgres
+    url: jdbc:postgresql://dj.gaia3d.com:25432/sias
     username: postgres
     password: postgres
 
