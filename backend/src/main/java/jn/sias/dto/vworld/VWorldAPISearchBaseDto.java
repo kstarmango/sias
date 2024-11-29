@@ -42,6 +42,9 @@ public class VWorldAPISearchBaseDto {
 
     String key;
 
+    @Builder.Default
+    String crs = "EPSG:5186";
+
     protected MultiValueMap<String, String> _toFormData() {
 
         MultiValueMap<String, String> formData = new LinkedMultiValueMap<>();
@@ -57,6 +60,7 @@ public class VWorldAPISearchBaseDto {
         formData.add("bbox", bbox);
         formData.add("key", key);
         formData.add("page", page);
+        formData.add("crs", crs);
 
         return formData;
     }
