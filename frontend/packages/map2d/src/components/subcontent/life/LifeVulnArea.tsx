@@ -2,7 +2,7 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { LifeVulnAnalysisCondition } from "@src/types/analysis-condition";
 import { ANALYSIS_FAC, ANALYSIS_POP, ANALYSIS_POP_DETAIL } from "@src/utils/analysis-constant";

@@ -2,7 +2,7 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { lifeDistanceFacConditionState } from "@src/stores/AnalysisCondition";
 import { LifeDistanceFacCondition } from "@src/types/analysis-condition";
 import { ALALYSIS_ARRIVE_FAC, TEMP_SGG } from "@src/utils/analysis-constant";

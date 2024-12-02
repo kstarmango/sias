@@ -1,7 +1,7 @@
 import "ol/ol.css";
 import { useState } from "react";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { YEAR } from "@src/utils/analysis-constant";
 import { useRecoilState } from "recoil";
 import { locationAnalysisConditionState } from "@src/stores/AnalysisCondition";

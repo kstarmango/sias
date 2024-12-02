@@ -2,7 +2,7 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { TEMP_FESTIVAL, YEAR } from "@src/utils/analysis-constant";
 import { festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 

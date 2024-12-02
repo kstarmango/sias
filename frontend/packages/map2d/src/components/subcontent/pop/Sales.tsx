@@ -2,7 +2,7 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { salesAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { BUSINESS, MONTH, TEMP_EMD, TEMP_SGG, YEAR } from "@src/utils/analysis-constant";
 

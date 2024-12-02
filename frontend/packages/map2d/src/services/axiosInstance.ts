@@ -1,25 +1,30 @@
 import Axios, { AxiosError, AxiosRequestConfig } from 'axios';
 
+// const AXIOS_INSTANCE = Axios.create({
+//   baseURL: import.meta.env.BASE_URL,
+//   withCredentials: true,
+// });
+
 const AXIOS_INSTANCE = Axios.create({
-  baseURL: import.meta.env.BASE_URL,
-  withCredentials: true,
+    baseURL: '/proxy',
+    withCredentials: true,
 });
 
-AXIOS_INSTANCE.interceptors.request.use(
-  config => {
-    // queryString 에서 access_token 을 가져와서 헤더에 추가
-    const params = new URLSearchParams(window.location.search);
-    const accessToken = params.get('access_token');
-    if (accessToken) {
-      config.headers.Authorization = `Bearer ${accessToken}`;
-    }
+// AXIOS_INSTANCE.interceptors.request.use(
+//   config => {
+//     // queryString 에서 access_token 을 가져와서 헤더에 추가
+//     const params = new URLSearchParams(window.location.search);
+//     const accessToken = params.get('access_token');
+//     if (accessToken) {
+//       config.headers.Authorization = `Bearer ${accessToken}`;
+//     }
 
-    return config;
-  },
-  error => {
-    return Promise.reject(error);
-  },
-);
+//     return config;
+//   },
+//   error => {
+//     return Promise.reject(error);
+//   },
+// );
 
 AXIOS_INSTANCE.interceptors.response.use(
   res => {

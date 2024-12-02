@@ -20,7 +20,7 @@ export const Nav = ({ onNavClick, selectedNav }: NavProps) => {
       {Object.keys(tabJSON).map((key) => (
         <button type="button" key={key} onClick={() => onNavClick(key)} className={getButtonSelected(key)}>
           <span className="icon real-estate selected"></span>
-          <span className="title" style={{whiteSpace: 'pre-line'}} >
+          <span className="title" style={{whiteSpace: 'pre-line'}}>
             {tabJSON[key].label.title}
           </span>
         </button>

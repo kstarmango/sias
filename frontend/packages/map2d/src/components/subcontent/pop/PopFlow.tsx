@@ -2,7 +2,7 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "../../ui/CustomSelect";
+import CustomSelect from "../../CustomSelect";
 import { popFlowAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { MONTH, TEMP_EMD, TEMP_SGG, YEAR } from "@src/utils/analysis-constant";
 

@@ -8,7 +8,7 @@ interface CustomSelectProps {
 }
 
 /**
- * 커스텀 셀렉트 컴포넌트
+ * 커스텀 셀렉트
  * 
  * @param options 옵션 목록
  * @param selectedOptionState 선택된 옵션과 드롭다운 상태 관리

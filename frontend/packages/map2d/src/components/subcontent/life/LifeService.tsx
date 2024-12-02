@@ -1,7 +1,7 @@
 import "ol/ol.css";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { LifeAnalysisCondition } from "@src/types/analysis-condition";
 import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { LIFE_SERVICE_FACILITY, LIFE_SERVICE_VISUAL, TEMP_SGG } from "@src/utils/analysis-constant";

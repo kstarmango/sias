@@ -1,6 +1,6 @@
 import "ol/ol.css";
 import { useState } from "react";
-import CustomSelect from "@src/components/ui/CustomSelect";
+import CustomSelect from "@src/components/CustomSelect";
 import { useRecoilState } from "recoil";
 import { commPopAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { MONTH, TEMP_EMD, TEMP_SGG } from "@src/utils/analysis-constant";
@@ -12,6 +12,7 @@ import { YEAR } from "@src/utils/analysis-constant";
  * @param analysisConditions 분석조건
  */
 export const CommPop = () => {
+  
   // 분석조건 상태
   const [commPopAnalysisCondition, setCommPopAnalysisCondition] = useRecoilState(commPopAnalysisConditionState);
   const { buffer, sgg, emd, startDate, endDate, weight } = commPopAnalysisCondition;
