@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="jn.sias.repository.CommFestAnalysisRepository">
+
+    <resultMap type="commFestAnalysisResultDto" id="commFestAnalysisResultDto">
+        <result column="gid" property="gid"/>
+        <result column="title" property="title"/>
+        <result column="startDate" property="startDate"/>
+        <result column="endDate" property="endDate"/>
+        <result column="yyyy" property="yyyy"/>
+        <result column="host" property="host"/>
+        <result column="content" property="content"/>
+        <result column="x_coord" property="x_coord"/>
+        <result column="y_coord" property="y_coord"/>
+    </resultMap>
+
+    <select id="getFestYearList" resultType="hashMap">
+        SELECT
+            yyyy
+        FROM
+            flow.jn_poi_festival
+        GROUP BY yyyy
+        ORDER BY yyyy
+    </select>
+
+    <select id="getFestList" resultType="commFestAnalysisResultDto">
+        SELECT
+            gid, title, startdate, enddate, yyyy, host, content, st_x(geom) as x_coord, st_y(geom) as y_coord
+        FROM
+            flow.jn_poi_festival
+        WHERE
+            yyyy = #{yyyy}
+        ORDER BY gid
+    </select>
+
+</mapper>
