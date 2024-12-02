@@ -1,0 +1,15 @@
+<config xmlns:xsi='http://www.w3.org/2001/XMLSchema-instance'
+        xmlns='http://www.ehcache.org/v3'
+        xsi:schemaLocation="http://www.ehcache.org/v3 http://www.ehcache.org/schema/ehcache-core.xsd">
+    <cache alias="searchCache">
+        <key-type>java.lang.String</key-type> <!-- 캐시 키 타입 -->
+        <value-type>java.util.List</value-type>
+        <expiry>
+            <ttl unit="hours">10</ttl> <!-- 만료 시간을 10시간으로 설정 -->
+        </expiry>
+        <resources> <!-- resources는 캐시 데이터의 저장 공간과 용량을 지정한다. 만약 힙 메모리만 사용한다면 <heap> 요소만으로 대체할 수 있다.  -->
+            <heap unit="entries">1000</heap> <!-- heap은 JVM 힙 메모리에 캐시를 저장하도록 세팅하는 요소이다. -->
+            <offheap unit="MB">10</offheap> <!-- offheap은 JVM 힙 메모리 외부의 메모리에 캐시를 저장하도록 세팅하는 요소이다. -->
+        </resources>
+    </cache>
+</config>

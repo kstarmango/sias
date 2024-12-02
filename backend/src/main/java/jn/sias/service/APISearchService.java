@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jn.sias.dto.vworld.*;
 
 import jn.sias.dto.vworld.Record;
+import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.checkerframework.checker.units.qual.C;
@@ -29,6 +30,10 @@ public class APISearchService {
 
     @Value("${search-api.vworld.key}")
     String key;
+
+//    @Value("${layer-config}")
+//    @Getter
+//    private String jsonFile;
 
     private final String sido = "전라남도";
     private final String sggCategory = "L2";

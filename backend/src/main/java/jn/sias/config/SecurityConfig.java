@@ -74,6 +74,7 @@ public class SecurityConfig {
                         .antMatchers("/api/admin/**").hasRole("ADMIN")
                         .antMatchers("/api/user/**").hasRole("USER")
                         .antMatchers("/api/guest/**").hasRole("GUEST")
+                        .antMatchers("/api/test/**").permitAll() // 테스트용 API 접근 허용
                         .anyRequest().authenticated()
                         .and()
                         .formLogin()
