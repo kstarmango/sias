@@ -1,8 +1,7 @@
 import "ol/ol.css";
 import { useState } from "react";
-import { useRecoilState } from "recoil";
+import { RecoilLoadable, useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/CustomSelect";
 import { salesAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { BUSINESS, MONTH, TEMP_EMD, TEMP_SGG, YEAR } from "@src/utils/analysis-constant";
 
@@ -49,14 +48,22 @@ export const Sales = () => {
           </label>                                                   
         </div>
         {areaType === 'admin' && (  
-          <div id="admin-area-select" className="clear-both search-condition mar-top-10">
+          <div className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+              <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+                {Object.entries(TEMP_SGG).map(([key, value]) => (
+                  <option className="custom-select width-100" key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
+              <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
+                {Object.entries(TEMP_EMD).map(([key, value]) => (
+                  <option className="custom-select width-100" key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>                                  
           </div> 
         )}
@@ -79,12 +86,24 @@ export const Sales = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>기간 선택</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)} />
-            <CustomSelect options={Object.entries(MONTH)} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)} />
+            <select className="custom-select" value={year} onChange={e => setYear(Number(e.target.value))}>
+              {Object.entries(YEAR).map(([key, value]) => (
+                <option key={key} value={key}>{String(value)}</option>
+              ))}
+            </select>
+            <select className="custom-select" value={month} onChange={e => setMonth(Number(e.target.value))}>
+              {Object.entries(MONTH).map(([key, value]) => (
+                <option className="custom-select width-100" key={key} value={key}>{String(value)}</option>
+              ))}
+            </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>항목 선택</label>
-            <CustomSelect options={Object.entries(BUSINESS)} selectedOptionState={[business, setBusiness]} onSelect={(e) => setBusiness(e)} />
+            <select className="custom-select" value={business} onChange={e => setBusiness(e.target.value as typeof salesAnalysisCondition['business'])}>
+              {Object.entries(BUSINESS).map(([key, value]) => (
+                <option className="list" key={key} value={key}>{String(value)}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div> 

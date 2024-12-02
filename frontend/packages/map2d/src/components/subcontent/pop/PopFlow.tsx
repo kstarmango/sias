@@ -2,7 +2,6 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "../../CustomSelect";
 import { popFlowAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { MONTH, TEMP_EMD, TEMP_SGG, YEAR } from "@src/utils/analysis-constant";
 
@@ -37,12 +36,12 @@ export const PopFlow = () => {
       <div className="analysis-condition-wrapper mar-top-30">
         <div className="analysis-title">영역 설정</div>
         <div className="analysis-content">
-          <label className="custom-radio">
-            <input type="radio" value="admin" name="option" checked={areaType === 'admin'} onChange={handleAreaTypeChange}/>
+          <label className="custom-radio">  
+            <input type="radio" name="option" value="admin" checked={areaType === 'admin'} onChange={handleAreaTypeChange}/>
             <span className="radio-mark"></span> 행정구역
           </label>
           <label className="custom-radio">
-            <input type="radio" value="user" name="option" checked={areaType === 'user'} onChange={handleAreaTypeChange}/>
+            <input type="radio" name="option" value="user" checked={areaType === 'user'} onChange={handleAreaTypeChange}/>
             <span className="radio-mark"></span> 사용자영역
           </label>                                                   
         </div>
@@ -50,11 +49,19 @@ export const PopFlow = () => {
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+              <select className="custom-select" value={sgg || ''} onChange={e => setSgg(e.target.value)}>
+                {Object.entries(TEMP_SGG).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
+              <select className="custom-select" value={emd || ''} onChange={e => setEmd(e.target.value)}>
+                {Object.entries(TEMP_EMD).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>                                  
           </div> 
         )}
@@ -77,11 +84,19 @@ export const PopFlow = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>기간 선택</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[year, setYear]} onSelect={(e) => setYear(e)} />
-            <CustomSelect options={Object.entries(MONTH)} selectedOptionState={[month, setMonth]} onSelect={(e) => setMonth(e)} />
+            <select className="custom-select" value={year || ''} onChange={e => setYear(Number(e.target.value))}>
+              {YEAR.map(value => (
+                <option key={value} value={value}>{value + '년'}</option>
+              ))}
+            </select>
+            <select className="custom-select" value={month || ''} onChange={e => setMonth(Number(e.target.value))}>
+              {MONTH.map((value) => (
+                <option key={value} value={value}>{value + '월'}</option>
+              ))}
+            </select>
           </div>
         </div>
-      </div> 
+      </div>  
 
       <div className="button-large-wrapper">
         <button type="button" className="large-button apply">

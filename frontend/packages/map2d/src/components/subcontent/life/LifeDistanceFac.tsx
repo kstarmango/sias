@@ -2,7 +2,6 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/CustomSelect";
 import { lifeDistanceFacConditionState } from "@src/stores/AnalysisCondition";
 import { LifeDistanceFacCondition } from "@src/types/analysis-condition";
 import { ALALYSIS_ARRIVE_FAC, TEMP_SGG } from "@src/utils/analysis-constant";
@@ -50,7 +49,11 @@ export const LifeDistanceFac = () => {
                 <div id="admin-area-select" className="clear-both search-condition mar-top-10">
                     <div className="condition-list mar-left-13">                            
                         <label>시군구</label>
-                        <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+                        <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+                          {Object.entries(TEMP_SGG).map(([key, value]) => (
+                            <option key={key} value={key}>{value}</option>
+                          ))}
+                        </select>
                     </div>                               
                 </div> 
                 )}
@@ -76,7 +79,11 @@ export const LifeDistanceFac = () => {
                     </div>
                     <div className="condition-list mar-left-13">
                         <label>도착시설</label>
-                        <CustomSelect options={Object.entries(ALALYSIS_ARRIVE_FAC)} selectedOptionState={[endFacility, setEndFacility]} onSelect={setEndFacility} />
+                        <select className="custom-select" value={endFacility} onChange={e => setEndFacility(e.target.value as LifeDistanceFacCondition['endFacility'])}>
+                          {Object.entries(ALALYSIS_ARRIVE_FAC).map(([key, value]) => (
+                            <option key={key} value={key}>{value}</option>
+                          ))}
+                        </select>
                     </div>
                 </div>
             </div>

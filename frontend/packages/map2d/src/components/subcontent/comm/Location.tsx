@@ -1,8 +1,6 @@
 import "ol/ol.css";
 import { useState } from "react";
 
-import CustomSelect from "@src/components/CustomSelect";
-import { YEAR } from "@src/utils/analysis-constant";
 import { useRecoilState } from "recoil";
 import { locationAnalysisConditionState } from "@src/stores/AnalysisCondition";
 
@@ -61,11 +59,11 @@ export const Location = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+            <input type="date" value={startDate || ''} onChange={e => setStartDate(e.target.value)}/>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+            <input type="date" value={endDate || ''} onChange={e => setEndDate(e.target.value)}/>
           </div>
         </div>
       </div>

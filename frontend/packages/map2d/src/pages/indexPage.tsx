@@ -19,22 +19,18 @@ const IndexPage = () => {
   };
 
   return (
-    <>
-      <div id="container">
-        <MapView2DProvider>
-          <div className="logo-wrapper">                
-            <h1 className="logo">전라남도 공간정보분석시스템</h1>
-          </div>
-          <Nav onNavClick={handleNavSelect} selectedNav={selectedNavItem}/>
-          <div id="map" style={{position: 'absolute', width: "100%", height: "100%"}} />
-          <main>
-            <Search />
-            <SubContent selectedNav={selectedNavItem} />
-            <ToolBox />
-          </main>
-        </MapView2DProvider>
-      </div>
-    </>
+    <MapView2DProvider>
+      <div id="map" style={{position: 'absolute', width: "100%", height: "100%"}} />
+      <main style={{position: 'initial'}}>
+        <div className="logo-wrapper">                
+          <h1 className="logo">전라남도 공간정보분석시스템</h1>
+        </div>
+        <Nav onNavClick={handleNavSelect} selectedNav={selectedNavItem}/>
+        <Search />
+        <SubContent selectedNav={selectedNavItem} />
+        <ToolBox />
+      </main>
+    </MapView2DProvider>
   );
 };
 

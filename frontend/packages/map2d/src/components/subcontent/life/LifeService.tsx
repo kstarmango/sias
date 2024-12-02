@@ -1,7 +1,6 @@
 import "ol/ol.css";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/CustomSelect";
 import { LifeAnalysisCondition } from "@src/types/analysis-condition";
 import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { LIFE_SERVICE_FACILITY, LIFE_SERVICE_VISUAL, TEMP_SGG } from "@src/utils/analysis-constant";
@@ -34,11 +33,19 @@ export const LifeService = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label>시군구</label>
-            <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)} />
+            <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+              {Object.entries(TEMP_SGG).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>읍면동</label>
-            <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)} />
+            <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
+              {Object.entries(TEMP_EMD).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -47,11 +54,19 @@ export const LifeService = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>생활서비스 시설</label>
-            <CustomSelect options={Object.entries(LIFE_SERVICE_FACILITY)} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
+            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value as LifeAnalysisCondition['lifeServiceFacility'])}>
+              {Object.entries(LIFE_SERVICE_FACILITY).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>시각화 방법</label>
-            <CustomSelect options={Object.entries(LIFE_SERVICE_VISUAL)} selectedOptionState={[visualType, setVisualType]} onSelect={setVisualType} />
+            <select className="custom-select" value={visualType} onChange={e => setVisualType(e.target.value as LifeAnalysisCondition['visualType'])}>
+              {Object.entries(LIFE_SERVICE_VISUAL).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

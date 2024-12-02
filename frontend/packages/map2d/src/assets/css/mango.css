@@ -20,13 +20,6 @@ nav {
   z-index: 1000;
 }
 
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
-}
-
 .logo:hover {
   filter: drop-shadow(0 0 2em #646cffaa);
 }
@@ -57,3 +50,13 @@ nav {
 .read-the-docs {
   color: #888;
 }
+
+.tabmenu {
+  overflow-x: scroll;
+}
+
+.tabmenu button {
+  white-space: nowrap;
+  padding: 0 10px;
+}
+

@@ -1,6 +1,5 @@
 import "ol/ol.css";
 import { useState } from "react";
-import CustomSelect from "@src/components/CustomSelect";
 import { useRecoilState } from "recoil";
 import { commPopAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { MONTH, TEMP_EMD, TEMP_SGG } from "@src/utils/analysis-constant";
@@ -60,11 +59,19 @@ export const CommPop = () => {
           <div className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={Object.entries(TEMP_SGG)} selectedOptionState={[sgg, setSgg]} onSelect={(e) => setSgg(e)}/>
+              <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+                {Object.entries(TEMP_SGG).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={Object.entries(TEMP_EMD)} selectedOptionState={[emd, setEmd]} onSelect={(e) => setEmd(e)}/>
+              <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
+                {Object.entries(TEMP_EMD).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>                                  
           </div> 
         )}
@@ -111,8 +118,16 @@ export const CommPop = () => {
           {timeType === "month" && (
             <div className="condition-list mar-left-13">
               <label>기간 선택</label>
-              <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
-              <CustomSelect options={Object.entries(MONTH)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+              <select className="custom-select" value={startDate || ''} onChange={e => setStartDate(e.target.value)}>
+                {Object.entries(YEAR).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
+              <select className="custom-select" value={endDate || ''} onChange={e => setEndDate(e.target.value)}>
+                {Object.entries(MONTH).map(([key, value]) => (
+                  <option key={key} value={key}>{value}</option>
+                ))}
+              </select>
             </div>
           )}
         </div>

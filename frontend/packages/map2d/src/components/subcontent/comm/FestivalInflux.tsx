@@ -2,7 +2,6 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/CustomSelect";
 import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { TEMP_FESTIVAL, YEAR } from "@src/utils/analysis-constant";
 
@@ -58,7 +57,11 @@ export const FestivalInflux = () => {
           <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>축제</label>
-            <CustomSelect options={Object.entries(TEMP_FESTIVAL)} selectedOptionState={[festival, setFestival]} onSelect={(e) => setFestival(e)} />
+            <select className="custom-select" value={festival} onChange={e => setFestival(e.target.value)}>
+              {Object.entries(TEMP_FESTIVAL).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>버퍼</label>
@@ -103,11 +106,19 @@ export const FestivalInflux = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[startDate, setStartDate]} onSelect={(e) => setStartDate(e)}/>
+            <select className="custom-select" value={startDate || ''} onChange={e => setStartDate(e.target.value)}>
+              {Object.entries(YEAR).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <CustomSelect options={Object.entries(YEAR)} selectedOptionState={[endDate, setEndDate]} onSelect={(e) => setEndDate(e)}/>
+            <select className="custom-select" value={endDate || ''} onChange={e => setEndDate(e.target.value)}>
+              {Object.entries(YEAR).map(([key, value]) => (
+                <option key={key} value={key}>{value}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>

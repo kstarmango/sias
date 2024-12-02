@@ -8,8 +8,8 @@ export const popFlowAnalysisConditionState = atom<PopFlowAnalysisCondition>({
     inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    year: null,
-    month: null,
+    year: '',
+    month: ''
   }
 });
 
@@ -18,8 +18,8 @@ export const inflowPopAnalysisConditionState = atom<InflowPopAnalysisCondition>(
   key: 'inflowPopAnalysisConditionState',
   default: {
     inputWkt: '',
-    year: null,
-    month: null,
+    year: '',
+    month: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
     isSggInclude: false,
@@ -34,8 +34,8 @@ export const salesAnalysisConditionState = atom<SalesAnalysisCondition>({
     inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    year: null,
-    month: null,
+    year: '',
+    month: '',
     business: 'ENTIRE'
   }
 });
@@ -96,8 +96,8 @@ export const commPopAnalysisConditionState = atom<CommPopAnalysisCondition>({
     buffer: 0,
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
     weight: false
   }
 });
@@ -107,8 +107,8 @@ export const locationAnalysisConditionState = atom<LocationAnalysisCondition>({
   key: 'locationAnalysisConditionState',
   default: {
     inputWkt: '',
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
     weight: false
   }
 });
@@ -119,8 +119,8 @@ export const areaSalesAnalysisConditionState = atom<AreaSalesAnalysisCondition>(
   default: {
     inputWkt: '',
     buffer: 0,
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
     business: 'ENTIRE'
   }
 });
@@ -132,8 +132,8 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
     festival: 'ENTIRE',
     inputWkt: '',
     buffer: 0,
-    startDate: null,
-    endDate: null,
+    startDate: '',
+    endDate: '',
     isSggInclude: false,
     weight: false
   }
@@ -146,8 +146,8 @@ export const festivalRevenueAnalysisConditionState = atom<FestivalRevenueAnalysi
     inputWkt: '',
     buffer: 0,
     festival: 'ENTIRE',
-    startDate: null,
-    endDate: null
+    startDate: '',
+    endDate: ''
   }
 });
 

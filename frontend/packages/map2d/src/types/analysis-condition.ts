@@ -11,14 +11,14 @@ interface UserAreaCondition {
 
 /** 기간 선택 조건 */
 interface TimeCondition {
-  year: number | null;
-  month: number | null;
+  year: number | '';
+  month: number | '';
 }
 
 /** 시작 종료 기간 조건 */
 interface StartEndTimeCondition {
-  startDate: string | null;
-  endDate: string | null;
+  startDate: string | '';
+  endDate: string | '';
 }
 
 /** 분석 시작점, 종료 시설 조건 */

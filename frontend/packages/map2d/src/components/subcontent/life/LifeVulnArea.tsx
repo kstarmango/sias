@@ -2,7 +2,6 @@ import "ol/ol.css";
 import { useState } from "react";
 import { useRecoilState } from "recoil";
 
-import CustomSelect from "@src/components/CustomSelect";
 import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { LifeVulnAnalysisCondition } from "@src/types/analysis-condition";
 import { ANALYSIS_FAC, ANALYSIS_POP, ANALYSIS_POP_DETAIL } from "@src/utils/analysis-constant";
@@ -61,11 +60,19 @@ export const LifeVulnArea = () => {
           <div id="admin-area-select" className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">                            
               <label>시군구</label>
-              <CustomSelect options={TEMP_SGG_LIST} selectedOptionState={[sgg, setSgg]} onSelect={setSgg} />
+              <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+                {TEMP_SGG_LIST.map((value, index) => (
+                  <option key={index} value={value}>{value}</option>
+                ))}
+              </select>
             </div>    
             <div className="condition-list mar-left-13">                            
               <label>읍면동</label>
-              <CustomSelect options={TEMP_EMD_LIST} selectedOptionState={[emd, setEmd]} onSelect={setEmd} />
+              <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
+                {TEMP_EMD_LIST.map((value, index) => (
+                  <option key={index} value={value}>{value}</option>
+                ))}
+              </select>
             </div>                                  
           </div> 
         )}
@@ -87,7 +94,11 @@ export const LifeVulnArea = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list">
             <label>분석시설</label>
-            <CustomSelect options={Object.entries(ANALYSIS_FAC)} selectedOptionState={[lifeServiceFacility, setLifeServiceFacility]} onSelect={setLifeServiceFacility} />
+            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value as LifeVulnAnalysisCondition['lifeServiceFacility'])}>
+              {Object.entries(ANALYSIS_FAC).map(([key, value]) => (
+                <option key={key} value={key}>{String(value)}</option>
+              ))}
+            </select>
           </div>
         </div>
       </div>
@@ -103,11 +114,19 @@ export const LifeVulnArea = () => {
           <div className="clear-both search-condition mar-top-10">
             <div className="condition-list mar-left-13">
               <label>분류</label>
-              <CustomSelect options={Object.entries(ANALYSIS_POP)} selectedOptionState={[analysisPop, setAnalysisPopClassification]} onSelect={setAnalysisPopClassification} />
+              <select className="custom-select" value={analysisPop} onChange={e => setAnalysisPop(e.target.value)}>
+                {Object.entries(ANALYSIS_POP).map(([key, value]) => (
+                  <option key={key} value={key}>{String(value)}</option>
+                ))}
+              </select>
             </div>
             <div className="condition-list mar-left-13">
               <label>세부분류</label>
-              <CustomSelect options={Object.entries(ANALYSIS_POP_DETAIL)} selectedOptionState={[analysisPop, setAnalysisPop]} onSelect={setAnalysisPop} />
+              <select className="custom-select" value={analysisPop} onChange={e => setAnalysisPop(e.target.value)}>
+                {Object.entries(ANALYSIS_POP_DETAIL).map(([key, value]) => (
+                  <option key={key} value={key}>{String(value)}</option>
+                ))}
+              </select>
             </div>
           </div>
         )}
