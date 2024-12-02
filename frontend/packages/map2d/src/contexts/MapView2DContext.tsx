@@ -11,16 +11,15 @@ import Interaction from "ol/interaction/Interaction";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
 import axios from "axios";
-
 import {useAuth} from "@shared/auth";
 import GeoJSON from "ol/format/GeoJSON";
 import Feature from "ol/Feature";
-import { Geometry } from "ol/geom";
+import { Geometry, LineString } from "ol/geom";
 import type { FeatureLike } from 'ol/Feature';
 import 'ol-ext/dist/ol-ext.css';
 import FlowLine from "ol-ext/style/FlowLine.js";
-import {cspline} from "ol/geom/Geometry";
 import Style from "ol/style/Style";
+import { midpoint } from "@turf/turf";
 
 proj4.defs([
 	['EPSG:4326', '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'],
@@ -134,7 +133,6 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
         });
 				
         setMap(initMap);	
-				// test
 
 				try {
 					const fetchFestivalInflowData = async () => {
@@ -175,28 +173,28 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 
 						const widthList = mapValuesToRange(topTenFeatures.map(feature => feature.properties.pop_all));
 						
-						return (feature: Feature<Geometry>) => {
+						return (feature: FeatureLike) => {
 
-							const opt = {
-								tension: 0.7, 
-								pointsPerSeg: 10,
-								normalize: false
-							};
+							// const feature_ = feature.clone() as Feature<Geometry>;
 
-							const csp = feature.getGeometry()?.cspline(opt);
+							// const featureGeometry = feature_.getGeometry()?.transform('EPSG:5186', 'EPSG:4326') as LineString;
+							// const coordinates = featureGeometry?.getCoordinates();
+							// const centerPoint = midpoint(coordinates[0], coordinates[coordinates.length - 1]);
+							// const updatedCoordinates = [...coordinates, centerPoint.geometry.coordinates]
+							// featureGeometry.setCoordinates(updatedCoordinates);
+							// feature_.setGeometry(featureGeometry);
 
-							const cspStyle = new Style({
-								geometry: csp
-							});
-	
-							// const t = new Style({
-							// 	image: new ol.style.Circle({ stroke:new ol.style.Stroke({color:"blue",width:1}), radius:1 }),
-							// 	geometry: ($("#dpt").prop("checked") && $("#cspline").prop("checked")) ? new ol.geom.MultiPoint(csp.getCoordinates()) : null
-							// });
-	
-							// const d = new ol.style.Style({
-							// 	image: new ol.style.Circle({ stroke:new ol.style.Stroke({color:"red",width:4}), radius:2 }),
-							// 	geometry: new ol.geom.MultiPoint(f.getGeometry().getCoordinates())
+							// const opt = {
+							// 	tension: 0.7, 
+							// 	pointsPerSeg: 10,
+							// 	normalize: false
+							// };
+
+							// const geometry = feature.getGeometry() as Geometry & { cspline?: (options: any) => any }
+							// const csp = geometry.cspline ? geometry.cspline(opt) : null
+
+							// const cspStyle = new Style({
+							// 	geometry: csp
 							// });
 
 							const colorList = ['#800026cc', '#bd0026cc', '#e31a1ccc', '#fc4e2acc', '#fd8d3ccc', '#feb24ccc', '#fed976cc', '#ffeda0cc', '#ffffcccc', '#fffffcc'];
@@ -209,6 +207,7 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 								arrow: 1,
 						  });
 
+							// return [flowLine, cspStyle];
 							return [flowLine];
 						}
 					}
@@ -221,7 +220,6 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 							.slice(0, 10);
 
 						featureData.features = topTenFeatures;
-						// 데이터 시각화
 
 						const featureReader = new GeoJSON();
 						const features = featureReader.readFeatures(featureData) as Feature<Geometry>[];
@@ -246,50 +244,6 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 				initMap.setTarget(undefined);
 			}
     }, []);
-
-		function getClassBreaks(method: string, features: FeatureLike[], field: string, bin: number) {
-
-      let minValue = Number.MAX_VALUE;
-      let maxValue = Number.MIN_VALUE;
-      let items: string[] = [];
-
-      for (let i = 0, { length } = features; i < length; i += 1) {
-        const value = features[i].get(field);
-        if (isNaN(value)) {
-          continue;
-        }
-
-        items[i] = Number(value).toFixed(7);
-        minValue = Math.min(value, minValue);
-        maxValue = Math.max(value, maxValue);
-      }
-
-      let breaks;
-      if (items.length === 0) {
-        return false;
-      }
-      const stat = new geostats(items);
-      stat.setPrecision(6);
-
-      if (method.indexOf('Eq') === 0) {
-        breaks = stat.getClassEqInterval(bin);
-      } else if (method.indexOf('Je') === 0 || method.indexOf('Na') === 0) {
-        breaks = stat.getClassJenks(bin);
-      } else if (method.indexOf('Qu') === 0) {
-        breaks = stat.getClassQuantile(bin);
-      } else if (method.indexOf('St') === 0) {
-        breaks = stat.getClassStdDeviation(bin);
-      } else if (method.indexOf('De') === 0) {
-        breaks = [0, 1, 2.5, 5, 10, 100];
-      } else { 
-				return null;
-			}
-
-      breaks[0] = minValue - 0.1 < 0 ? 0 : minValue - 0.1;
-      breaks[breaks.length - 1] = maxValue + 0.1;
-
-      return breaks;
-  	}
 
   return (
 		<MapContext.Provider 

@@ -1,4 +1,5 @@
 //import './App.css';
+import "@src/assets/styles/mango.css";
 import {ErrorInfo} from 'react';
 import {ErrorBoundary} from 'react-error-boundary';
 import {ErrorFallback} from "@shared/components";

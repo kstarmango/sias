@@ -5,7 +5,7 @@ import { Nav } from "@src/components/common/Nav";
 import { Search } from "@src/components/common/Search";
 import { SubContent } from "@src/components/common/SubContent";
 import ToolBox from "@src/components/common/ToolBox";
-import "../index.css";
+import "@src/assets/styles/mango.css";
 
 /**
  * 메인 인덱스 페이지
