@@ -56,7 +56,7 @@ nav {
 }
 
 .tabmenu button {
-  white-space: nowrap;
+  /* white-space: nowrap; */
   padding: 0 10px;
 }
 

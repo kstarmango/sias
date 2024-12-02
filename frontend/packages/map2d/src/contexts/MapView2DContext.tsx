@@ -20,6 +20,9 @@ import 'ol-ext/dist/ol-ext.css';
 import FlowLine from "ol-ext/style/FlowLine.js";
 import Style from "ol/style/Style";
 import { midpoint } from "@turf/turf";
+import Fill from "ol/style/Fill";
+import CircleStyle from "ol/style/Circle";
+import Stroke from "ol/style/Stroke";
 
 proj4.defs([
 	['EPSG:4326', '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'],
@@ -118,12 +121,28 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
     const [interactions, setInteractions] = useState<Interaction[]>([]);
 
 		useEffect(() => {
+
+			const analysisInputLayer = new VectorLayer({
+				source: new VectorSource(),
+				style: new Style({
+					image: new CircleStyle({
+						radius: 20,
+						stroke: new Stroke({
+							color: 'red',
+							width: 2
+						})
+					})
+				})
+			});
+			analysisInputLayer.set('title', 'analysisInput');
+
       const initMap = new Map({
 				target: "map",
         layers: [
           new TileLayer({
             source: new OSM(),
           }),
+					analysisInputLayer
         ],
         view: new View({
 					zoom: 8,
@@ -131,9 +150,9 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
           projection: 'EPSG:5186'
         }),
       });
-			
+
       setMap(initMap);	
-			
+
 			return () => {
 				initMap.setTarget(undefined);
 			}
