@@ -319,9 +319,7 @@ export const FestivalInflux = () => {
               type={timeType} 
               value={startDate || ''}
               min={timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={timeType === 'month' 
-                ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
-                : `${new Date().toISOString().split("T")[0]}`}
+              max={endDate ? endDate : timeType === 'month' ? '2024-09' : `2024-09-${new Date(2024, 9, 0).getDate()}`}
               onChange={e => updateAnalysisCondition('startDate', e.target.value)} 
             /> 
           </div>
@@ -329,11 +327,9 @@ export const FestivalInflux = () => {
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
             <input 
               type={timeType} 
-              value={endDate || ''} 
-              min={timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={timeType === 'month' 
-                ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
-                : `${new Date().toISOString().split("T")[0]}`}
+              value={endDate || ''}
+              min={startDate ? startDate : timeType === 'month' ? '2023-01' : '2023-01-01'}
+              max={timeType === 'month' ? '2024-09' : `2024-09-${new Date(2024, 9, 0).getDate()}`}
               onChange={e => updateAnalysisCondition('endDate', e.target.value)} 
             />
           </div>
