@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="jn.sias.repository.LifeAnalysisRepository">
+
+    <resultMap type="LifeCategoryInfoDto" id="LifeCategoryInfoDto">
+        <result column="id" property="id"/>
+        <result column="psy_nm" property="psy_nm"/>
+        <result column="log_nm" property="log_nm"/>
+        <result column="life_category" property="life_category"/>
+    </resultMap>
+
+    <select id="getLifeCatList" resultType="LifeCategoryInfoDto">
+        SELECT gid as id, psy_nm, log_nm, life_category
+            FROM life.jn_life_metadata
+                WHERE life_yn = true
+        ORDER BY gid
+    </select>
+
+    <select id="getWeakCatList" resultType="LifeCategoryInfoDto">
+        SELECT gid as id, psy_nm, log_nm
+        FROM life.jn_life_metadata
+        WHERE weak_yn = true
+        ORDER BY gid
+    </select>
+
+</mapper>

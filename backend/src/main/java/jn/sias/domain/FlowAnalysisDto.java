@@ -5,9 +5,9 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CommFestAnalysisResultDto {
+public class FlowAnalysisDto {
 
-    private int gid;
+    private int id;
     private String title;
     private String startDate;
     private String endDate;

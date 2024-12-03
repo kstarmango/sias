@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<mapper namespace="jn.sias.repository.AdmDistrictRepository">
+
+    <resultMap type="SggDistrictDto" id="SggDistrictDto">
+        <result column="id" property="id"/>
+        <result column="geom" property="geom"/>
+        <result column="sig_cd" property="sig_cd"/>
+        <result column="sig_kor_nm" property="sig_kor_nm"/>
+    </resultMap>
+
+    <resultMap type="EmdDistrictDto" id="EmdDistrictDto">
+        <result column="id" property="id"/>
+        <result column="geom" property="geom"/>
+        <result column="emd_cd" property="emd_cd"/>
+        <result column="emd_cd" property="emd_cd"/>
+    </resultMap>
+
+    <select id="getSggList" resultType="SggDistrictDto">
+        SELECT
+            id, sig_cd, sig_kor_nm
+        FROM
+            public.lp_adm_sgg
+        ORDER BY sig_cd
+    </select>
+
+    <select id="getSggInfo" resultType="SggDistrictDto">
+        SELECT
+            id, ST_AsText(geom) as geom, sig_cd, sig_kor_nm
+        FROM
+            public.lp_adm_sgg
+        WHERE sig_cd = #{sig_cd}
+    </select>
+
+    <select id="getEmdList" resultType="EmdDistrictDto">
+        SELECT
+            id, emd_cd, emd_kor_nm
+        FROM
+            public.lp_adm_emd
+        WHERE
+            emd_cd like #{sig_cd}||'%'
+        ORDER BY emd_cd
+    </select>
+
+    <select id="getEmdInfo" resultType="EmdDistrictDto">
+        SELECT
+            id, ST_AsText(geom) as geom, emd_cd, emd_kor_nm
+        FROM
+            public.lp_adm_emd
+        WHERE
+            emd_cd = #{emd_cd}
+    </select>
+
+</mapper>

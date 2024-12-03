@@ -2,10 +2,10 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 
 
-<mapper namespace="jn.sias.repository.CommFestAnalysisRepository">
+<mapper namespace="jn.sias.repository.FlowAnalysisRepository">
 
-    <resultMap type="commFestAnalysisResultDto" id="commFestAnalysisResultDto">
-        <result column="gid" property="gid"/>
+    <resultMap type="flowAnalysisDto" id="flowAnalysisDto">
+        <result column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="startDate" property="startDate"/>
         <result column="endDate" property="endDate"/>
@@ -26,9 +26,9 @@
         ORDER BY yyyy
     </select>
 
-    <select id="getFestList" resultType="commFestAnalysisResultDto">
+    <select id="getFestList" resultType="flowAnalysisDto">
         SELECT
-            gid, title, startdate, enddate, yyyy, host, content, st_x(geom) as x_coord, st_y(geom) as y_coord, ST_AsText(geom) as geom
+            gid as id, title, startdate, enddate, yyyy, host, content, st_x(geom) as x_coord, st_y(geom) as y_coord, ST_AsText(geom) as geom
         FROM
             flow.jn_poi_festival
         WHERE
