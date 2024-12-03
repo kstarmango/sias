@@ -16,5 +16,6 @@ public class CommFestAnalysisResultDto {
     private String content;
     private double x_coord;
     private double y_coord;
+    private String geom;
 
 }
