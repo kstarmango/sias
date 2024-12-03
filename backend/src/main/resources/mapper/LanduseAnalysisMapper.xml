@@ -11,6 +11,44 @@
         <result column="area" property="area"/>
     </resultMap>
 
+<!--
+    <resultMap id="userResultMap" type="com.example.dto.UserDto">
+        <result column="user_id" property="id" />
+        <result column="user_name" property="name" />
+        <result column="user_email" property="email" />
+
+        <association property="address" javaType="com.example.dto.AddressDto">
+            <result column="address_id" property="id"/>
+            <result column="address_line" property="line"/>
+        </association>
+    </resultMap>
+
+    <select id="findUserWithAddress" resultMap="userResultMap">
+        SELECT u.user_id, u.user_name, u.user_email, a.address_id, a.address_line
+        FROM users u
+        LEFT JOIN addresses a ON u.user_id = a.user_id
+        WHERE u.user_id = #{id}
+    </select>
+    -->
+
+    <resultMap type="YearMonthValue" id="yearMonthValue">
+        <result column="baseYear" property="baseYear"/>
+        <result column="baseMonth" property="baseMonth"/>
+        <result column="jiga" property="jiga"/>
+        <result column="stdYN" property="stdYN"/>
+    </resultMap>
+
+    <resultMap type="ParcelBaseInformation" id="parcelBaseInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="jimkCode" property="jimkCode"/>
+        <result column="jimkName" property="jimkName"/>
+        <result column="ownCode" property="ownCode"/>
+        <result column="ownName" property="ownName"/>
+        <result column="ownrAddress" property="ownrAddress"/>
+        <collection property="jigaList" resultMap="yearMonthValue" />
+    </resultMap>
+
+
     <!-- umd code를 이용한 토지지목 분석 -->
     <select id="findJimkByAdm" resultType="landuseAnalysisResultDto">
         SELECT
@@ -75,9 +113,7 @@
         WHERE
             ST_Intersects(
                 ST_SetSRID(jk.geom, 5186),
-                ST_Transform(
-                ST_GeomFromText('${geomText}', 3857),
-                5186)
+                ST_GeomFromText('${geomText}', 5186)
             )
     </select>
 
@@ -85,20 +121,40 @@
     <!-- umd code를 이용한 소유자 타입 분석 -->
     <select id="findOwnByUserDraw" resultType="landuseAnalysisResultDto">
         SELECT
-        jk.pnu,
-        ST_AsText(jk.geom) AS geomText,
-        jk.own_gbn as code,
-        jk.own_code_nm as code_nm,
-        jk.area
+            jk.pnu,
+            ST_AsText(jk.geom) AS geomText,
+            jk.own_gbn as code,
+            jk.own_code_nm as code_nm,
+            jk.area
         FROM
-        public.vw_lrgtn101_own jk
+            public.vw_lrgtn101_own jk
         WHERE
-        ST_Intersects(
-        ST_SetSRID(jk.geom, 5186),
-        ST_Transform(
-        ST_GeomFromText('${geomText}', 3857),
-        5186)
-        )
+            ST_Intersects(
+                ST_SetSRID(jk.geom, 5186),
+                ST_GeomFromText('${geomText}', 5186)
+            )
     </select>
 
+    <!-- user click point(x, y)를 이용한 필지정보 분석 -->
+    <select id="findParcelInformation" resultType="parcelBaseInformation">
+        SELECT
+            jk.pnu,
+            jk.jimk AS jimkCode,
+            jk.jimk_nm as jimkName,
+            jk.own_gbn as ownCode,
+            jk.own_gbn_nm as ownName,
+            jk.ownr_addr as ownrAddress,
+
+            jk.base_year as baseYear,
+            jk.base_mon as baseMonth,
+            jk.jiga as jiga
+<!--            jk.ownr_addr as ownrAddress,-->
+        FROM
+            public.vw_lrgtn101_cbnd_jiga jk
+        WHERE
+            ST_Intersects(
+                ST_SetSRID(jk.geom, 5186),
+                ST_GeomFromText('${geomText}', 5186)
+            )
+    </select>
 </mapper>
