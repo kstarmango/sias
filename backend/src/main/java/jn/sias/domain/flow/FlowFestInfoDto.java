@@ -1,11 +1,11 @@
-package jn.sias.domain;
+package jn.sias.domain.flow;
 
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
-public class FlowAnalysisDto {
+public class FlowFestInfoDto {
 
     private int id;
     private String title;

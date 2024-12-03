@@ -1,6 +1,7 @@
 package jn.sias.service;
 
-import jn.sias.domain.FlowAnalysisDto;
+import jn.sias.domain.flow.FlowFestInfoDto;
+import jn.sias.domain.flow.FlowSalesClassInfoDto;
 import jn.sias.repository.FlowAnalysisRepository;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,18 +16,25 @@ public class FlowAnalysisService {
     @Autowired
     private FlowAnalysisRepository flowAnalysisRepository;
 
-    public List<FlowAnalysisDto> getFestYearList () throws Exception {
+    public List<FlowFestInfoDto> getFestYearList () throws Exception {
 
-        List<FlowAnalysisDto> festList = flowAnalysisRepository.getFestYearList();
+        List<FlowFestInfoDto> festList = flowAnalysisRepository.getFestYearList();
 
         return festList;
     }
 
-    public List<FlowAnalysisDto> getFestList (String yyyy) throws Exception {
+    public List<FlowFestInfoDto> getFestList (String yyyy) throws Exception {
 
-        List<FlowAnalysisDto> festList = flowAnalysisRepository.getFestList(yyyy);
+        List<FlowFestInfoDto> festList = flowAnalysisRepository.getFestList(yyyy);
 
         return festList;
+    }
+
+    public List<FlowSalesClassInfoDto> getSalesClassList () throws Exception {
+
+        List<FlowSalesClassInfoDto> salesList = flowAnalysisRepository.getSalesClassList();
+
+        return salesList;
     }
 
 }

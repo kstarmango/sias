@@ -4,7 +4,7 @@
 
 <mapper namespace="jn.sias.repository.FlowAnalysisRepository">
 
-    <resultMap type="flowAnalysisDto" id="flowAnalysisDto">
+    <resultMap type="flowFestInfoDto" id="flowFestInfoDto">
         <result column="id" property="id"/>
         <result column="title" property="title"/>
         <result column="startDate" property="startDate"/>
@@ -17,16 +17,22 @@
         <result column="geom" property="geom"/>
     </resultMap>
 
+    <resultMap type="flowSalesClassInfoDto" id="flowSalesClassInfoDto">
+        <result column="id" property="id"/>
+        <result column="rcls_nm" property="rcls_nm"/>
+        <result column="lcls_list" property="lcls_list"/>
+    </resultMap>
+
     <select id="getFestYearList" resultType="hashMap">
         SELECT
             yyyy
         FROM
             flow.jn_poi_festival
         GROUP BY yyyy
-        ORDER BY yyyy
+        ORDER BY yyyy DESC
     </select>
 
-    <select id="getFestList" resultType="flowAnalysisDto">
+    <select id="getFestList" resultType="flowFestInfoDto">
         SELECT
             gid as id, title, startdate, enddate, yyyy, host, content, st_x(geom) as x_coord, st_y(geom) as y_coord, ST_AsText(geom) as geom
         FROM
@@ -34,6 +40,17 @@
         WHERE
             yyyy = #{yyyy}
         ORDER BY gid
+    </select>
+
+    <select id="getSalesClassList" resultType="flowSalesClassInfoDto">
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY rcls_nm) as id, rcls_nm, STRING_AGG(CAST(lcls_nm AS VARCHAR), ',') as lcls_list
+        FROM
+            flow.jn_sales_reclass
+        GROUP BY
+            rcls_nm
+        ORDER BY
+            rcls_nm
     </select>
 
 </mapper>
