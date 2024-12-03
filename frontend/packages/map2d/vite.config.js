@@ -17,7 +17,13 @@ export default defineConfig({
         proxy: {
             '/api': {
                 target: 'http://localhost:8080',
-                // rewrite: (path) => path.replace(/^\/api/, ''),
+                changeOrigin: true,
+                secure: false,
+                ws: true,
+            },
+            '/geoserver': {
+                target: 'http://118.216.255.110:25050',
+                // rewrite: (path) => path.replace(/^\/geoserver/, ''),
                 changeOrigin: true,
                 secure: false,
                 ws: true,

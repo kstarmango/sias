@@ -17,8 +17,8 @@ interface TimeCondition {
 
 /** 시작 종료 기간 조건 */
 interface StartEndTimeCondition {
-  startDate: string | '';
-  endDate: string | '';
+  start_date: string | '';
+  end_date: string | '';
 }
 
 /** 분석 시작점, 종료 시설 조건 */
@@ -45,6 +45,13 @@ interface LifeVisualCondition {
 /** 업종 포함 조건 */
 interface BusinessCondition  {
   business: '' | 'ENTIRE' | 'AGRICULTURE_FORESTRY_FISHING' | 'MINING' | 'MANUFACTURING' | 'ELECTRICITY_GAS_STEAM_AIR_CONDITIONING_SUPPLY' | 'REAL_ESTATE' | 'CONSTRUCTION' | 'WHOLESALE_RETAIL_TRADE' | 'ARTS_SPORTS_RECREATION_RELATED_SERVICES' | 'EDUCATION_SERVICES' | 'INFORMATION_COMMUNICATION' | 'FINANCE_INSURANCE' | 'TRANSPORTATION_STORAGE' | 'PUBLIC_ADMINISTRATION_NATIONAL_DEFENSE_SOCIAL_SECURITY' | 'ACCOMMODATION_FOOD_SERVICE' | 'PROFESSIONAL_SCIENCE_TECHNOLOGY_SERVICES' | 'ASSOCIATIONS_UNIONS_REPAIR_OTHER_PERSONAL_SERVICES';
+}
+
+/** 버퍼 조건 */
+interface BufferCondition {
+  x_coord: number;
+  y_coord: number;
+  radius: number;
 }
 
 /** 인구 정보 그룹 */
@@ -132,7 +139,7 @@ export type LocationAnalysisCondition = UserAreaCondition & StartEndTimeConditio
 export type AreaSalesAnalysisCondition = BufferIncludeAreaCondition & StartEndTimeCondition & BusinessCondition;
 
 /** 축제 유입 분석 조건 */
-export type FestivalInfluxAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition & { isSggInclude: boolean } & { weight: boolean };
+export type FestivalInfluxAnalysisCondition = BufferCondition & StartEndTimeCondition & { des_cd: number };
 
 /** 축제 매출 분석 조건 */
 export type FestivalRevenueAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition;

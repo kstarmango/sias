@@ -60,3 +60,8 @@ nav {
   padding: 0 10px;
 }
 
+.sub-contents .main-content {
+  max-height: 560px;
+  overflow-y: auto;
+}
+

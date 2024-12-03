@@ -3,17 +3,18 @@ import GeoJSON from "ol/format/GeoJSON";
 import FlowLine from "ol-ext/style/FlowLine";
 import Feature, { FeatureLike } from "ol/Feature";
 import axios from "axios";
-import { useContext } from "react";
-
-import { MapContext } from "@src/contexts/MapView2DContext";
 import VectorLayer from "ol/layer/Vector";
 import { Geometry } from "ol/geom";
+import Map from "ol/Map";
 
-export const odFlowMap = async (data: any) => {
+import { FestivalInfluxAnalysisCondition } from "@src/types/analysis-condition";
+
+export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map) => {
   try {
-    const { map } = useContext(MapContext);
+
     const fetchFestivalInflowData = async () => {
-      const geoserverUrl = import.meta.env.VITE_GEOSERVER_URL;
+      const geoserverUrl = '/geoserver/jn/ows';
+      const { x_coord, y_coord, start_date, end_date, radius, des_cd } = data;
       
       const params = new URLSearchParams({
         service: 'WFS',
@@ -22,7 +23,7 @@ export const odFlowMap = async (data: any) => {
         typeName: 'jn:jn_festival_inflow_age', 
         outputFormat: 'application/json',
         srs: 'EPSG:5186',
-        viewparams: 'x_coord:146823.5;y_coord:244192.7;start_date:20230927;end_date:20230929;radius:2000;des_cd:46'
+        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${start_date};end_date:${end_date};radius:${radius};des_cd:${des_cd}`
       })
 
       const response = await axios.get(`${geoserverUrl}?${params.toString()}`);

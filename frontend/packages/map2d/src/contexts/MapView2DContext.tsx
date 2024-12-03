@@ -1,28 +1,24 @@
 import "ol/ol.css";
+import 'ol-ext/dist/ol-ext.css';
 import Map from "ol/map";
 import proj4 from 'proj4'
 import View from "ol/view";
 import TileLayer from "ol/layer/tile";
 import OSM from "ol/source/osm";
-import {createContext, useEffect, useState} from "react";
-import {MapOptions} from "ol/Map";
-import {register} from 'ol/proj/proj4'
 import Interaction from "ol/interaction/Interaction";
 import VectorSource from "ol/source/Vector";
 import VectorLayer from "ol/layer/Vector";
-import axios from "axios";
+import {MapOptions} from "ol/Map";
+import {register} from 'ol/proj/proj4'
+import {createContext, useEffect, useState} from "react";
+import {Stroke, Fill, Style} from "ol/style";
+import {Translate, Modify, Draw} from "ol/interaction";
+
 import {useAuth} from "@shared/auth";
-import GeoJSON from "ol/format/GeoJSON";
+import Geometry, { Type } from "ol/geom/Geometry";
 import Feature from "ol/Feature";
-import { Geometry, LineString } from "ol/geom";
-import type { FeatureLike } from 'ol/Feature';
-import 'ol-ext/dist/ol-ext.css';
-import FlowLine from "ol-ext/style/FlowLine.js";
-import Style from "ol/style/Style";
-import { midpoint } from "@turf/turf";
-import Fill from "ol/style/Fill";
-import CircleStyle from "ol/style/Circle";
-import Stroke from "ol/style/Stroke";
+import Circle from "ol/geom/Circle";
+import { createBox } from "ol/interaction/Draw";
 
 proj4.defs([
 	['EPSG:4326', '+proj=longlat +ellps=WGS84 +datum=WGS84 +no_defs'],
@@ -106,57 +102,143 @@ export const MapContext = createContext<{
 	map: Map | null,
 	interactions: Interaction[],
 	setMap: (map: Map | null) => void,
-	setInteractions: (interactions: Interaction[]) => void
+	setInteractions: (interactions: Interaction[]) => void,
+	getTitleLayer: (title: string) => VectorLayer | null,
+	addInteractionByType: (type: 'POINT' | 'POLYGON' | 'LINESTRING', radius?: number) => void
 }>({
 	map: null,
 	interactions: [],
 	setMap: () => {},
-	setInteractions: () => {}
+	setInteractions: () => {},
+	getTitleLayer: () => null,
+	addInteractionByType: () => {}
 });
 
 export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 
-    const {authenticated} = useAuth();
-    const [map, setMap] = useState<Map | null>(null);
-    const [interactions, setInteractions] = useState<Interaction[]>([]);
+  const {authenticated} = useAuth();
+  const [map, setMap] = useState<Map | null>(null);
+  const [interactions, setInteractions] = useState<Interaction[]>([]);
 
-		useEffect(() => {
+	useEffect(() => {
 
-			const analysisInputLayer = new VectorLayer({
-				source: new VectorSource(),
-				style: new Style({
-					image: new CircleStyle({
-						radius: 20,
-						stroke: new Stroke({
-							color: 'red',
-							width: 2
-						})
-					})
-				})
-			});
-			analysisInputLayer.set('title', 'analysisInput');
+		const analysisInputLayer = new VectorLayer({
+			source: new VectorSource(),
+			style: new Style({
+				fill: new Fill({ color: 'rgba(255, 0, 0, 0.5)' }),
+				stroke: new Stroke({ color: 'red', width: 2 })
+			})
+		});
+		analysisInputLayer.set('title', 'analysisInput');
 
-      const initMap = new Map({
-				target: "map",
-        layers: [
-          new TileLayer({
-            source: new OSM(),
-          }),
-					analysisInputLayer
-        ],
-        view: new View({
-					zoom: 8,
-          center: [259823, 384192],
-          projection: 'EPSG:5186'
+    const initMap = new Map({
+			target: "map",
+      layers: [
+        new TileLayer({
+          source: new OSM(),
         }),
-      });
+				analysisInputLayer
+      ],
+      view: new View({
+				zoom: 8,
+        center: [259823, 384192],
+        projection: 'EPSG:5186'
+      }),
+    });
 
-      setMap(initMap);	
+    setMap(initMap);	
 
-			return () => {
-				initMap.setTarget(undefined);
-			}
-    }, []);
+		return () => {
+			initMap.setTarget(undefined);
+		}
+  }, []);
+
+	const getTitleLayer = (title: string) => map?.getLayers().getArray().filter(layer => layer?.get('title') === title)[0] as VectorLayer;
+
+	function addInteractionByType(type, radius?: number) {
+	
+		let vector = getTitleLayer('analysisInput');
+		let source = vector.getSource();
+		source?.clear();
+		if(!map) return;
+		if(!source) return;
+	
+		const translateContext = new Translate({
+			layers: [vector],
+		});
+
+		translateContext.set('title', 'Translate');
+		map?.addInteraction(translateContext);
+		
+		const modifyContext = new Modify({ source: source as VectorSource<Feature<Geometry>> });
+		modifyContext.set('title', 'Modify');
+		map?.addInteraction(modifyContext);
+		
+		const geometryFunction = type === 'Box' ? createBox() : undefined;
+		
+		let drawContext: Draw;
+
+		if (type === 'Circle') {
+			drawContext = new Draw({
+				source,
+				type: 'Point',
+			});
+	
+			drawContext.on('drawstart', e => {
+				if (!radius || radius <= 0) {
+					alert('반지름을 0보다 크게 설정해주세요.');
+					source.clear();
+					map.removeInteraction(drawContext);
+				}
+			})
+	
+			drawContext.on('drawend', e => makeCircle(e, radius))
+			map.addInteraction(drawContext);
+	
+		} else if (type !== 'Circle') {
+
+			drawContext = new Draw({
+				source,
+				type: type === 'Box' ? 'Circle' : type,
+				geometryFunction,
+			});
+			drawContext.set('title', 'Draw');
+
+			drawContext.on('drawstart', function () {
+				getTitleLayer('analysisInput')?.getSource()?.clear();
+			});
+		
+			drawContext.on('drawend', function () {
+				map.removeInteraction(drawContext);
+			});
+			
+			setInteractions([...interactions, drawContext]);
+			map.addInteraction(drawContext);
+		}
+	}
+
+	function makeCircle(e, radius?: number) {
+
+		const source = getTitleLayer('analysisInput')?.getSource();
+		if(!source) return;
+		
+		let point;
+
+		if(e){
+			point = e.feature.getGeometry().getCoordinates();
+		} else {
+			point =  source?.getFeatures().filter(f => f.getGeometry().getType() == 'Point')[0].getGeometry().getCoordinates();
+			const circle =  source.getFeatures().filter(f => f.getGeometry().getType() == 'Circle')[0];
+			source.removeFeature(circle);
+		}
+
+		const circleFeature = new Feature({
+			geometry: new Circle(point, radius),
+		});
+	
+		source.addFeatures([circleFeature]);
+		interactions.forEach(interaction => map?.removeInteraction(interaction));
+	}
 
   return (
 		<MapContext.Provider 
@@ -164,10 +246,13 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 				map,
 				interactions,
 				setMap, 
-				setInteractions
+				setInteractions,
+				getTitleLayer,
+				addInteractionByType
 			}}
 		>	
 			{children}
 		</MapContext.Provider>
   );
 }
+
