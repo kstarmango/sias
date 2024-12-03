@@ -4,25 +4,65 @@
 
 <mapper namespace="jn.sias.repository.LifeAnalysisRepository">
 
-    <resultMap type="LifeCategoryInfoDto" id="LifeCategoryInfoDto">
+    <resultMap type="lifeCategoryInfoDto" id="lifeCategoryInfoDto">
         <result column="id" property="id"/>
         <result column="psy_nm" property="psy_nm"/>
         <result column="log_nm" property="log_nm"/>
         <result column="life_category" property="life_category"/>
     </resultMap>
 
-    <select id="getLifeCatList" resultType="LifeCategoryInfoDto">
-        SELECT gid as id, psy_nm, log_nm, life_category
-            FROM life.jn_life_metadata
-                WHERE life_yn = true
-        ORDER BY gid
+    <resultMap type="lifePopTypeInfoDto" id="lifePopTypeInfoDto">
+        <result column="id" property="id"/>
+        <result column="log_type_nm" property="log_type_nm"/>
+    </resultMap>
+
+    <resultMap type="lifePopInfoDto" id="lifePopInfoDto">
+        <result column="id" property="id"/>
+        <result column="log_col_nm" property="log_col_nm"/>
+        <result column="psy_col_nm" property="psy_col_nm"/>
+    </resultMap>
+
+    <select id="getLifeCatList" resultType="lifeCategoryInfoDto">
+        SELECT g
+            id as id, psy_nm, log_nm, life_category
+        FROM
+            life.jn_life_metadata
+        WHERE
+            life_yn = true
+        ORDER BY
+            gid
     </select>
 
-    <select id="getWeakCatList" resultType="LifeCategoryInfoDto">
-        SELECT gid as id, psy_nm, log_nm
-        FROM life.jn_life_metadata
-        WHERE weak_yn = true
-        ORDER BY gid
+    <select id="getWeakCatList" resultType="lifeCategoryInfoDto">
+        SELECT
+            gid as id, psy_nm, log_nm
+        FROM
+            life.jn_life_metadata
+        WHERE
+            weak_yn = true
+        ORDER BY
+            gid
+    </select>
+
+    <select id="getPopTypeList" resultType="LifePopTypeInfoDto">
+        SELECT
+            ROW_NUMBER() OVER (ORDER BY log_type_nm) as id, log_type_nm
+        FROM
+            life.jn_pop_col_metadata
+        GROUP BY
+            log_type_nm
+        ORDER BY
+            id
+    </select>
+
+    <select id="getPopList" resultType="lifePopInfoDto">
+        SELECT
+            gid as id, log_col_nm, psy_col_nm
+        FROM
+            life.jn_pop_col_metadata
+        WHERE
+            log_type_nm = #{log_type_nm}
+        ORDER BY id
     </select>
 
 </mapper>

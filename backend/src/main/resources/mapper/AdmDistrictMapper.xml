@@ -4,21 +4,21 @@
 
 <mapper namespace="jn.sias.repository.AdmDistrictRepository">
 
-    <resultMap type="SggDistrictDto" id="SggDistrictDto">
+    <resultMap type="sggDistrictDto" id="sggDistrictDto">
         <result column="id" property="id"/>
         <result column="geom" property="geom"/>
         <result column="sig_cd" property="sig_cd"/>
         <result column="sig_kor_nm" property="sig_kor_nm"/>
     </resultMap>
 
-    <resultMap type="EmdDistrictDto" id="EmdDistrictDto">
+    <resultMap type="emdDistrictDto" id="emdDistrictDto">
         <result column="id" property="id"/>
         <result column="geom" property="geom"/>
         <result column="emd_cd" property="emd_cd"/>
         <result column="emd_cd" property="emd_cd"/>
     </resultMap>
 
-    <select id="getSggList" resultType="SggDistrictDto">
+    <select id="getSggList" resultType="sggDistrictDto">
         SELECT
             id, sig_cd, sig_kor_nm
         FROM
@@ -26,7 +26,7 @@
         ORDER BY sig_cd
     </select>
 
-    <select id="getSggInfo" resultType="SggDistrictDto">
+    <select id="getSggInfo" resultType="sggDistrictDto">
         SELECT
             id, ST_AsText(geom) as geom, sig_cd, sig_kor_nm
         FROM
@@ -34,7 +34,7 @@
         WHERE sig_cd = #{sig_cd}
     </select>
 
-    <select id="getEmdList" resultType="EmdDistrictDto">
+    <select id="getEmdList" resultType="emdDistrictDto">
         SELECT
             id, emd_cd, emd_kor_nm
         FROM
@@ -44,7 +44,7 @@
         ORDER BY emd_cd
     </select>
 
-    <select id="getEmdInfo" resultType="EmdDistrictDto">
+    <select id="getEmdInfo" resultType="emdDistrictDto">
         SELECT
             id, ST_AsText(geom) as geom, emd_cd, emd_kor_nm
         FROM

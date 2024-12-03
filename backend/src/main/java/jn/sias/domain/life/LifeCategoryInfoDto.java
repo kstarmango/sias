@@ -1,4 +1,4 @@
-package jn.sias.domain;
+package jn.sias.domain.life;
 
 import lombok.Getter;
 import lombok.Setter;
