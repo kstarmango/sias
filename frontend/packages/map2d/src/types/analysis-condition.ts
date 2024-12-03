@@ -17,8 +17,8 @@ interface TimeCondition {
 
 /** 시작 종료 기간 조건 */
 interface StartEndTimeCondition {
-  start_date: string | '';
-  end_date: string | '';
+  startDate: string | '';
+  endDate: string | '';
 }
 
 /** 분석 시작점, 종료 시설 조건 */

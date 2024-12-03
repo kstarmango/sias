@@ -13,13 +13,13 @@ import { festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondi
 export const FestivalRevenue = () => {
   // 분석조건 상태
   const [festivalRevenueAnalysisCondition, setFestivalRevenueAnalysisCondition] = useRecoilState(festivalRevenueAnalysisConditionState);
-  const { inputWkt, festival, buffer, startDate, endDate } = festivalRevenueAnalysisCondition;
+  const { inputWkt, festival, buffer, start_date, end_date } = festivalRevenueAnalysisCondition;
 
   const setInputWkt = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, inputWkt: value});
   const setFestival = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, festival: value});
   const setBuffer = (value: number) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, buffer: value});
-  const setStartDate = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, startDate: value});
-  const setEndDate = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, endDate: value});
+  const setStartDate = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, start_date: value});
+  const setEndDate = (value: string) => setFestivalRevenueAnalysisCondition({...festivalRevenueAnalysisCondition, end_date: value});
 
   const [pointType, setPointType] = useState<string>('Festival');
   const [timeType, setTimeType] = useState<string>('month');
@@ -105,7 +105,7 @@ export const FestivalRevenue = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <select className="custom-select" value={startDate || ''} onChange={e => setStartDate(e.target.value)}>
+            <select className="custom-select" value={start_date || ''} onChange={e => setStartDate(e.target.value)}>
               {Object.entries(YEAR).map(([key, value]) => (
                 <option key={key} value={key}>{value}</option>
               ))}
@@ -113,7 +113,7 @@ export const FestivalRevenue = () => {
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <select className="custom-select" value={endDate || ''} onChange={e => setEndDate(e.target.value)}>
+            <select className="custom-select" value={end_date || ''} onChange={e => setEndDate(e.target.value)}>
               {Object.entries(YEAR).map(([key, value]) => (
                 <option key={key} value={key}>{value}</option>
               ))}

@@ -14,7 +14,7 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
 
     const fetchFestivalInflowData = async () => {
       const geoserverUrl = '/geoserver/jn/ows';
-      const { x_coord, y_coord, start_date, end_date, radius, des_cd } = data;
+      const { x_coord, y_coord, startDate, endDate, radius, des_cd } = data;
       
       const params = new URLSearchParams({
         service: 'WFS',
@@ -23,7 +23,7 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
         typeName: 'jn:jn_festival_inflow_age', 
         outputFormat: 'application/json',
         srs: 'EPSG:5186',
-        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${start_date};end_date:${end_date};radius:${radius};des_cd:${des_cd}`
+        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};des_cd:${des_cd}`
       })
 
       const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
@@ -111,6 +111,7 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
       vectorLayer.set('title', 'festival_inflow');
       map?.addLayer(vectorLayer as any);
     
+   
     }).catch(error => {
       console.error(error);
     })

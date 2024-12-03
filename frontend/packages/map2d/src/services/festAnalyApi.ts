@@ -1,7 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import axios from "axios";
 
-const endPoint = '/api/test/commFestAnalysis';
+const endPoint = '/api/test/flow';
 
 const defaultOpt = {
   // enabled: false,
@@ -14,7 +14,7 @@ export const getFestivalListData = (data) => {
   const callApi = async () => {
     const res = await axios({
       method: 'GET',
-      url: endPoint + '/festList',
+      url: endPoint + '/getFestList',
       params: {
         yyyy: data
       }
@@ -24,7 +24,7 @@ export const getFestivalListData = (data) => {
   }
 
   return useQuery({
-    queryKey: ['getFestivalListData', data],
+    queryKey: ['getFestList', data],
     queryFn: () => callApi(),
     enabled: !!data,
     ...defaultOpt
@@ -36,14 +36,14 @@ export const getFestivalYearList = () => {
   const callApi = async () => {
     const res = await axios({
       method: 'GET',
-      url: endPoint + '/festYear',
+      url: endPoint + '/getFestYearList',
     })
 
     return res.data;
   }
 
   return useQuery({
-    queryKey: ['getFestivalYearList'],
+    queryKey: ['getFestYearList'],
     queryFn: () => callApi(),
     ...defaultOpt
   });

@@ -1,7 +1,6 @@
 import "ol/ol.css";
-
 import { useContext, useEffect, useState } from "react";
-import tabJSON from '../tab.json';
+
 import { PopFlow } from "../subcontent/pop/PopFlow";
 import { InflowPop } from "../subcontent/pop/InflowPop";
 import { Sales } from "../subcontent/pop/Sales";
@@ -15,6 +14,7 @@ import { AreaSales } from "../subcontent/comm/AreaSales";
 import { FestivalInflux } from "../subcontent/comm/FestivalInflux";
 import { FestivalRevenue } from "../subcontent/comm/FestivalRevenue";
 import { MapContext } from "@src/contexts/MapView2DContext";
+import { ANALYSIS_TAB_TYPE } from "@src/utils/analysis-constant";
 /**
  * 좌측 분석기능 검색 조건 창
  */
@@ -24,7 +24,7 @@ interface SubContentProps {
 
 export const SubContent = ({ selectedNav }: SubContentProps) => {
   
-  const tabItems = tabJSON[selectedNav]?.tabs || [];
+  const tabItems = ANALYSIS_TAB_TYPE[selectedNav]?.tabs || [];
   const [selectedTab, setSelectedTab] = useState<string>('');
 
   const { getTitleLayer } = useContext(MapContext);

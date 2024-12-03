@@ -1,6 +1,6 @@
 import "ol/ol.css";
 import { MapOptions } from "ol/Map";
-import tabJSON from '../tab.json';
+import { ANALYSIS_TAB_TYPE } from "@src/utils/analysis-constant";
 
 export interface NavProps extends MapOptions {
 
@@ -17,11 +17,11 @@ export const Nav = ({ onNavClick, selectedNav }: NavProps) => {
 
   return (
     <nav>
-      {Object.keys(tabJSON).map((key) => (
+      {Object.keys(ANALYSIS_TAB_TYPE).map((key) => (
         <button type="button" key={key} onClick={() => onNavClick(key)} className={getButtonSelected(key)}>
           <span className="icon real-estate selected"></span>
           <span className="title" style={{whiteSpace: 'pre-line'}}>
-            {tabJSON[key].label.title}
+            {ANALYSIS_TAB_TYPE[key].label.title}
           </span>
         </button>
       ))}

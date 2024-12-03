@@ -2,13 +2,15 @@ import "ol/ol.css";
 import Feature from "ol/Feature";
 import WKT from "ol/format/WKT";
 import { useRecoilState } from "recoil";
-import { Circle, Point } from "ol/geom";
+import { Circle, Geometry, Point } from "ol/geom";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/festAnalyApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
 import { odFlowMap } from "@src/services/analyVisualization";
+import Draw from "ol/interaction/Draw";
+import VectorSource from "ol/source/Vector";
 
 type Festival = {
   gid: number;
@@ -16,8 +18,8 @@ type Festival = {
   x_coord: number;
   y_coord: number;
   host: string;
-  start_date: string;
-  end_date: string;
+  startDate: string;
+  endDate: string;
   yyyy: string;
   content: string;
   geom: string;
@@ -31,12 +33,12 @@ type Festival = {
 export const FestivalInflux = () => {
   // 분석조건 상태
   const [festivalInfluxAnalysisCondition, setFestivalInfluxAnalysisCondition] = useRecoilState(festivalInfluxAnalysisConditionState);
-  const { start_date, end_date, radius } = festivalInfluxAnalysisCondition;
+  const { startDate, endDate, radius } = festivalInfluxAnalysisCondition;
 
   const updateAnalysisCondition = (key: keyof typeof festivalInfluxAnalysisCondition, value: any) => 
     setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, [key]: value});
 
-  const [festival, setFestival] = useState<Festival>({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', start_date: '', end_date: '', yyyy: '', content: '', geom: '' });
+  const [festival, setFestival] = useState<Festival>({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
   const [festivalYear, setFestivalYear] = useState<string>('');
   const [timeType, setTimeType] = useState<string>('month');
   const [pointType, setPointType] = useState<string>('Festival');
@@ -48,10 +50,17 @@ export const FestivalInflux = () => {
   const { data: festivalListData } = getFestivalListData(festivalYear) as { data: Festival[] };
   const { data: festivalYearList } = getFestivalYearList() as { data: string[] };
 
-  const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setPointType(e.target.value);
+  const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setPointType(e.target.value);
+    // 축제 지점 초기화
+    getTitleLayer('analysisInput')?.getSource()?.clear();
+    updateAnalysisCondition('radius', 100);
+    setFestival({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
+  }
+
   const handleTimeTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    updateAnalysisCondition('start_date', '');
-    updateAnalysisCondition('end_date', '');
+    updateAnalysisCondition('startDate', '');
+    updateAnalysisCondition('endDate', '');
     setTimeType(e.target.value); 
   };
 
@@ -80,48 +89,51 @@ export const FestivalInflux = () => {
     map.getView().setZoom(14);
 
     const coordinates = point.getCoordinates();
-    setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, x_coord: coordinates[0], y_coord: coordinates[1]});
+    setFestivalInfluxAnalysisCondition({
+      ...festivalInfluxAnalysisCondition,
+      startDate: formatDateString(item.startDate),
+      endDate: formatDateString(item.endDate),
+      x_coord: coordinates[0], 
+      y_coord: coordinates[1],
+    });
+    
     setFestival(item);
   };
 
-  useEffect(() => {
-    console.log(festivalInfluxAnalysisCondition.x_coord, festivalInfluxAnalysisCondition.y_coord);
-  }, [festivalInfluxAnalysisCondition.x_coord, festivalInfluxAnalysisCondition.y_coord]);
-
+  /**
+   * 버퍼 거리 변경 이벤트 핸들러
+   * @param e 이벤트
+   */
   const handleBufferChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newBuffer = Number(e.target.value);
     updateAnalysisCondition('radius', newBuffer);
 
     const wktReader = new WKT();
-    const point = wktReader.readGeometry(festival.geom) as Point;
+    // 축제 지점 좌표
+    const pointCoordinates = festival.geom 
+      ? (wktReader.readGeometry(festival.geom) as Point).getCoordinates()
+      : (getTitleLayer('analysisInput')?.getSource()?.getFeatures()[0]?.getGeometry() as Circle).getCenter();
 
-    if(festival.geom && newBuffer){
-      
+    if(pointCoordinates && newBuffer){
       const newPoint = new Feature({ 
-        geometry: new Circle(
-          point.getCoordinates(),
-          newBuffer
-        )
+        geometry: new Circle(pointCoordinates, newBuffer)
       });
 
       const inputLayer = getTitleLayer('analysisInput');
       inputLayer?.getSource()?.clear();
       inputLayer?.getSource()?.addFeature(newPoint);
     }
-  }, [festival.geom, radius]);
+  }, [radius]);
 
   /**
    * 분석 실행 이벤트 핸들러
    */
   const handleAnalysis = () => {
-
-    if(!festival.geom) {
-      alert('축제 지점을 선택해주세요.');
-      return;
-    } else if(!start_date || !end_date) {
+    
+    if(!startDate || !endDate) {
       alert('분석기간을 설정해주세요.');
       return;
-    } else if(start_date > end_date) {
+    } else if(startDate > endDate) {
       alert('시작일이 종료일보다 클 수 없습니다.');
       return;
     }
@@ -133,8 +145,8 @@ export const FestivalInflux = () => {
 
       // start loading
       const data = {...festivalInfluxAnalysisCondition};
-      data.start_date = data.start_date.replace(/-/g, '');
-      data.end_date = data.end_date.replace(/-/g, '');
+      data.startDate = data.startDate.replace(/-/g, '');
+      data.endDate = data.endDate.replace(/-/g, '');
 
       if(map) odFlowMap(data, map);
     } catch (error) {
@@ -144,10 +156,36 @@ export const FestivalInflux = () => {
     }
   };
 
+  /**
+   * 지점 선택 이벤트 핸들러
+   */
   const selectSpatialPoint = () => {
     if(!map) return;
 
+    const interactions = map.getInteractions().getArray();
+    const drawInteractions = interactions.filter(interaction => interaction.get('title') === 'Draw') as Draw[];
+    drawInteractions.forEach(interaction => map.removeInteraction(interaction));
+    const analysisInputSource = getTitleLayer('analysisInput')?.getSource() as VectorSource<Feature<Geometry>>;
+
+    const drawInteraction = new Draw({
+      source: analysisInputSource,
+      type: 'Circle',
+    });
+    drawInteraction.set('title', 'Draw');
     
+    drawInteraction.on('drawstart', e => {
+      analysisInputSource.clear();
+    });
+
+    drawInteraction.on('drawend', e => {
+      const feature = e.feature;
+      const radius = (feature?.getGeometry() as Circle)?.getRadius();
+      if(radius) updateAnalysisCondition('radius', radius.toFixed(0));
+
+      map.removeInteraction(drawInteraction);
+    });   
+
+    map.addInteraction(drawInteraction);
   }
 
   useEffect(() => {
@@ -157,6 +195,26 @@ export const FestivalInflux = () => {
       getTitleLayer('analysisInput')?.getSource()?.clear();
     }
   }, []);
+
+  /**
+   * 날짜 포맷 변경 함수
+   * @param dateString 날짜 문자열
+   * @returns 포맷 변경된 날짜 문자열
+   */
+  const formatDateString = (dateString: string) => {
+    if (!dateString) return '';
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+
+    if(day){
+      setTimeType('date');
+      return `${year}-${month}-${day}`;
+    } else {
+      setTimeType('month');
+      return `${year}-${month}`;
+    }
+  }
 
   return (
     <div className="main-content">
@@ -175,7 +233,7 @@ export const FestivalInflux = () => {
           <label className="custom-radio">
             <input type="radio" value="User" name="pointType" checked={pointType === "User"} onChange={handlePointTypeChange}/>
             <span className="radio-mark"></span> 사용자 지정
-          </label>    
+          </label>
         </div>
 
         {pointType === 'Festival' && (
@@ -195,8 +253,8 @@ export const FestivalInflux = () => {
                 {festivalYear ? 
                   <>
                     <option value={''}>축제 선택</option>
-                    {festivalListData?.map((item) => (
-                      <option key={item.gid} value={item.title}>{item.title}</option>
+                    {festivalListData?.map((item, idx) => (
+                      <option key={idx} value={item.title}>{item.title}</option>
                     ))}
                   </> 
                 : <option value={''}>축제 년도를 선택해주세요.</option>}
@@ -259,24 +317,24 @@ export const FestivalInflux = () => {
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
             <input 
               type={timeType} 
-              value={start_date || ''}
+              value={startDate || ''}
               min={timeType === 'month' ? '2023-01' : '2023-01-01'}
               max={timeType === 'month' 
                 ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
                 : `${new Date().toISOString().split("T")[0]}`}
-              onChange={e => updateAnalysisCondition('start_date', e.target.value)} 
+              onChange={e => updateAnalysisCondition('startDate', e.target.value)} 
             /> 
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
             <input 
               type={timeType} 
-              value={end_date || ''} 
+              value={endDate || ''} 
               min={timeType === 'month' ? '2023-01' : '2023-01-01'}
               max={timeType === 'month' 
                 ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
                 : `${new Date().toISOString().split("T")[0]}`}
-              onChange={e => updateAnalysisCondition('end_date', e.target.value)} 
+              onChange={e => updateAnalysisCondition('endDate', e.target.value)} 
             />
           </div>
         </div>

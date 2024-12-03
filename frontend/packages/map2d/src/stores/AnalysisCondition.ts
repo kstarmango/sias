@@ -96,8 +96,8 @@ export const commPopAnalysisConditionState = atom<CommPopAnalysisCondition>({
     buffer: 0,
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
     weight: false
   }
 });
@@ -107,8 +107,8 @@ export const locationAnalysisConditionState = atom<LocationAnalysisCondition>({
   key: 'locationAnalysisConditionState',
   default: {
     inputWkt: '',
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
     weight: false
   }
 });
@@ -119,8 +119,8 @@ export const areaSalesAnalysisConditionState = atom<AreaSalesAnalysisCondition>(
   default: {
     inputWkt: '',
     buffer: 0,
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
     business: 'ENTIRE'
   }
 });
@@ -131,8 +131,8 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
   default: {
     x_coord: 0,
     y_coord: 0,
-    start_date: '',
-    end_date: '',
+    startDate: '',
+    endDate: '',
     radius: 100,
     des_cd: 99
   }
@@ -145,8 +145,8 @@ export const festivalRevenueAnalysisConditionState = atom<FestivalRevenueAnalysi
     inputWkt: '',
     buffer: 0,
     festival: 'ENTIRE',
-    start_date: '',
-    end_date: ''
+    startDate: '',
+    endDate: ''
   }
 });
 
