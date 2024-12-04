@@ -5,12 +5,19 @@ import { useRecoilState } from "recoil";
 import { Circle, Geometry, Point } from "ol/geom";
 import { useCallback, useContext, useEffect, useState } from "react";
 
+import VectorSource from "ol/source/Vector";
+import GeoJSON from "ol/format/GeoJSON";
+
+import { FeatureLike } from "ol/Feature";
+import VectorLayer from "ol/layer/Vector";
+import {Style, Fill, Stroke, Text} from "ol/style";
+
 import { festivalInfluxAnalysisConditionState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
-import { fesitvalSalesAll } from "@src/services/analyVisualization";
 import Draw from "ol/interaction/Draw";
-import VectorSource from "ol/source/Vector";
+import { FestivalRevenueAnalysisCondition } from "@src/types/analysis-condition";
+import axios from "axios";
 
 type Festival = {
   gid: number;
@@ -157,7 +164,7 @@ export const FestivalRevenue = () => {
       data.startDate = data.startDate.replace(/-/g, '');
       data.endDate = data.endDate.replace(/-/g, '');
 
-      if(map) fesitvalSalesAll(data, map);
+      if(map) fesitvalSalesAll(data);
     } catch (error) {
       console.error(error);
     } finally {
@@ -200,7 +207,7 @@ export const FestivalRevenue = () => {
   useEffect(() => {
     return () => {
       // 분석결과 초기화
-      getTitleLayer('festival_sales_all')?.getSource()?.clear();
+      getTitleLayer('festival_revenue')?.getSource()?.clear();
       getTitleLayer('analysisInput')?.getSource()?.clear();
     }
   }, []);
@@ -224,6 +231,109 @@ export const FestivalRevenue = () => {
       return `${year}-${month}`;
     }
   }
+
+  /** 축제 매출 분석 시각화 - layerTitle: festival_sales_all */
+const fesitvalSalesAll = async (conditions: FestivalRevenueAnalysisCondition) => {
+
+  try {
+    const fetchFestivalSalesAllData = async () => {
+      const geoserverUrl = '/geoserver/jn/ows';
+      const { x_coord, y_coord, startDate, endDate, radius, order } = conditions;
+      
+      const params = new URLSearchParams({
+        service: 'WFS',
+        version: '1.1.0',
+        request: 'GetFeature',
+        typeName: 'jn:jn_festival_sales_age_all', 
+        outputFormat: 'application/json',
+        srs: 'EPSG:5186',
+        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};order:${order}`
+      })
+  
+      const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
+      if(!response.data){
+        throw new Error('네트워크 응답이 좋지 않습니다.')
+      }
+      return response.data;
+    }
+
+    const styleFunction = (features: Feature<Geometry>[], order:string) => {
+      
+      const dataList = features.map(feature => feature.getProperties()[order]);
+      const colorList = [ '#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026' ];
+
+      // 임시 5등분 처리
+      function divideIntoQuintiles(numbers: number[]): number[][] {
+        if (numbers.length === 0) return []
+      
+        const sortedNumbers = [...numbers].sort((a, b) => a - b)
+        const quintiles: number[][] = []
+      
+        const quintileSize = Math.ceil(sortedNumbers.length / 5)
+      
+        for (let i = 0; i < 5; i++) {
+          const start = i * quintileSize
+          const end = start + quintileSize
+          quintiles.push(sortedNumbers.slice(start, end))
+        }
+      
+        return quintiles
+      }
+
+      const quintiles = divideIntoQuintiles(dataList);
+
+      return (feature: FeatureLike) => {
+
+        const index = quintiles.findIndex(arr => arr.includes(feature.getProperties()[order]));
+
+        const fillStyle = new Style({
+          fill: new Fill({ color: colorList[index] }),
+          stroke: new Stroke({
+            color: '#fff',
+            width: 1,
+          }),
+        });
+
+        const labelStyle = new Style({
+          text: new Text({
+            font: '15px Calibri,sans-serif',
+            fill: new Fill({
+              color: '#000',
+            }),
+            stroke: new Stroke({
+              color: '#fff',
+              width: 4,
+            }),
+            text: '총 매출: ' + Number(feature.getProperties()[order].toFixed(0)).toLocaleString('ko-KR') + '원' 
+          }),
+          zIndex: 2
+        });
+
+        return [labelStyle, fillStyle];
+      }
+    }
+
+    fetchFestivalSalesAllData().then(data => {
+      if(data.features.length === 0) {
+        alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
+        return;
+      }
+
+      const featureReader = new GeoJSON();
+      const features = featureReader.readFeatures(data) as Feature<Geometry>[];
+      
+      const vectorLayer = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_revenue')[0] as VectorLayer<VectorSource<Feature<Geometry>>>;
+      vectorLayer.getSource()?.clear();
+      vectorLayer.getSource()?.addFeatures(features);
+      vectorLayer.setStyle(styleFunction(features, conditions.order ));
+
+    }).catch(error => {
+      console.error(error);
+    })
+  } catch (error) {
+    console.error(error);
+  }
+}
 
   return (
     <div className="main-content">

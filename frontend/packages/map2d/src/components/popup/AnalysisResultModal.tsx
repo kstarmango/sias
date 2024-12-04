@@ -1,19 +1,26 @@
 import "ol/ol.css";
-import { MapOptions } from "ol/Map";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { AnalysisResultModalOpenState } from "@src/stores/AnalysisCondition";
 
 
 /**
  * 분석 결과 팝업창
 */
 export const AnalysisResultModal = () => {
+  const { modalOpen, title, data } = useRecoilValue(AnalysisResultModalOpenState);
+  const setAnalysisResultModalOpen = useSetRecoilState(AnalysisResultModalOpenState);
 
   return (
     <div className="popup popup-parcel">                
-      <button type="button" className="close popup-close"></button>
-      <h2><span className="txt">일필지정보</span></h2>
-      
+      <button 
+        type="button"  
+        onClick={() => setAnalysisResultModalOpen({modalOpen: false, title: '', data: {}})} 
+        className="close popup-close"
+      ></button>
+      <h2><span className="txt">{title}</span></h2>
 
-      {/* <div className="content-wrapper mar-top-20">
+      {/* 
+      <div className="content-wrapper mar-top-20">
           <div className="popup-4col-tabmenu">
               <button type="button" className="selected">기본정보</button>
               <button type="button">토지대장</button>
@@ -106,7 +113,8 @@ export const AnalysisResultModal = () => {
                   </table>
               </div>                   
           </div>
-      </div> */}
-  </div> 
+      </div> 
+      */}
+    </div> 
   )
 }

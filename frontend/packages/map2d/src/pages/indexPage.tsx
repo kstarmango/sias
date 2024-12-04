@@ -6,6 +6,9 @@ import { Search } from "@src/components/common/Search";
 import { SubContent } from "@src/components/common/SubContent";
 import ToolBox from "@src/components/common/ToolBox";
 import "@src/assets/css/mango.css";
+import { AnalysisResultModal } from "@src/components/popup/AnalysisResultModal";
+import { useRecoilValue } from "recoil";
+import { AnalysisResultModalOpenState } from "@src/stores/AnalysisCondition";
 
 /**
  * 메인 인덱스 페이지
@@ -13,6 +16,7 @@ import "@src/assets/css/mango.css";
 const IndexPage = () => {
 
   const [selectedNavItem, setSelectedNavItem] = useState<string>('');
+  const { modalOpen } = useRecoilValue(AnalysisResultModalOpenState);
 
   const handleNavSelect = (navItem: string) => {
     setSelectedNavItem(navItem)
@@ -29,6 +33,7 @@ const IndexPage = () => {
         <Search />
         <SubContent selectedNav={selectedNavItem} />
         <ToolBox />
+        {modalOpen && <AnalysisResultModal />}
       </main>
     </MapView2DProvider>
   );

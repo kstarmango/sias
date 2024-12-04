@@ -1,5 +1,16 @@
 import { atom } from "recoil";
+
 import { AreaSalesAnalysisCondition, CommPopAnalysisCondition, FestivalInfluxAnalysisCondition, FestivalRevenueAnalysisCondition, InflowPopAnalysisCondition, LifeAnalysisCondition, LifeDistanceFacCondition, LifeTrafficAnalysisCondition, LifeVulnAnalysisCondition, LocationAnalysisCondition, PopFlowAnalysisCondition, SalesAnalysisCondition } from "@src/types/analysis-condition";
+
+// 분석 결과 팝업창 열기/닫기 이동 예정
+export const AnalysisResultModalOpenState = atom<{modalOpen: boolean, title: string, data: any}>({
+  key: 'AnalysisResultModalOpenState',
+  default: {
+    modalOpen: false,
+    title: '',
+    data: {}
+  }
+});
 
 /** 유동 인구 분석 조건 */
 export const popFlowAnalysisConditionState = atom<PopFlowAnalysisCondition>({

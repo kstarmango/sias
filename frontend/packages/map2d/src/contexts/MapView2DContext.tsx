@@ -125,13 +125,37 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 		});
 		analysisInputLayer.set('title', 'analysisInput');
 
-    const initMap = new Map({
+		const festivalInflowLayer = new VectorLayer({
+			source: new VectorSource(),
+		});
+		festivalInflowLayer.set('title', 'festival_inflow');
+
+		const festivalRevenueLayer = new VectorLayer({
+			source: new VectorSource(),
+		});
+		festivalRevenueLayer.set('title', 'festival_revenue');
+
+		const lifeVulnAreaLayer = new VectorLayer({
+			source: new VectorSource(),
+		});
+		lifeVulnAreaLayer.set('title', 'life_vuln_area');
+
+		const lifeServiceFacilityLayer = new VectorLayer({
+			source: new VectorSource(),
+		});
+		lifeServiceFacilityLayer.set('title', 'life_service_facility');
+
+		const initMap = new Map({
 			target: "map",
       layers: [
         new TileLayer({
           source: new OSM(),
         }),
-				analysisInputLayer
+				analysisInputLayer,
+				festivalInflowLayer,
+				festivalRevenueLayer,
+				lifeVulnAreaLayer,
+				lifeServiceFacilityLayer
       ],
       view: new View({
 				zoom: 8,
