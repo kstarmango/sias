@@ -8,9 +8,8 @@ import { Geometry } from "ol/geom";
 import Map from "ol/Map";
 
 import { FestivalInfluxAnalysisCondition, FestivalRevenueAnalysisCondition } from "@src/types/analysis-condition";
-import { Fill } from "ol/style";
-import Style from "ol/style/Style";
- 
+import {Style, Fill, Stroke, Text} from "ol/style";
+
 /** 축제 유입 분석 시각화 - layerTitle: festival_inflow */
 export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map) => {
   try {
@@ -80,6 +79,22 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
 
         const colorList = ['#800026cc', '#bd0026cc', '#e31a1ccc', '#fc4e2acc', '#fd8d3ccc', '#feb24ccc', '#fed976cc', '#ffeda0cc', '#ffffcccc', '#fffffcc'];
         const featureIndex = topTenFeaturesIdList.indexOf(feature.getId());
+
+        const labelStyle = new Style({
+          text: new Text({
+            font: '15px Calibri,sans-serif',
+            fill: new Fill({
+              color: '#000',
+            }),
+            stroke: new Stroke({
+              color: '#fff',
+              width: 4,
+            }),
+            text: feature.getProperties().sid_nm + ' \n 총 : ' + feature.getProperties().pop_all.toFixed() + '명'
+          }),
+          zIndex: 2
+        });
+
         const flowLine = new FlowLine({
           color: colorList[featureIndex],
           color2: colorList[featureIndex],
@@ -89,7 +104,7 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
         });
 
         // return [flowLine, cspStyle];
-        return [flowLine];
+        return [labelStyle, flowLine];
       }
     }
 
@@ -102,27 +117,36 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
       }
 
       const topTenFeatures = featureData.features
-        .sort((a, b) => b.properties.pop_all - a.properties.pop_all) 
+        .sort((a, b) => b.properties.pop_all - a.properties.pop_all)
         .slice(0, 10);
 
       featureData.features = topTenFeatures;
 
       const featureReader = new GeoJSON();
       const features = featureReader.readFeatures(featureData) as Feature<Geometry>[];
-      const vectorLayer = new VectorLayer({
-        source: new VectorSource({
-          features: features
-        }),
-        style: styleFunction(topTenFeatures)
+
+      const duplicate : VectorLayer<VectorSource<Feature<Geometry>>>[] = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_inflow');
+      let vectorLayer : VectorLayer<VectorSource<Feature<Geometry>>>;
+      const source = new VectorSource({
+        features: features
       });
 
-      vectorLayer.set('title', 'festival_inflow');
-      map?.addLayer(vectorLayer as unknown as VectorLayer<VectorSource<Feature<Geometry>>>);
-    
-   
+      if(duplicate.length > 0){
+        vectorLayer = duplicate[0];
+        vectorLayer.setSource(source);
+        vectorLayer.setStyle(styleFunction(topTenFeatures));
+      }else{
+        vectorLayer = new VectorLayer({
+          source,
+          style: styleFunction(topTenFeatures)
+        });
+        vectorLayer.set('title', 'festival_inflow');
+        map?.addLayer(vectorLayer as unknown as VectorLayer<VectorSource<Feature<Geometry>>>);
+      }
+
     }).catch(error => {
       console.error(error);
-    })
+    });
 
   } catch (error) {
     console.error(error);

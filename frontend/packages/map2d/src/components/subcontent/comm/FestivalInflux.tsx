@@ -52,6 +52,12 @@ export const FestivalInflux = () => {
   const { data: festivalListData } = getFestivalListData(festivalYear) as { data: Festival[] };
   const { data: festivalYearList } = getFestivalYearList() as { data: string[] };
 
+  const testMinDate = '202301';
+  const testMaxDate = '202409';
+
+  const minDate = testMinDate.substring(0, 4) + '-' + testMinDate.substring(4);
+  const maxDate = testMaxDate.substring(0, 4) + '-' + testMaxDate.substring(4);
+
   const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPointType(e.target.value);
     // 축제 지점 초기화
@@ -112,15 +118,15 @@ export const FestivalInflux = () => {
   const handleBufferChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newBuffer = Number(e.target.value);
     updateAnalysisCondition('radius', newBuffer);
-        
+
     const wktReader = new WKT();
     // 축제 지점 좌표
-    const pointCoordinates = festival.geom 
+    const pointCoordinates = festival.geom
       ? (wktReader.readGeometry(festival.geom) as Point).getCoordinates()
       : (getTitleLayer('analysisInput')?.getSource()?.getFeatures()[0]?.getGeometry() as Circle).getCenter();
 
     if(pointCoordinates && newBuffer){
-      const newPoint = new Feature({ 
+      const newPoint = new Feature({
         geometry: new Circle(pointCoordinates, newBuffer)
       });
 
@@ -140,6 +146,12 @@ export const FestivalInflux = () => {
       return;
     } else if(startDate > endDate) {
       alert('시작일이 종료일보다 클 수 없습니다.');
+      return;
+    } else if(!festival.title) {
+      alert('축제를 선택해주세요.');
+      return;
+    } else if(!radius) {
+      alert('버퍼를 0 이상의 값으로 설정해주세요.');
       return;
     }
 
@@ -179,7 +191,7 @@ export const FestivalInflux = () => {
     });
     drawInteraction.set('title', 'Draw');
     
-    drawInteraction.on('drawstart', e => {
+    drawInteraction.on('drawstart', () => {
       analysisInputSource.clear();
     });
 
@@ -297,46 +309,57 @@ export const FestivalInflux = () => {
         <div className="analysis-title">분석기간 설정</div>
         <div className="analysis-content ">
           <label className="custom-radio">
-            <input 
-              type="radio" 
+            <input
+              type="radio"
               value="month"
-              name="timeType" 
-              checked={timeType === "month"} 
+              name="timeType"
+              checked={timeType === "month"}
               onChange={handleTimeTypeChange}
             />
             <span className="radio-mark"></span> 월
           </label>
           <label className="custom-radio">
-            <input 
-              type="radio" 
-              value="date" 
-              name="timeType" 
-              checked={timeType === "date"} 
+            <input
+              type="radio"
+              value="date"
+              name="timeType"
+              checked={timeType === "date"}
               onChange={handleTimeTypeChange}
             />
             <span className="radio-mark"></span> 일
-          </label>                                                  
+          </label>
         </div>
 
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label>시작{timeType === 'month' ? '월' : '일'}</label>
-            <input 
-              type={timeType} 
+            <input
+              type={timeType}
               value={startDate || ''}
-              min={timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={endDate ? endDate : timeType === 'month' ? '2024-09' : `2024-09-${new Date(2024, 9, 0).getDate()}`}
-              onChange={e => updateAnalysisCondition('startDate', e.target.value)} 
-            /> 
+              min={timeType === 'month' ?
+                  minDate :
+                  `${minDate}-01`}
+              max={endDate ? endDate :
+                  timeType === 'month' ?
+                      maxDate :
+                      `${maxDate}-${new Date(Number(maxDate.substring(0,4)), Number(maxDate.substring(6,7)), 0).getDate()}`}
+              onChange={e => updateAnalysisCondition('startDate', e.target.value)}
+            />
           </div>
           <div className="condition-list mar-left-13">
             <label>종료{timeType === 'month' ? '월' : '일'}</label>
-            <input 
-              type={timeType} 
+            <input
+              type={timeType}
               value={endDate || ''}
-              min={startDate ? startDate : timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={timeType === 'month' ? '2024-09' : `2024-09-${new Date(2024, 9, 0).getDate()}`}
-              onChange={e => updateAnalysisCondition('endDate', e.target.value)} 
+              min={startDate ?
+                  startDate :
+                  timeType === 'month' ?
+                      minDate :
+                      `${minDate}-01`}
+              max={timeType === 'month' ?
+                  maxDate :
+                  `${maxDate}-${new Date(Number(maxDate.substring(0,4)), Number(maxDate.substring(6,7)), 0).getDate()}`}
+              onChange={e => updateAnalysisCondition('endDate', e.target.value)}
             />
           </div>
         </div>
