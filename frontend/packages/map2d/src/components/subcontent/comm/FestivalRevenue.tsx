@@ -8,7 +8,7 @@ import { useCallback, useContext, useEffect, useState } from "react";
 import { festivalInfluxAnalysisConditionState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
-import { fesitvalSalesAll, odFlowMap } from "@src/services/analyVisualization";
+import { fesitvalSalesAll } from "@src/services/analyVisualization";
 import Draw from "ol/interaction/Draw";
 import VectorSource from "ol/source/Vector";
 
@@ -45,12 +45,19 @@ export const FestivalRevenue = () => {
   const [timeType, setTimeType] = useState<string>('month');
   const [pointType, setPointType] = useState<string>('Festival');
   const [isSggInclude, setIsSggInclude] = useState<boolean>(false);
+  const [isJeonnamInclude, setIsJeonnamInclude] = useState<boolean>(false);
   const [weight, setWeight] = useState<boolean>(false);
 
   const { map, getTitleLayer } = useContext(MapContext);
 
   const { data: festivalListData } = getFestivalListData(festivalYear) as { data: Festival[] };
   const { data: festivalYearList } = getFestivalYearList() as { data: string[] };
+
+  const testMinDate = '202301';
+  const testMaxDate = '202409'; 
+
+  const minDate = testMinDate.substring(0, 4) + '-' + testMinDate.substring(4);
+  const maxDate = testMaxDate.substring(0, 4) + '-' + testMaxDate.substring(4);
 
   const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPointType(e.target.value);
@@ -320,10 +327,13 @@ export const FestivalRevenue = () => {
             <input 
               type={timeType} 
               value={startDate || ''}
-              min={timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={timeType === 'month' 
-                ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
-                : `${new Date().toISOString().split("T")[0]}`}
+              min={timeType === 'month' ?
+                minDate :
+                `${minDate}-01`}
+              max={endDate ? endDate :
+                timeType === 'month' ?
+                    maxDate :
+                    `${maxDate}-${new Date(Number(maxDate.substring(0,4)), Number(maxDate.substring(6,7)), 0).getDate()}`}
               onChange={e => updateAnalysisCondition('startDate', e.target.value)} 
             /> 
           </div>
@@ -332,10 +342,14 @@ export const FestivalRevenue = () => {
             <input 
               type={timeType} 
               value={endDate || ''} 
-              min={timeType === 'month' ? '2023-01' : '2023-01-01'}
-              max={timeType === 'month' 
-                ? `${new Date().getFullYear()}-${new Date().getMonth() + 1}` 
-                : `${new Date().toISOString().split("T")[0]}`}
+              min={startDate ?
+                startDate :
+                timeType === 'month' ?
+                    minDate :
+                    `${minDate}-01`}
+              max={timeType === 'month' ?
+                  maxDate :
+                  `${maxDate}-${new Date(Number(maxDate.substring(0,4)), Number(maxDate.substring(6,7)), 0).getDate()}`}  
               onChange={e => updateAnalysisCondition('endDate', e.target.value)} 
             />
           </div>

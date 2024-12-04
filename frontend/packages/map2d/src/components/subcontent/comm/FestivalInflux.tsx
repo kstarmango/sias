@@ -45,6 +45,7 @@ export const FestivalInflux = () => {
   const [timeType, setTimeType] = useState<string>('month');
   const [pointType, setPointType] = useState<string>('Festival');
   const [isSggInclude, setIsSggInclude] = useState<boolean>(false);
+  const [isJeonnamInclude, setIsJeonnamInclude] = useState<boolean>(false);
   const [weight, setWeight] = useState<boolean>(false);
 
   const { map, getTitleLayer } = useContext(MapContext);
@@ -165,8 +166,12 @@ export const FestivalInflux = () => {
       const data = {...festivalInfluxAnalysisCondition};
       data.startDate = data.startDate.replace(/-/g, '');
       data.endDate = data.endDate.replace(/-/g, '');
+      data.des_cd = isJeonnamInclude ? 99 : 46;
 
-      if(map) odFlowMap(data, map);
+      let isInclude = true;
+      if(isJeonnamInclude && !isSggInclude) isInclude = false;
+
+      if(map) odFlowMap(data, map, isInclude);
     } catch (error) {
       console.error('축제 유입 분석 시각화 오류', error);
     } finally {
@@ -370,9 +375,15 @@ export const FestivalInflux = () => {
         <div className="search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>
-              <input type="checkbox" checked={isSggInclude} onChange={(e) => setIsSggInclude(e.target.checked)} style={{marginRight: '10px'}}/>
-              <span>현재 시군구 포함</span>
+              <input type="checkbox" checked={isJeonnamInclude} onChange={(e) => setIsJeonnamInclude(e.target.checked)} style={{marginRight: '10px'}}/>
+              <span>전남 포함</span>
             </label>
+            {isJeonnamInclude && (
+              <label style={{whiteSpace: 'nowrap'}}>
+                <input type="checkbox" checked={isSggInclude} onChange={(e) => setIsSggInclude(e.target.checked)} style={{marginRight: '10px'}}/>
+                <span>현재 시군구 포함</span>
+              </label>
+            )}
           </div>
         </div>
       </div>

@@ -134,7 +134,7 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
     startDate: '',
     endDate: '',
     radius: 100,
-    des_cd: 99
+    des_cd: 46
   }
 });
 

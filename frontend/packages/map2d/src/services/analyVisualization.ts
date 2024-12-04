@@ -5,27 +5,27 @@ import Feature, { FeatureLike } from "ol/Feature";
 import axios from "axios";
 import VectorLayer from "ol/layer/Vector";
 import { Geometry } from "ol/geom";
+import {Style, Fill, Stroke, Text} from "ol/style";
 import Map from "ol/Map";
 
 import { FestivalInfluxAnalysisCondition, FestivalRevenueAnalysisCondition } from "@src/types/analysis-condition";
-import {Style, Fill, Stroke, Text} from "ol/style";
 
 /** 축제 유입 분석 시각화 - layerTitle: festival_inflow */
-export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map) => {
+export const odFlowMap = async (conditions: FestivalInfluxAnalysisCondition, map: Map, isInclude: boolean) => {
   try {
 
     const fetchFestivalInflowData = async () => {
       const geoserverUrl = '/geoserver/jn/ows';
-      const { x_coord, y_coord, startDate, endDate, radius, des_cd } = data;
+      const { x_coord, y_coord, startDate, endDate, radius, des_cd } = conditions;
       
       const params = new URLSearchParams({
         service: 'WFS',
         version: '1.1.0',
         request: 'GetFeature',
-        typeName: 'jn:jn_festival_inflow_age', 
+        typeName: isInclude ? 'jn:jn_festival_inflow_age' : 'jn:jn_festival_inflow_age_not_include', 
         outputFormat: 'application/json',
         srs: 'EPSG:5186',
-        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};des_cd:${des_cd}`
+        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};` + (isInclude ? `des_cd:${des_cd}` : '') 
       })
 
       const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
@@ -90,7 +90,8 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
               color: '#fff',
               width: 4,
             }),
-            text: feature.getProperties().sid_nm + ' \n 총 : ' + feature.getProperties().pop_all.toFixed() + '명'
+            text: feature.getProperties().sid_nm + ' \n 총 : ' + 
+                  Number(feature.getProperties().pop_all.toFixed(0)).toLocaleString('ko-KR') + '명' 
           }),
           zIndex: 2
         });
@@ -125,14 +126,15 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
       const featureReader = new GeoJSON();
       const features = featureReader.readFeatures(featureData) as Feature<Geometry>[];
 
-      const duplicate : VectorLayer<VectorSource<Feature<Geometry>>>[] = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_inflow');
+      const duplicate = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_inflow');
+        
       let vectorLayer : VectorLayer<VectorSource<Feature<Geometry>>>;
       const source = new VectorSource({
         features: features
       });
 
       if(duplicate.length > 0){
-        vectorLayer = duplicate[0];
+        vectorLayer = duplicate[0] as VectorLayer<VectorSource<Feature<Geometry>>>;
         vectorLayer.setSource(source);
         vectorLayer.setStyle(styleFunction(topTenFeatures));
       }else{
@@ -154,12 +156,12 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
 }
 
 /** 축제 매출 분석 시각화 - layerTitle: festival_sales_all */
-export const fesitvalSalesAll = async (data: FestivalRevenueAnalysisCondition, map: Map) => {
+export const fesitvalSalesAll = async (conditions: FestivalRevenueAnalysisCondition, map: Map) => {
 
   try {
     const fetchFestivalSalesAllData = async () => {
       const geoserverUrl = '/geoserver/jn/ows';
-      const { x_coord, y_coord, startDate, endDate, radius, order } = data;
+      const { x_coord, y_coord, startDate, endDate, radius, order } = conditions;
       
       const params = new URLSearchParams({
         service: 'WFS',
@@ -178,24 +180,64 @@ export const fesitvalSalesAll = async (data: FestivalRevenueAnalysisCondition, m
       return response.data;
     }
 
-    const styleFunction = (features: Feature<Geometry>[]) => {
+    const styleFunction = (features: Feature<Geometry>[], order:string) => {
+      
+      const dataList = features.map(feature => feature.getProperties()[order]);
+      const colorList = [ '#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026' ];
+
+      // 임시 5등분 처리
+      function divideIntoQuintiles(numbers: number[]): number[][] {
+        if (numbers.length === 0) return []
+      
+        const sortedNumbers = [...numbers].sort((a, b) => a - b)
+        const quintiles: number[][] = []
+      
+        const quintileSize = Math.ceil(sortedNumbers.length / 5)
+      
+        for (let i = 0; i < 5; i++) {
+          const start = i * quintileSize
+          const end = start + quintileSize
+          quintiles.push(sortedNumbers.slice(start, end))
+        }
+      
+        return quintiles
+      }
+
+      const quintiles = divideIntoQuintiles(dataList);
+
       return (feature: FeatureLike) => {
 
-        debugger;
+        const index = quintiles.findIndex(arr => arr.includes(feature.getProperties()[order]));
 
-        return new Style({
-          fill: new Fill({ color: 'red' })
+        const fillStyle = new Style({
+          fill: new Fill({ color: colorList[index] })
         });
+
+        const labelStyle = new Style({
+          text: new Text({
+            font: '15px Calibri,sans-serif',
+            fill: new Fill({
+              color: '#000',
+            }),
+            stroke: new Stroke({
+              color: '#fff',
+              width: 4,
+            }),
+            text: Number(feature.getProperties()[order].toFixed(0)).toLocaleString('ko-KR') + '원' 
+          }),
+          zIndex: 2
+        });
+
+        return [labelStyle, fillStyle];
       }
     }
 
     fetchFestivalSalesAllData().then(data => {
-      if(!data.features) {
+      if(data.features.length === 0) {
         alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
         return;
       }
 
-      debugger;
 
       const featureReader = new GeoJSON();
       const features = featureReader.readFeatures(data) as Feature<Geometry>[];
@@ -204,7 +246,7 @@ export const fesitvalSalesAll = async (data: FestivalRevenueAnalysisCondition, m
         source: new VectorSource({
           features: features
         }),
-        style: styleFunction(features)  
+        style: styleFunction(features, conditions.order )  
       });
 
       vectorLayer.set('title', 'festival_sales_all');
