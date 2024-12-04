@@ -150,7 +150,7 @@ export const FestivalRevenue = () => {
     try {
       // 분석결과 초기화
       getTitleLayer('analysisInput')?.getSource()?.clear();
-      getTitleLayer('festival_inflow')?.getSource()?.clear();
+      getTitleLayer('festival_sales_all')?.getSource()?.clear();
 
       // start loading
       const data = {...festivalRevenueAnalysisCondition};
@@ -200,7 +200,7 @@ export const FestivalRevenue = () => {
   useEffect(() => {
     return () => {
       // 분석결과 초기화
-      getTitleLayer('festival_inflow')?.getSource()?.clear();
+      getTitleLayer('festival_sales_all')?.getSource()?.clear();
       getTitleLayer('analysisInput')?.getSource()?.clear();
     }
   }, []);

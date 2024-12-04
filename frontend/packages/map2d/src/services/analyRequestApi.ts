@@ -103,6 +103,58 @@ export const getWeakCatList = () => {
   });
 } 
 
+/**
+ * 인구 유형 데이터 조회
+ */
+export const getPopTypeList = () => {
+
+  const callApi = async () => {
+    const res = await axios({
+      method: 'GET',
+      url: lifeEndPoint + '/getPopTypeList',
+    })
+
+    const totalPopulation = res.data.find(item => item.log_type_nm === '총인구')
+    const otherPopulations = res.data.filter(item => item.log_type_nm !== '총인구')
+
+    return [totalPopulation, ...otherPopulations]
+  }
+
+  return useQuery({
+    queryKey: ['getPopTypeList'],
+    queryFn: () => callApi(),
+    ...defaultOpt
+  });
+}
+
+/**
+ * 인구 데이터 조회
+ */
+export const getPopList = (popType: string) => {
+
+  const callApi = async () => {
+    const res = await axios({
+      method: 'GET',
+      url: lifeEndPoint + '/getPopList',
+      params: {
+        log_type_nm: popType
+      },
+    })
+
+    const totalPopulation = res.data.find(item => item.log_col_nm.includes('전체'))
+    const otherPopulations = res.data.filter(item => !item.log_col_nm.includes('전체'))
+
+    return [totalPopulation, ...otherPopulations];
+  }
+
+  return useQuery({
+    queryKey: ['getPopList', popType],
+    queryFn: () => callApi(),
+    enabled: !!popType,
+    ...defaultOpt
+  });
+}
+
 
 /** 시군구 --------------------------------------------------------------------------*/
 
