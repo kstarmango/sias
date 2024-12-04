@@ -34,7 +34,7 @@ interface FestivalCondition {
 
 /** 생활서비스 시설 조건 */
 interface LifeFacilityCondition {
-  lifeServiceFacility: '' | 'ENTIRE' | 'PUBLIC_ADMINISTRATION_NATIONAL_DEFENSE_SOCIAL_SECURITY' | 'EDUCATION_SERVICES' | 'PROFESSIONAL_SCIENCE_TECHNOLOGY_SERVICES' | 'ASSOCIATIONS_UNIONS_REPAIR_OTHER_PERSONAL_SERVICES';
+  lifeServiceFacility: string;
 }
 
 /** 생활 서비스 시각화 조건 */
@@ -97,6 +97,30 @@ export const analysisPopDetailArr: Record<string, string[]> = {
   'infants': populationGroups.infants,
   'students': populationGroups.students,
   'age-groups': populationGroups.ageGroups
+}
+
+/** 시군구 정보 */
+export type SggInfo = {
+  id: number;
+  sig_cd: string;
+  sig_kor_nm: string;
+  geom: string;
+}
+
+/** 읍면동 정보 */
+export type EmdInfo = {
+  id: number;
+  emd_cd: string;
+  emd_kor_nm: string;
+  geom: string;
+}
+
+/** 생활서비스 카테고리 정보 */
+export type LifeCatInfo = {
+  id: number;
+  psy_nm: string;
+  log_nm: string;
+  life_category: string;
 }
 
 /** 영역 조건 */

@@ -1,13 +1,18 @@
 import "ol/ol.css";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { useRecoilState } from "recoil";
 
 import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
-import { LifeVulnAnalysisCondition } from "@src/types/analysis-condition";
+import { EmdInfo, LifeVulnAnalysisCondition, SggInfo } from "@src/types/analysis-condition";
 import { ANALYSIS_FAC, ANALYSIS_POP, ANALYSIS_POP_DETAIL } from "@src/utils/analysis-constant";
+import { getSelEmd, getSggList, getWeakCatList } from "@src/services/analyRequestApi";
+import { getSelSgg } from "@src/services/analyRequestApi";
+import WKT from "ol/format/WKT";
+import Feature from "ol/Feature";
+import { MapContext } from "@src/contexts/MapView2DContext";
 
 /**
- * 최단거리 시설 분석 컴포넌트
+ * 취약지역 시설 분석 컴포넌트
  * 
  * @param analysisConditions 분석조건
  */
@@ -16,25 +21,60 @@ export const LifeVulnArea = () => {
 
   // 분석조건 상태
   const [ lifeVulnAnalysisCondition, setLifeVulnAnalysisCondition ] = useRecoilState(lifeVulnAnalysisConditionState);
-  const { inputWkt, sgg, emd, gwangju, lifeServiceFacility, popInclude, analysisPop } = lifeVulnAnalysisCondition;
-  
-  const [areaType, setAreaType] = useState<string>('point');
+  const { gwangju, lifeServiceFacility, popInclude, analysisPop } = lifeVulnAnalysisCondition;
+  const { map, getTitleLayer } = useContext(MapContext);
+
+  const [areaType, setAreaType] = useState<string>('admin');
   const [analysisPopClassification, setAnalysisPopClassification] = useState<string[]>([]);
 
   const handleAreaTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => setAreaType(e.target.value); 
 
   // 분석조건 상태 설정 함수
   const setInputWkt = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, inputWkt: value});
-  const setSgg = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, sgg: value});
-  const setEmd = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, emd: value});
   const setGwangju = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, gwangju: value});
   const setLifeServiceFacility = (value: LifeVulnAnalysisCondition['lifeServiceFacility']) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, lifeServiceFacility: value});
   const setPopInclude = (value: boolean) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, popInclude: value});
   const setAnalysisPop = (value: string) => setLifeVulnAnalysisCondition({...lifeVulnAnalysisCondition, analysisPop: value});
+  
+  // 시군구, 읍면동 상태
+  const [ sgg, setSgg ] = useState('');
+  const [ emd, setEmd ] = useState('');
+  const { data: sggList } = getSggList();
 
-  // 임시 데이터 목록
-  const TEMP_SGG_LIST = ['전체', '목포시', '여수시', '순천시', '완도군', '진도군'];
-  const TEMP_EMD_LIST = ['전체', '금화동', '영산동', '중앙동', '중동', '중앙동'];
+  const changeSggEmd = (data: any, type: 'sgg' | 'emd') => {
+    const info = type === 'sgg' ? data.sggInfo as SggInfo : data as EmdInfo;
+
+    if (info) {
+      zoomToAdminstr(info as SggInfo | EmdInfo);
+    }
+  }
+
+  const { data: selSggInfo } = getSelSgg(sgg, (data) => changeSggEmd(data, 'sgg'));
+  const { data: selEmdInfo } = getSelEmd(emd, (data) => changeSggEmd(data, 'emd'));
+
+  const { data: weakCatList } = getWeakCatList();
+
+  /**
+   * 영역 확대
+   * @param info 시군구 또는 읍면동 정보
+   */
+  const zoomToAdminstr = (info: SggInfo | EmdInfo) => {
+    const wkt = new WKT();
+    const geom = wkt.readGeometry(info.geom);
+
+    const feature = new Feature({
+      geometry: geom,
+    });
+
+    const source = getTitleLayer('analysisInput')?.getSource();
+    source?.clear();
+    source?.addFeature(feature);
+
+    map?.getView().fit(geom.getExtent(), {
+      padding: [10, 10, 10, 10],
+      duration: 300
+    });
+  } 
 
   return (
     <div>
@@ -57,23 +97,32 @@ export const LifeVulnArea = () => {
           </label>                                      
         </div>
         {areaType === 'admin' && (  
-          <div id="admin-area-select" className="clear-both search-condition mar-top-10">
-            <div className="condition-list mar-left-13">                            
+          <div className="clear-both search-condition mar-top-10">
+          <div className="condition-list mar-left-13">
               <label>시군구</label>
               <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
-                {TEMP_SGG_LIST.map((value, index) => (
-                  <option key={index} value={value}>{value}</option>
+                {sggList?.map((item, idx) => (
+                  <option key={idx} value={item.sig_cd}>{item.sig_kor_nm}</option>
                 ))}
               </select>
-            </div>    
-            <div className="condition-list mar-left-13">                            
-              <label>읍면동</label>
-              <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
-                {TEMP_EMD_LIST.map((value, index) => (
-                  <option key={index} value={value}>{value}</option>
-                ))}
+            </div>
+          <div className="condition-list mar-left-13">
+            <label>읍면동</label>
+            <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
+              {sgg && selSggInfo 
+                ? 
+                  <>
+                    <option value={sgg}>전체</option>
+                    {
+                      selSggInfo.emdList.map((item, idx) => (
+                        <option key={idx} value={item.emd_cd}>{item.emd_kor_nm}</option>
+                      )) 
+                    }
+                  </>
+                : <option value="">시군구 선택해주세요.</option>
+              }
               </select>
-            </div>                                  
+            </div>                               
           </div> 
         )}
         {areaType === 'user' && (
@@ -94,9 +143,9 @@ export const LifeVulnArea = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list">
             <label>분석시설</label>
-            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value as LifeVulnAnalysisCondition['lifeServiceFacility'])}>
-              {Object.entries(ANALYSIS_FAC).map(([key, value]) => (
-                <option key={key} value={key}>{String(value)}</option>
+            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value)}>
+              {weakCatList?.map((item, idx) => (
+                <option key={idx} value={item.psy_nm}>{item.log_nm}</option>
               ))}
             </select>
           </div>

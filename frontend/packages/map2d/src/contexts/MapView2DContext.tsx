@@ -120,7 +120,6 @@ export const MapView2DProvider = ({children}: {children: React.ReactNode}) => {
 		const analysisInputLayer = new VectorLayer({
 			source: new VectorSource(),
 			style: new Style({
-				fill: new Fill({ color: 'rgba(255, 0, 0, 0.5)' }),
 				stroke: new Stroke({ color: 'red', width: 2 })
 			})
 		});

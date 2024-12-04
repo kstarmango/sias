@@ -47,7 +47,7 @@ export const lifeAnalysisConditionState = atom<LifeAnalysisCondition>({
     inputWkt: '',
     sgg: 'ENTIRE',
     emd: 'ENTIRE',
-    lifeServiceFacility: 'ENTIRE',
+    lifeServiceFacility: '',
     visualType: 'POINT'
   }
 });

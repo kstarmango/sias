@@ -181,8 +181,8 @@ export const ANALYSIS_TAB_TYPE = {
     label: {"value": "life", "title": "생활정보"},
     tabs: [
       {"value": "service", "title": "생활서비스 조회"},
-      {"value": "traffic", "title": "교통사고 다발지역 조회"},
       {"value": "vulnArea", "title": "취약지역 조회"},
+      {"value": "traffic", "title": "교통사고 다발지역 조회"},
       {"value": "distanceFac", "title": "최단거리 시설 분석"}
     ]
   },
@@ -194,10 +194,10 @@ export const ANALYSIS_TAB_TYPE = {
     label: {"value": "fes", "title": "상권축제"},
     tabs: [
       {"value": "fesInflux", "title": "축제 유입 분석"},
+      {"value": "fesRevenue", "title": "축제 매출 분석"},
       {"value": "commPop", "title": "상권 인구 분석"},
       {"value": "location", "title": "지점분석"},
-      {"value": "areaSales", "title": "상권 매출 분석"},
-      {"value": "fesRevenue", "title": "축제 매출 분석"}
+      {"value": "areaSales", "title": "상권 매출 분석"}
     ]
   }
 }

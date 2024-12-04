@@ -6,7 +6,7 @@ import { Circle, Geometry, Point } from "ol/geom";
 import { useCallback, useContext, useEffect, useState } from "react";
 
 import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
-import { getFestivalListData, getFestivalYearList } from "@src/services/festAnalyApi";
+import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
 import { odFlowMap } from "@src/services/analyVisualization";
 import Draw from "ol/interaction/Draw";

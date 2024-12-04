@@ -1,10 +1,14 @@
 import "ol/ol.css";
+import WKT from "ol/format/WKT";
+import Feature from "ol/Feature";
 import { useRecoilState } from "recoil";
+import { useContext, useState } from "react";
 
-import { LifeAnalysisCondition } from "@src/types/analysis-condition";
+import { MapContext } from "@src/contexts/MapView2DContext";
+import { EmdInfo, LifeAnalysisCondition, SggInfo } from "@src/types/analysis-condition";
 import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
-import { LIFE_SERVICE_FACILITY, LIFE_SERVICE_VISUAL, TEMP_SGG } from "@src/utils/analysis-constant";
-import { TEMP_EMD } from "@src/utils/analysis-constant";
+import { getLifeCatList, getSelEmd, getSelSgg, getSggList } from "@src/services/analyRequestApi";
+import { LIFE_SERVICE_VISUAL } from "@src/utils/analysis-constant";
 
 /**
  * 생활서비스 조회컴포넌트
@@ -15,12 +19,52 @@ export const LifeService = () => {
 
   // 분석조건 상태
   const [ lifeAnalysisCondition, setLifeAnalysisCondition ] = useRecoilState(lifeAnalysisConditionState);
-  const { sgg, emd, lifeServiceFacility, visualType } = lifeAnalysisCondition;
+  const { lifeServiceFacility, visualType } = lifeAnalysisCondition;
+  const { map, getTitleLayer } = useContext(MapContext);
 
-  const setSgg = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, sgg: value});
-  const setEmd = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, emd: value});
+  const setInputWkt = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, inputWkt: value});
   const setLifeServiceFacility = (value: LifeAnalysisCondition['lifeServiceFacility']) => setLifeAnalysisCondition({...lifeAnalysisCondition, lifeServiceFacility: value});
   const setVisualType = (value: LifeAnalysisCondition['visualType']) => setLifeAnalysisCondition({...lifeAnalysisCondition, visualType: value});
+
+  // 시군구, 읍면동 상태
+  const [ sgg, setSgg ] = useState('');
+  const [ emd, setEmd ] = useState('');
+  const { data: sggList } = getSggList();
+
+  const changeSggEmd = (data: any, type: 'sgg' | 'emd') => {
+    const info = type === 'sgg' ? data.sggInfo as SggInfo : data as EmdInfo;
+
+    if (info) {
+      zoomToAdminstr(info as SggInfo | EmdInfo);
+    }
+  }
+
+  const { data: selSggInfo } = getSelSgg(sgg, (data) => changeSggEmd(data, 'sgg'));
+  const { data: selEmdInfo } = getSelEmd(emd, (data) => changeSggEmd(data, 'emd'));
+
+  const { data: lifeCatList } = getLifeCatList();
+
+  /**
+   * 영역 확대
+   * @param info 시군구 또는 읍면동 정보
+   */
+  const zoomToAdminstr = (info: SggInfo | EmdInfo) => {
+    const wkt = new WKT();
+    const geom = wkt.readGeometry(info.geom);
+
+    const feature = new Feature({
+      geometry: geom,
+    });
+
+    const source = getTitleLayer('analysisInput')?.getSource();
+    source?.clear();
+    source?.addFeature(feature);
+
+    map?.getView().fit(geom.getExtent(), {
+      padding: [10, 10, 10, 10],
+      duration: 300
+    });
+  }
 
   return (
     <div>
@@ -34,17 +78,26 @@ export const LifeService = () => {
           <div className="condition-list mar-left-13">
             <label>시군구</label>
             <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
-              {Object.entries(TEMP_SGG).map(([key, value]) => (
-                <option key={key} value={key}>{value}</option>
+              {sggList?.map((item, idx) => (
+                <option key={idx} value={item.sig_cd}>{item.sig_kor_nm}</option>
               ))}
             </select>
           </div>
           <div className="condition-list mar-left-13">
             <label>읍면동</label>
             <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
-              {Object.entries(TEMP_EMD).map(([key, value]) => (
-                <option key={key} value={key}>{value}</option>
-              ))}
+              {sgg && selSggInfo 
+                ? 
+                  <>
+                    <option value={sgg}>전체</option>
+                    {
+                      selSggInfo.emdList.map((item, idx) => (
+                        <option key={idx} value={item.emd_cd}>{item.emd_kor_nm}</option>
+                      )) 
+                    }
+                  </>
+                : <option value="">시군구 선택해주세요.</option>
+              }
             </select>
           </div>
         </div>
@@ -54,9 +107,9 @@ export const LifeService = () => {
         <div className="analysis-content search-condition">
           <div className="condition-list mar-left-13">
             <label style={{whiteSpace: 'nowrap'}}>생활서비스 시설</label>
-            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value as LifeAnalysisCondition['lifeServiceFacility'])}>
-              {Object.entries(LIFE_SERVICE_FACILITY).map(([key, value]) => (
-                <option key={key} value={key}>{value}</option>
+            <select className="custom-select" value={lifeServiceFacility} onChange={e => setLifeServiceFacility(e.target.value)}>
+              {lifeCatList?.map((item, idx) => (
+                <option key={idx} value={item.psy_nm}>{item.log_nm}</option>
               ))}
             </select>
           </div>
