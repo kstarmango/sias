@@ -110,8 +110,8 @@ export const FestivalInflux = () => {
     const coordinates = point.getCoordinates();
     setFestivalInfluxAnalysisCondition(prev => ({
       ...prev,
-      startDate: formatDateString(item.startDate),
-      endDate: formatDateString(item.endDate),
+      startDate: formatDateString(item.startDate, 'start'),
+      endDate: formatDateString(item.endDate, 'end'),
       x_coord: coordinates[0], 
       y_coord: coordinates[1],
     }));
@@ -236,7 +236,7 @@ export const FestivalInflux = () => {
    * @param dateString 날짜 문자열
    * @returns 포맷 변경된 날짜 문자열
    */
-  const formatDateString = (dateString: string) => {
+  const formatDateString = (dateString: string, type: 'start' | 'end') => {
     if (!dateString) return '';
     const year = dateString.substring(0, 4);
     const month = dateString.substring(4, 6);
@@ -247,7 +247,8 @@ export const FestivalInflux = () => {
       return `${year}-${month}-${day}`;
     } else {
       setTimeType('month');
-      return `${year}-${month}`;
+      const restDay = type === 'start' ? '01' : '31';
+      return `${year}-${month}-${restDay}`;
     }
   }
 
@@ -295,28 +296,6 @@ export const FestivalInflux = () => {
         const widthList = mapValuesToRange(topTenFeatures.map(feature => feature.properties.pop_all));
       
       return (feature: FeatureLike) => {
-
-        // const feature_ = feature.clone() as Feature<Geometry>;
-
-        // const featureGeometry = feature_.getGeometry()?.transform('EPSG:5186', 'EPSG:4326') as LineString;
-        // const coordinates = featureGeometry?.getCoordinates();
-        // const centerPoint = midpoint(coordinates[0], coordinates[coordinates.length - 1]);
-        // const updatedCoordinates = [...coordinates, centerPoint.geometry.coordinates]
-        // featureGeometry.setCoordinates(updatedCoordinates);
-        // feature_.setGeometry(featureGeometry);
-
-        // const opt = {
-        // 	tension: 0.7, 
-        // 	pointsPerSeg: 10,
-        // 	normalize: false
-        // };
-
-        // const geometry = feature.getGeometry() as Geometry & { cspline?: (options: any) => any }
-        // const csp = geometry.cspline ? geometry.cspline(opt) : null
-
-        // const cspStyle = new Style({
-        // 	geometry: csp
-        // });
 
         const colorList = ['#800026cc', '#bd0026cc', '#e31a1ccc', '#fc4e2acc', '#fd8d3ccc', '#feb24ccc', '#fed976cc', '#ffeda0cc', '#ffffcccc', '#fffffcc'];
         const featureIndex = topTenFeaturesIdList.indexOf(feature.getId());

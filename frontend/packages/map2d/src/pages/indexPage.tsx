@@ -16,7 +16,7 @@ import { AnalysisResultModalOpenState } from "@src/stores/AnalysisCondition";
 const IndexPage = () => {
 
   const [selectedNavItem, setSelectedNavItem] = useState<string>('');
-  const { modalOpen } = useRecoilValue(AnalysisResultModalOpenState);
+  const { modalOpen, title, data } = useRecoilValue(AnalysisResultModalOpenState);
 
   const handleNavSelect = (navItem: string) => {
     setSelectedNavItem(navItem)
@@ -33,7 +33,7 @@ const IndexPage = () => {
         <Search />
         <SubContent selectedNav={selectedNavItem} />
         <ToolBox />
-        {modalOpen && <AnalysisResultModal />}
+        {modalOpen && <AnalysisResultModal title={title} data={data} />}
       </main>
     </MapView2DProvider>
   );

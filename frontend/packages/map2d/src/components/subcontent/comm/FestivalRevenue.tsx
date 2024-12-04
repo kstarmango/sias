@@ -1,7 +1,7 @@
 import "ol/ol.css";
 import Feature from "ol/Feature";
 import WKT from "ol/format/WKT";
-import { useRecoilState } from "recoil";
+import { useRecoilState, useSetRecoilState } from "recoil";
 import { Circle, Geometry, Point } from "ol/geom";
 import { useCallback, useContext, useEffect, useState } from "react";
 
@@ -12,7 +12,7 @@ import { FeatureLike } from "ol/Feature";
 import VectorLayer from "ol/layer/Vector";
 import {Style, Fill, Stroke, Text} from "ol/style";
 
-import { festivalInfluxAnalysisConditionState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { AnalysisResultModalOpenState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
 import Draw from "ol/interaction/Draw";
@@ -41,6 +41,7 @@ export const FestivalRevenue = () => {
   // 분석조건 상태
   const [festivalRevenueAnalysisCondition, setFestivalRevenueAnalysisCondition] = useRecoilState(festivalRevenueAnalysisConditionState);
   const { startDate, endDate, radius, order } = festivalRevenueAnalysisCondition;
+  const setAnalysisResultModalOpen = useSetRecoilState(AnalysisResultModalOpenState);
 
   const updateAnalysisCondition = useCallback((key: keyof typeof festivalRevenueAnalysisCondition, value: any) => 
     setFestivalRevenueAnalysisCondition(prev => ({...prev, [key]: value})),
@@ -232,108 +233,114 @@ export const FestivalRevenue = () => {
     }
   }
 
-  /** 축제 매출 분석 시각화 - layerTitle: festival_sales_all */
-const fesitvalSalesAll = async (conditions: FestivalRevenueAnalysisCondition) => {
+  /** 축제 매출 분석 결과 시각화 - layerTitle: festival_sales_all */
+  const fesitvalSalesAll = async (conditions: FestivalRevenueAnalysisCondition) => {
 
-  try {
-    const fetchFestivalSalesAllData = async () => {
-      const geoserverUrl = '/geoserver/jn/ows';
-      const { x_coord, y_coord, startDate, endDate, radius, order } = conditions;
-      
-      const params = new URLSearchParams({
-        service: 'WFS',
-        version: '1.1.0',
-        request: 'GetFeature',
-        typeName: 'jn:jn_festival_sales_age_all', 
-        outputFormat: 'application/json',
-        srs: 'EPSG:5186',
-        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};order:${order}`
-      })
-  
-      const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
-      if(!response.data){
-        throw new Error('네트워크 응답이 좋지 않습니다.')
-      }
-      return response.data;
-    }
-
-    const styleFunction = (features: Feature<Geometry>[], order:string) => {
-      
-      const dataList = features.map(feature => feature.getProperties()[order]);
-      const colorList = [ '#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026' ];
-
-      // 임시 5등분 처리
-      function divideIntoQuintiles(numbers: number[]): number[][] {
-        if (numbers.length === 0) return []
-      
-        const sortedNumbers = [...numbers].sort((a, b) => a - b)
-        const quintiles: number[][] = []
-      
-        const quintileSize = Math.ceil(sortedNumbers.length / 5)
-      
-        for (let i = 0; i < 5; i++) {
-          const start = i * quintileSize
-          const end = start + quintileSize
-          quintiles.push(sortedNumbers.slice(start, end))
+    try {
+      const fetchFestivalSalesAllData = async () => {
+        const geoserverUrl = '/geoserver/jn/ows';
+        const { x_coord, y_coord, startDate, endDate, radius, order } = conditions;
+        
+        const params = new URLSearchParams({
+          service: 'WFS',
+          version: '1.1.0',
+          request: 'GetFeature',
+          typeName: 'jn:jn_festival_sales_age_all', 
+          outputFormat: 'application/json',
+          srs: 'EPSG:5186',
+          viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};order:${order}`
+        })
+    
+        const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
+        if(!response.data){
+          throw new Error('네트워크 응답이 좋지 않습니다.')
         }
-      
-        return quintiles
+        return response.data;
       }
 
-      const quintiles = divideIntoQuintiles(dataList);
+      const styleFunction = (features: Feature<Geometry>[], order:string) => {
+        
+        const dataList = features.map(feature => feature.getProperties()[order]);
+        const colorList = [ '#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026' ];
 
-      return (feature: FeatureLike) => {
+        // 임시 5등분 처리
+        function divideIntoQuintiles(numbers: number[]): number[][] {
+          if (numbers.length === 0) return []
+        
+          const sortedNumbers = [...numbers].sort((a, b) => a - b)
+          const quintiles: number[][] = []
+        
+          const quintileSize = Math.ceil(sortedNumbers.length / 5)
+        
+          for (let i = 0; i < 5; i++) {
+            const start = i * quintileSize
+            const end = start + quintileSize
+            quintiles.push(sortedNumbers.slice(start, end))
+          }
+        
+          return quintiles
+        }
 
-        const index = quintiles.findIndex(arr => arr.includes(feature.getProperties()[order]));
+        const quintiles = divideIntoQuintiles(dataList);
 
-        const fillStyle = new Style({
-          fill: new Fill({ color: colorList[index] }),
-          stroke: new Stroke({
-            color: '#fff',
-            width: 1,
-          }),
-        });
+        return (feature: FeatureLike) => {
 
-        const labelStyle = new Style({
-          text: new Text({
-            font: '15px Calibri,sans-serif',
-            fill: new Fill({
-              color: '#000',
-            }),
+          const index = quintiles.findIndex(arr => arr.includes(feature.getProperties()[order]));
+
+          const fillStyle = new Style({
+            fill: new Fill({ color: colorList[index] }),
             stroke: new Stroke({
               color: '#fff',
-              width: 4,
+              width: 1,
             }),
-            text: '총 매출: ' + Number(feature.getProperties()[order].toFixed(0)).toLocaleString('ko-KR') + '원' 
-          }),
-          zIndex: 2
+          });
+
+          const labelStyle = new Style({
+            text: new Text({
+              font: '15px Calibri,sans-serif',
+              fill: new Fill({
+                color: '#000',
+              }),
+              stroke: new Stroke({
+                color: '#fff',
+                width: 4,
+              }),
+              text: '총 매출: ' + Number(feature.getProperties()[order].toFixed(0)).toLocaleString('ko-KR') + '원' 
+            }),
+            zIndex: 2
+          });
+
+          return [labelStyle, fillStyle];
+        }
+      }
+
+      fetchFestivalSalesAllData().then(data => {
+        if(data.features.length === 0) {
+          alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
+          return;
+        }
+
+        const featureReader = new GeoJSON();
+        const features = featureReader.readFeatures(data) as Feature<Geometry>[];
+        
+        const vectorLayer = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_revenue')[0] as VectorLayer<VectorSource<Feature<Geometry>>>;
+        vectorLayer.getSource()?.clear();
+        vectorLayer.getSource()?.addFeatures(features);
+        vectorLayer.setStyle(styleFunction(features, conditions.order ));
+
+        setAnalysisResultModalOpen({
+          modalOpen: true,
+          title: '축제 매출 분석 결과',
+          data: data
         });
 
-        return [labelStyle, fillStyle];
-      }
-    }
-
-    fetchFestivalSalesAllData().then(data => {
-      if(data.features.length === 0) {
-        alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
-        return;
-      }
-
-      const featureReader = new GeoJSON();
-      const features = featureReader.readFeatures(data) as Feature<Geometry>[];
-      
-      const vectorLayer = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'festival_revenue')[0] as VectorLayer<VectorSource<Feature<Geometry>>>;
-      vectorLayer.getSource()?.clear();
-      vectorLayer.getSource()?.addFeatures(features);
-      vectorLayer.setStyle(styleFunction(features, conditions.order ));
-
-    }).catch(error => {
+      }).catch(error => {
+        console.error(error);
+      })
+    } catch (error) {
       console.error(error);
-    })
-  } catch (error) {
-    console.error(error);
+    }
   }
-}
 
   return (
     <div className="main-content">

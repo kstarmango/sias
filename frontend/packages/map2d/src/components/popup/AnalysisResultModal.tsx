@@ -6,8 +6,7 @@ import { AnalysisResultModalOpenState } from "@src/stores/AnalysisCondition";
 /**
  * 분석 결과 팝업창
 */
-export const AnalysisResultModal = () => {
-  const { modalOpen, title, data } = useRecoilValue(AnalysisResultModalOpenState);
+export const AnalysisResultModal = ({ title, data }: { title: string, data: any }) => {
   const setAnalysisResultModalOpen = useSetRecoilState(AnalysisResultModalOpenState);
 
   return (
