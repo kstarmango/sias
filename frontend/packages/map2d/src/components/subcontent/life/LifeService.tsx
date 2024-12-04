@@ -2,7 +2,7 @@ import "ol/ol.css";
 import WKT from "ol/format/WKT";
 import Feature from "ol/Feature";
 import { useRecoilState } from "recoil";
-import { useContext, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 
 import { EmdInfo, LifeAnalysisCondition, SggInfo } from "@src/types/analysis-condition";
 import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
@@ -11,6 +11,11 @@ import { LIFE_SERVICE_VISUAL } from "@src/utils/analysis-constant";
 import { useMapContext } from "@src/context/MapContext";
 import { getTitleLayer } from "@src/utils/mapUtils";
 
+import axios from "axios";
+import GeoJSON from "ol/format/GeoJSON";
+import {Geometry} from "ol/geom";
+import VectorLayer from "ol/layer/Vector";
+import {Vector as VectorSource, Cluster} from "ol/source";
 
 /**
  * 생활서비스 조회컴포넌트
@@ -24,7 +29,7 @@ export const LifeService = () => {
   const { lifeServiceFacility, visualType } = lifeAnalysisCondition;
   const { map } = useMapContext();
 
-  const setInputWkt = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, inputWkt: value});
+  // const setInputWkt = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, inputWkt: value});
   const setLifeServiceFacility = (value: LifeAnalysisCondition['lifeServiceFacility']) => setLifeAnalysisCondition({...lifeAnalysisCondition, lifeServiceFacility: value});
   const setVisualType = (value: LifeAnalysisCondition['visualType']) => setLifeAnalysisCondition({...lifeAnalysisCondition, visualType: value});
 
@@ -68,6 +73,83 @@ export const LifeService = () => {
     });
   }
 
+  const handleAnalysis = () => {
+
+    try {
+      const lifeAnalysisData = async () => {
+        const geoserverUrl = '/geoserver/jn/ows';
+
+        let cqlFilter = '';
+
+        if (emd) {
+          cqlFilter = `emd_cd='${emd}'`;
+        } else if (sgg) {
+          cqlFilter = `sgg_cd like '${sgg}%'`;
+        }
+
+        const params = new URLSearchParams({
+          service: 'WFS',
+          version: '1.1.0',
+          request: 'GetFeature',
+          typeName: 'jn:' + lifeServiceFacility,
+          outputFormat: 'application/json',
+          srs: 'EPSG:5186',
+          CQL_FILTER: cqlFilter
+        })
+
+        const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
+
+        if(!response.data){
+          throw new Error('네트워크 응답이 좋지 않습니다.')
+        }
+        return response.data;
+      }
+
+      lifeAnalysisData().then((data) => {
+        if(data.features.length === 0) {
+          alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
+          return;
+        }
+
+        const featureReader = new GeoJSON();
+        const features = featureReader.readFeatures(data) as Feature<Geometry>[];
+
+        const vectorLayer = map?.getLayers().getArray().filter(lyr => lyr instanceof VectorLayer && lyr.get('title') === 'life_service')[0] as VectorLayer<VectorSource<Feature<Geometry>>>;
+
+        if(visualType === 'POINT'){
+          const source: VectorSource<any> = new VectorSource({
+            features
+          })
+          vectorLayer.setSource(source);
+        }else if(visualType === 'CLUSTER'){
+          const vectorSource : VectorSource<any> = new VectorSource({
+            features
+          });
+
+          const clusterSource : Cluster<any> = new Cluster({
+            distance: 35,
+            source: vectorSource,
+          });
+
+          vectorLayer.setSource(clusterSource);
+        }
+
+      }).catch((error) => {
+        console.log(error);
+      })
+
+    } catch (error) {
+      console.error(error);
+    }
+  }
+
+  useEffect(() => {
+    if (!lifeCatList) {
+      return;
+    }
+    setLifeServiceFacility(lifeCatList[0]['psy_nm']);
+  }, [lifeCatList]);
+
   return (
     <>
       <div className="information">
@@ -80,6 +162,7 @@ export const LifeService = () => {
           <div className="condition-list mar-left-13">
             <label>시군구</label>
             <select className="custom-select" value={sgg} onChange={e => setSgg(e.target.value)}>
+              <option value={''}>전체</option>
               {sggList?.map((item, idx) => (
                 <option key={idx} value={item.sig_cd}>{item.sig_kor_nm}</option>
               ))}
@@ -88,17 +171,11 @@ export const LifeService = () => {
           <div className="condition-list mar-left-13">
             <label>읍면동</label>
             <select className="custom-select" value={emd} onChange={e => setEmd(e.target.value)}>
-              {sgg && selSggInfo 
-                ? 
-                  <>
-                    <option value={sgg}>전체</option>
-                    {
-                      selSggInfo.emdList.map((item, idx) => (
-                        <option key={idx} value={item.emd_cd}>{item.emd_kor_nm}</option>
-                      )) 
-                    }
-                  </>
-                : <option value="">시군구 선택해주세요.</option>
+              <option value={''}>전체</option>
+              {
+                selSggInfo?.emdList.map((item, idx) => (
+                  <option key={idx} value={item.emd_cd}>{item.emd_kor_nm}</option>
+                ))
               }
             </select>
           </div>
@@ -126,7 +203,7 @@ export const LifeService = () => {
         </div>
       </div>
       <div className="button-large-wrapper">
-        <button type="button" className="large-button apply">
+        <button type="button" className="large-button apply" onClick={handleAnalysis}>
           <span className="txt">조회</span>
         </button>
       </div>

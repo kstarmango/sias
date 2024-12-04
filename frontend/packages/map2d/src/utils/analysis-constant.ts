@@ -129,10 +129,10 @@ export const LIFE_SERVICE_FACILITY = {
 }
 
 export const LIFE_SERVICE_VISUAL = {
-  point : '포인트',
-  step : '단계구분',
-  heatmap : '히트맵',
-  cluster : '클러스터'
+  POINT : '포인트',
+  STEP : '단계구분',
+  HEATMAP : '히트맵',
+  CLUSTER : '클러스터'
 }
 
 // ** 임시 데이터 목록 **

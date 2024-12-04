@@ -40,7 +40,7 @@ export const MapProvider  = ({children}) => {
 
         
         let layerList: VectorLayer[] = [];
-        const layerTitList = ['analysisInput', 'festival_inflow', 'festival_revenue', 'life_vuln_area', 'life_service_facility'];
+        const layerTitList = ['analysisInput', 'festival_inflow', 'festival_revenue', 'life_vuln_area', 'life_service'];
     
         layerTitList.forEach((title) => {
             const layer = new VectorLayer({
