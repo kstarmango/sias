@@ -262,7 +262,8 @@ export const FestivalRevenue = () => {
       const styleFunction = (features: Feature<Geometry>[], order:string) => {
         
         const dataList = features.map(feature => feature.getProperties()[order]);
-        const colorList = [ '#ffffb2', '#fecc5c', '#fd8d3c', '#f03b20', '#bd0026' ];
+        const colorList = [ 'rgba(255, 255, 178, 0.6)', 'rgba(254, 204, 92, 0.6)',
+          'rgba(253, 141, 60, 0.6)', 'rgba(240, 59, 32, 0.6)', 'rgba(189, 0, 38, 0.6)' ];
 
         // 임시 5등분 처리
         function divideIntoQuintiles(numbers: number[]): number[][] {

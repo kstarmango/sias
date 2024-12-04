@@ -150,6 +150,14 @@ export const LifeService = () => {
     setLifeServiceFacility(lifeCatList[0]['psy_nm']);
   }, [lifeCatList]);
 
+  useEffect(() => {
+    return () => {
+      // 분석결과 초기화
+      getTitleLayer(map, 'life_service')?.getSource()?.clear();
+      getTitleLayer(map, 'analysisInput')?.getSource()?.clear();
+    }
+  }, []);
+
   return (
     <>
       <div className="information">
