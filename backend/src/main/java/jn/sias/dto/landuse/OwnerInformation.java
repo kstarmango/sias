@@ -1,8 +1,10 @@
 package jn.sias.dto.landuse;
 
 import lombok.Builder;
+import lombok.Data;
 
 @Builder
+@Data
 public class OwnerInformation {
 
     private String changeYMD;

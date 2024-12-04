@@ -4,6 +4,7 @@ import jn.sias.domain.BuildingInformation;
 import jn.sias.domain.OwnerShipChangeInformation;
 import jn.sias.domain.OwnerShipShareChangeInformation;
 import jn.sias.domain.ParcelBaseInformation;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -11,6 +12,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuperBuilder
+@Data
 public class BuildingRegisterDto extends ParcelInformationBase {
 
     protected List<BuildingInformation> buildingList;

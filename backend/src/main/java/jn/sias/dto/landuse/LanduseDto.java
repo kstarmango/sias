@@ -1,6 +1,7 @@
 package jn.sias.dto.landuse;
 
 import jn.sias.domain.*;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
@@ -8,6 +9,7 @@ import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @SuperBuilder
+@Data
 public class LanduseDto extends ParcelInformationBase {
 
     protected List<LanduseInformation> landuseInformationList;

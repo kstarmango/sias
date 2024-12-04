@@ -1,23 +1,19 @@
-package jn.sias;
+package jn.sias.service;
 
 import jn.sias.domain.*;
 import jn.sias.dto.landuse.*;
 import jn.sias.repository.ParcelInformationRepository;
-import jn.sias.service.APISearchService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.scheduling.annotation.Async;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
-@SpringBootTest
+@Service
 @Slf4j
-@RequiredArgsConstructor
-public class ParcelInformationTest {
+public class ParcelInformationService {
 
     @Autowired
     private ParcelInformationRepository parcelInformationRepository;
@@ -26,25 +22,24 @@ public class ParcelInformationTest {
     private APISearchService apiSearchService;
 
 
-    @Test
-    void testParcelBaseInformation() throws Exception {
+    private String pointToGeomPoint(String pt) {
+//        "POINT(143017.99839841994 242968.49454689625)";
+        String[] xy = pt.split(",");
+        double x = Double.parseDouble(xy[0]);
+        double y = Double.parseDouble(xy[1]);
+        return String.format("'POINT(%.2f %.2f )'", x, y);
+//        return "'POINT(" + pt.replace(",", " ") + ")'";
 
-        String pt = "143017.99839841994,242968.49454689625";
+    }
 
+    public OneParcelInformationDto findOneParcelInformation(String pt) throws Exception {
+
+//        String pt = "143017.99839841994,242968.49454689625";
         String geomText = pointToGeomPoint(pt);
-//        String geomText = "POINT(143017.99839841994 242968.49454689625)";
+
         PNUBase pnuBase = parcelInformationRepository.findParcelPUNByPoint(geomText);
         String pnu = pnuBase.getPnu();
         String[] arryAddress = apiSearchService.searchAddressByGeoCode(pt);
-
-
-//        String pnu = "4677039023107310002";
-        List<ParcelBaseInformation> pInfos = parcelInformationRepository.findParcelBaseInformation(pnu);
-//        ParcelBaseInformation result = results.get(0);
-//        log.info("pun : {}", pnu);
-//        log.info("jimkCode : {}", result.getJimkCode() + "-" + result.getJimkName());
-//        log.info("ownCode : {}", result.getOwnCode() + "-" + result.getOwnName());
-
 
         CompletableFuture<List<ParcelBaseInformation>> futureParcel = fetchParcelInformation(pnu);
         CompletableFuture<List<BuildingInformation>> futureBuilding = fetchBuildingInformation(pnu);
@@ -53,9 +48,10 @@ public class ParcelInformationTest {
         CompletableFuture<List<LanduseInformation>> futureLanduse = fetchLanduseInformation(pnu);
 
         CompletableFuture.allOf(futureParcel, futureBuilding, futureOwnrShip,
-                                futureOwnrShare, futureLanduse).join();
+                futureOwnrShare, futureLanduse).join();
 
         try {
+
             List<ParcelBaseInformation> parcelBaseInfos = futureParcel.get();
             List<BuildingInformation> bInfos = futureBuilding.get();
             List<OwnerShipChangeInformation> oInfos = futureOwnrShip.get();
@@ -63,40 +59,27 @@ public class ParcelInformationTest {
             List<LanduseInformation> landuseInfos = futureLanduse.get();
 
             ParcelInformationDto parcelInformationDto = ParcelInformationDto.buildFrom(arryAddress[0], arryAddress[1],
-                                                                            parcelBaseInfos, bInfos);
+                    parcelBaseInfos, bInfos);
 
             LandRegisterDto landRegisterDto = LandRegisterDto.buildFrom(arryAddress[0], arryAddress[1],
-                                                    parcelBaseInfos, bInfos, oInfos, shareInfos);
+                    parcelBaseInfos, bInfos, oInfos, shareInfos);
 
             BuildingRegisterDto buildingRegisterDto = BuildingRegisterDto.buildFrom(arryAddress[0], arryAddress[1], bInfos);
 
             LanduseDto landuseDto = LanduseDto.buildFrom(arryAddress[0], arryAddress[1], parcelBaseInfos, landuseInfos);
+            landuseInfos.forEach(landInfo -> landInfo.convertYNCode());
 
-            OneParcelInformationDto.builder()
-                    .parcelInformationDto(parcelInformationDto)
-                    .buildingRegisterDto(buildingRegisterDto)
-                    .landRegisterDto(landRegisterDto)
-                    .landuseDto(landuseDto)
-                    .geomText(pnuBase.getGeomText())
-                    .build();
-            log.info("ParcelBaseInformation : {}", parcelBaseInfos.size());
-            log.info("BuildingInformation : {}", bInfos.size());
-            log.info("OwnerShipChangeInformation : {}", oInfos.size());
-            log.info("OwnerShipShareChangeInformation : {}", shareInfos.size());
-            log.info("LanduseInformation : {}", landuseInfos.size());
-
-            // 결과 처리 로직
-//            processResults(data1, data2);
+            return OneParcelInformationDto.builder()
+                            .parcelInformationDto(parcelInformationDto)
+                            .buildingRegisterDto(buildingRegisterDto)
+                            .landRegisterDto(landRegisterDto)
+                            .landuseDto(landuseDto)
+                            .geomText(pnuBase.getGeomText())
+                            .build();
 
         } catch (Exception e) {
-            e.printStackTrace();
+            throw new RuntimeException(e.getMessage());
         }
-    }
-
-    private String pointToGeomPoint(String pt) {
-//        "POINT(143017.99839841994 242968.49454689625)";
-        return "'POINT(" + pt.replace(",", " ") + ")'";
-
     }
 
     @Async
@@ -131,4 +114,5 @@ public class ParcelInformationTest {
         List<ParcelBaseInformation> results = parcelInformationRepository.findParcelBaseInformation(pnu);
         return CompletableFuture.completedFuture(results);
     }
+
 }

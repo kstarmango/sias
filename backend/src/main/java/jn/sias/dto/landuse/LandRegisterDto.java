@@ -4,11 +4,13 @@ import jn.sias.domain.BuildingInformation;
 import jn.sias.domain.OwnerShipChangeInformation;
 import jn.sias.domain.OwnerShipShareChangeInformation;
 import jn.sias.domain.ParcelBaseInformation;
+import lombok.Data;
 import lombok.experimental.SuperBuilder;
 
 import java.util.List;
 
 @SuperBuilder
+@Data
 public class LandRegisterDto extends ParcelInformationBase {
 
     protected String landChangeName;
