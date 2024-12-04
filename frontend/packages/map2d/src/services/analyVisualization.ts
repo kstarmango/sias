@@ -7,8 +7,11 @@ import VectorLayer from "ol/layer/Vector";
 import { Geometry } from "ol/geom";
 import Map from "ol/Map";
 
-import { FestivalInfluxAnalysisCondition } from "@src/types/analysis-condition";
-
+import { FestivalInfluxAnalysisCondition, FestivalRevenueAnalysisCondition } from "@src/types/analysis-condition";
+import { Fill } from "ol/style";
+import Style from "ol/style/Style";
+ 
+/** 축제 유입 분석 시각화 - layerTitle: festival_inflow */
 export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map) => {
   try {
 
@@ -93,6 +96,11 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
     fetchFestivalInflowData().then(data => {
       let featureData = data;
 
+      if(!featureData.features) {
+        alert('분석 조건에 충족하는 분 결과가 존재하지 않습니다.');
+        return;
+      }
+
       const topTenFeatures = featureData.features
         .sort((a, b) => b.properties.pop_all - a.properties.pop_all) 
         .slice(0, 10);
@@ -109,13 +117,78 @@ export const odFlowMap = async (data: FestivalInfluxAnalysisCondition, map: Map)
       });
 
       vectorLayer.set('title', 'festival_inflow');
-      map?.addLayer(vectorLayer as any);
+      map?.addLayer(vectorLayer as unknown as VectorLayer<VectorSource<Feature<Geometry>>>);
     
    
     }).catch(error => {
       console.error(error);
     })
 
+  } catch (error) {
+    console.error(error);
+  }
+}
+
+/** 축제 매출 분석 시각화 - layerTitle: festival_sales_all */
+export const fesitvalSalesAll = async (data: FestivalRevenueAnalysisCondition, map: Map) => {
+
+  try {
+    const fetchFestivalSalesAllData = async () => {
+      const geoserverUrl = '/geoserver/jn/ows';
+      const { x_coord, y_coord, startDate, endDate, radius, order } = data;
+      
+      const params = new URLSearchParams({
+        service: 'WFS',
+        version: '1.1.0',
+        request: 'GetFeature',
+        typeName: 'jn:jn_festival_sales_age_all', 
+        outputFormat: 'application/json',
+        srs: 'EPSG:5186',
+        viewparams: `x_coord:${x_coord};y_coord:${y_coord};start_date:${startDate};end_date:${endDate};radius:${radius};order:${order}`
+      })
+  
+      const response = await axios.get(`${geoserverUrl}?${params.toString()}`);
+      if(!response.data){
+        throw new Error('네트워크 응답이 좋지 않습니다.')
+      }
+      return response.data;
+    }
+
+    const styleFunction = (features: Feature<Geometry>[]) => {
+      return (feature: FeatureLike) => {
+
+        debugger;
+
+        return new Style({
+          fill: new Fill({ color: 'red' })
+        });
+      }
+    }
+
+    fetchFestivalSalesAllData().then(data => {
+      if(!data.features) {
+        alert('분석 조건에 충족하는 분석 결과가 존재하지 않습니다.');
+        return;
+      }
+
+      debugger;
+
+      const featureReader = new GeoJSON();
+      const features = featureReader.readFeatures(data) as Feature<Geometry>[];
+
+      const vectorLayer = new VectorLayer({
+        source: new VectorSource({
+          features: features
+        }),
+        style: styleFunction(features)  
+      });
+
+      vectorLayer.set('title', 'festival_sales_all');
+      map?.addLayer(vectorLayer);
+
+    }).catch(error => {
+      console.error(error);
+    })
   } catch (error) {
     console.error(error);
   }

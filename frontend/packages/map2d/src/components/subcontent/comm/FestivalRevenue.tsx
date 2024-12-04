@@ -5,10 +5,10 @@ import { useRecoilState } from "recoil";
 import { Circle, Geometry, Point } from "ol/geom";
 import { useCallback, useContext, useEffect, useState } from "react";
 
-import { festivalInfluxAnalysisConditionState } from "@src/stores/AnalysisCondition";
+import { festivalInfluxAnalysisConditionState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
 import { MapContext } from "@src/contexts/MapView2DContext";
-import { odFlowMap } from "@src/services/analyVisualization";
+import { fesitvalSalesAll, odFlowMap } from "@src/services/analyVisualization";
 import Draw from "ol/interaction/Draw";
 import VectorSource from "ol/source/Vector";
 
@@ -32,11 +32,13 @@ type Festival = {
  */
 export const FestivalRevenue = () => {
   // 분석조건 상태
-  const [festivalInfluxAnalysisCondition, setFestivalInfluxAnalysisCondition] = useRecoilState(festivalInfluxAnalysisConditionState);
-  const { startDate, endDate, radius } = festivalInfluxAnalysisCondition;
+  const [festivalRevenueAnalysisCondition, setFestivalRevenueAnalysisCondition] = useRecoilState(festivalRevenueAnalysisConditionState);
+  const { startDate, endDate, radius, order } = festivalRevenueAnalysisCondition;
 
-  const updateAnalysisCondition = (key: keyof typeof festivalInfluxAnalysisCondition, value: any) => 
-    setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, [key]: value});
+  const updateAnalysisCondition = useCallback((key: keyof typeof festivalRevenueAnalysisCondition, value: any) => 
+    setFestivalRevenueAnalysisCondition(prev => ({...prev, [key]: value})),
+    [festivalRevenueAnalysisCondition]
+  );
 
   const [festival, setFestival] = useState<Festival>({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
   const [festivalYear, setFestivalYear] = useState<string>('');
@@ -89,13 +91,13 @@ export const FestivalRevenue = () => {
     map.getView().setZoom(14);
 
     const coordinates = point.getCoordinates();
-    setFestivalInfluxAnalysisCondition({
-      ...festivalInfluxAnalysisCondition,
+    setFestivalRevenueAnalysisCondition(prev => ({
+      ...prev,
       startDate: formatDateString(item.startDate),
       endDate: formatDateString(item.endDate),
       x_coord: coordinates[0], 
       y_coord: coordinates[1],
-    });
+    }));
     
     setFestival(item);
   };
@@ -144,11 +146,11 @@ export const FestivalRevenue = () => {
       getTitleLayer('festival_inflow')?.getSource()?.clear();
 
       // start loading
-      const data = {...festivalInfluxAnalysisCondition};
+      const data = {...festivalRevenueAnalysisCondition};
       data.startDate = data.startDate.replace(/-/g, '');
       data.endDate = data.endDate.replace(/-/g, '');
 
-      if(map) odFlowMap(data, map);
+      if(map) fesitvalSalesAll(data, map);
     } catch (error) {
       console.error(error);
     } finally {

@@ -35,8 +35,10 @@ export const FestivalInflux = () => {
   const [festivalInfluxAnalysisCondition, setFestivalInfluxAnalysisCondition] = useRecoilState(festivalInfluxAnalysisConditionState);
   const { startDate, endDate, radius } = festivalInfluxAnalysisCondition;
 
-  const updateAnalysisCondition = (key: keyof typeof festivalInfluxAnalysisCondition, value: any) => 
-    setFestivalInfluxAnalysisCondition({...festivalInfluxAnalysisCondition, [key]: value});
+  const updateAnalysisCondition = useCallback((key: keyof typeof festivalInfluxAnalysisCondition, value: any) => 
+    setFestivalInfluxAnalysisCondition(prev => ({...prev, [key]: value})),
+    [festivalInfluxAnalysisCondition]
+  );
 
   const [festival, setFestival] = useState<Festival>({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
   const [festivalYear, setFestivalYear] = useState<string>('');
@@ -55,6 +57,8 @@ export const FestivalInflux = () => {
     // 축제 지점 초기화
     getTitleLayer('analysisInput')?.getSource()?.clear();
     updateAnalysisCondition('radius', 100);
+
+    console.log('change');
     setFestival({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
   }
 
@@ -70,6 +74,7 @@ export const FestivalInflux = () => {
    */
   const handleFestivalChange = (festivalTitle: string) => {
     const item : Festival = festivalListData?.find(item => item.title === festivalTitle) as Festival;
+    
     if(!map) return;
 
     const wktReader = new WKT();
@@ -89,14 +94,14 @@ export const FestivalInflux = () => {
     map.getView().setZoom(14);
 
     const coordinates = point.getCoordinates();
-    setFestivalInfluxAnalysisCondition({
-      ...festivalInfluxAnalysisCondition,
+    setFestivalInfluxAnalysisCondition(prev => ({
+      ...prev,
       startDate: formatDateString(item.startDate),
       endDate: formatDateString(item.endDate),
       x_coord: coordinates[0], 
       y_coord: coordinates[1],
-    });
-    
+    }));
+
     setFestival(item);
   };
 
@@ -107,7 +112,7 @@ export const FestivalInflux = () => {
   const handleBufferChange = useCallback((e: React.ChangeEvent<HTMLInputElement>) => {
     const newBuffer = Number(e.target.value);
     updateAnalysisCondition('radius', newBuffer);
-
+        
     const wktReader = new WKT();
     // 축제 지점 좌표
     const pointCoordinates = festival.geom 
@@ -139,6 +144,7 @@ export const FestivalInflux = () => {
     }
 
     try {
+
       // 분석결과 초기화
       getTitleLayer('analysisInput')?.getSource()?.clear();
       getTitleLayer('festival_inflow')?.getSource()?.clear();
@@ -150,7 +156,7 @@ export const FestivalInflux = () => {
 
       if(map) odFlowMap(data, map);
     } catch (error) {
-      console.error(error);
+      console.error('축제 유입 분석 시각화 오류', error);
     } finally {
       // stop loading
     }

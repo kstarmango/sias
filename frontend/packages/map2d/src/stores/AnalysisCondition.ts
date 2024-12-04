@@ -142,9 +142,10 @@ export const festivalInfluxAnalysisConditionState = atom<FestivalInfluxAnalysisC
 export const festivalRevenueAnalysisConditionState = atom<FestivalRevenueAnalysisCondition>({
   key: 'festivalRevenueAnalysisConditionState',
   default: {
-    inputWkt: '',
-    buffer: 0,
-    festival: 'ENTIRE',
+    x_coord: 0,
+    y_coord: 0,
+    radius: 100,
+    order: 'sale_all',
     startDate: '',
     endDate: ''
   }

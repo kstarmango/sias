@@ -166,4 +166,4 @@ export type AreaSalesAnalysisCondition = BufferIncludeAreaCondition & StartEndTi
 export type FestivalInfluxAnalysisCondition = BufferCondition & StartEndTimeCondition & { des_cd: number };
 
 /** 축제 매출 분석 조건 */
-export type FestivalRevenueAnalysisCondition = FestivalAreaCondition & StartEndTimeCondition;
+export type FestivalRevenueAnalysisCondition = BufferCondition & StartEndTimeCondition & { order: string };
