@@ -23,8 +23,7 @@
     </resultMap>
 
     <select id="getLifeCatList" resultType="lifeCategoryInfoDto">
-        SELECT g
-            id as id, psy_nm, log_nm, life_category
+        SELECT gid as id, psy_nm, log_nm, life_category
         FROM
             life.jn_life_metadata
         WHERE
