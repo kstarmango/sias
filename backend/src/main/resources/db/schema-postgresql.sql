@@ -51,3 +51,17 @@ LEFT JOIN
     public.gbn_cd_code g
 ON
     l.jimk = g.cd;
+
+create VIEW public.vw_lrgtn101_jiga AS
+SELECT
+    l.*,
+    g.base_year || '-' || LPAD(g.base_month::TEXT, 2, '0') AS base_ym,
+	g.jiga,
+	g.jiga_ymd,
+	g.std_yn
+FROM
+    public.vw_cbnd_lrgtn l
+LEFT JOIN
+    public.al_d151_46 g
+ON
+    l.pnu = g.pnu;

@@ -5,7 +5,7 @@ import lombok.Data;
 @Data
 public class LanduseAnalysisRequestDto {
 
-    // 분석타입
+    // 분석타입(owner, jimk, parcel)
     // owner type
     // 0 일본인, 창씨명등, 1 개인, 2 국유지, 3 외국인, 외국공공기관, 4 시, 도유지, 5 군유지
     // 6 법인, 7 종중, 8 종교단체, 9 기타단체

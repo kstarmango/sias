@@ -1,0 +1,225 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="jn.sias.repository.ParcelInformationRepository">
+
+<!--
+    <resultMap id="userResultMap" type="com.example.dto.UserDto">
+        <result column="user_id" property="id" />
+        <result column="user_name" property="name" />
+        <result column="user_email" property="email" />
+
+        <association property="address" javaType="com.example.dto.AddressDto">
+            <result column="address_id" property="id"/>
+            <result column="address_line" property="line"/>
+        </association>
+    </resultMap>
+
+    <select id="findUserWithAddress" resultMap="userResultMap">
+        SELECT u.user_id, u.user_name, u.user_email, a.address_id, a.address_line
+        FROM users u
+        LEFT JOIN addresses a ON u.user_id = a.user_id
+        WHERE u.user_id = #{id}
+    </select>
+
+
+    <resultMap type="YearMonthValue" id="yearMonthValue">
+        <result column="baseYear" property="baseYear"/>
+        <result column="baseMonth" property="baseMonth"/>
+        <result column="jiga" property="jiga"/>
+        <result column="stdYN" property="stdYN"/>
+    </resultMap>
+
+    <resultMap type="ParcelBaseInformation" id="parcelBaseInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="jimkCode" property="jimkCode"/>
+        <result column="jimkName" property="jimkName"/>
+        <result column="ownCode" property="ownCode"/>
+        <result column="ownName" property="ownName"/>
+        <result column="ownrAddress" property="ownrAddress"/>
+        <collection property="jigaList" resultMap="yearMonthValue" />
+    </resultMap>
+    -->
+
+    <resultMap type="ParcelBaseInformation" id="parcelBaseInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="jimkCode" property="jimkCode"/>
+        <result column="jimkName" property="jimkName"/>
+        <result column="ownCode" property="ownCode"/>
+        <result column="ownName" property="ownName"/>
+        <result column="area" property="area"/>
+        <result column="ownrAddress" property="ownrAddress"/>
+        <result column="mainPurpsName" property="mainPurpsName"/>
+        <result column="baseYear" property="baseYear"/>
+        <result column="baseMonth" property="baseMonth"/>
+        <result column="jiga" property="jiga"/>
+        <result column="stdYN" property="stdYN"/>
+    </resultMap>
+
+    <resultMap type="BuildingInformation" id="buildingInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="buildingName" property="buildingName"/>
+        <result column="mainPurpsName" property="mainPurpsName"/>
+        <result column="buildingLandArea" property="buildingLandArea"/>
+        <result column="mgmBldrgst" property="mgmBldrgst"/>
+        <result column="registerType" property="registerType"/>
+        <result column="buildingArea" property="buildingArea"/>
+        <result column="buildingFloorArea" property="buildingFloorArea"/>
+        <result column="dryRatio" property="dryRatio"/>
+        <result column="floorAreaRatio" property="floorAreaRatio"/>
+        <result column="baseYear" property="baseYear"/>
+        <result column="baseMonth" property="baseMonth"/>
+        <result column="jiga" property="jiga"/>
+        <result column="stdYN" property="stdYN"/>
+
+    </resultMap>
+
+    <resultMap type="OwnerShipChangeInformation" id="ownerShipChangeInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="changeNumber" property="changeNumber"/>
+        <result column="changeYMD" property="changeYMD"/>
+        <result column="changeCode" property="changeCode"/>
+        <result column="changeName" property="changeName"/>
+        <result column="ownrName" property="ownrName"/>
+        <result column="ownrAddress" property="ownrAddress"/>
+    </resultMap>
+
+    <resultMap type="OwnerShipShareChangeInformation" id="ownerShipShareChangeInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="changeYMD" property="changeYMD"/>
+        <result column="changeCode" property="changeCode"/>
+        <result column="changeName" property="changeName"/>
+        <result column="ownspCosm" property="ownspCosm"/>
+        <result column="ownrName" property="ownrName"/>
+        <result column="ownrAddress" property="ownrAddress"/>
+    </resultMap>
+
+
+    <resultMap type="LanduseInformation" id="landuseInformation">
+        <result column="pnu" property="pnu"/>
+        <result column="ledgCode" property="ledgCode"/>
+        <result column="chltYN" property="chltYN"/>
+        <result column="aprvYN" property="aprvYN"/>
+        <result column="useZoneCode" property="useZoneCode"/>
+        <result column="useZoneCodeName" property="useZoneCodeName"/>
+    </resultMap>
+
+
+    <resultMap type="PNUBase" id="pnuBase">
+        <result column="pnu" property="pnu"/>
+        <result column="geomText" property="geomText"/>
+    </resultMap>
+
+
+    <!-- pnu code를 이용한 소유자 변경이력정보 조회 -->
+    <select id="findLanduseInformation" resultType="landuseInformation">
+        SELECT
+            b.pnu,
+<!--            b.aprv_yn as ledgCode,-->
+            b.cflt_yn as chltYN,
+            b.aprv_yn as aprvYN,
+            b.use_zone_zone_cd as useZoneCode,
+            b.use_zone_zone_cd_nm AS useZoneCodeName
+        FROM
+         public.vw_landuse_pnu b
+        WHERE
+            b.pnu = #{pnu}
+<!--            order by b.ownsp_ch_ymd-->
+    </select>
+
+    <select id="findParcelPUNByPoint" resultType="pnuBase">
+        select
+            pnu,  ST_AsText(jk.geom) AS geomText,
+        from
+            lp_pa_cbnd c
+        where
+            ST_Intersects(
+                ST_SetSRID(c.geom, 5186),
+                ST_GeomFromText(${geomText}, 5186)
+            )
+    </select>
+
+    <!-- pnu code를 이용한 소유자 변경이력정보 조회 -->
+    <select id="findOwnerShipShareChangeInformation" resultType="ownerShipShareChangeInformation">
+        SELECT
+            b.pnu,
+            b.ownsp_ch_ymd as changeYMD,
+            b.ownsp_ch_cau_gbn as changeCode,
+            b.cd_nm as changeName,
+            b.ownsp_cosm AS ownspCosm,
+            b.ownr_nm as ownrName,
+            b.ownr_addr AS ownrAddress
+        FROM
+            public.vw_lrgtn113 b
+        WHERE
+            b.pnu = #{pnu}
+            order by b.ownsp_ch_ymd
+    </select>
+
+
+    <!-- pnu code를 이용한 소유자 변경이력정보 조회 -->
+    <select id="findOwnerShipChangeInformation" resultType="ownerShipChangeInformation">
+        SELECT
+            b.pnu,
+            b.ownsp_chr_no AS changeNumber,
+            b.ownsp_ch_ymd as changeYMD,
+            b.ownsp_ch_cau_gbn as changeCode,
+            b.cd_nm as changeName,
+            b.ownr_nm as ownrName,
+            b.ownr_addr AS ownrAddress
+        FROM
+            public.vw_lrgtn112 b
+        WHERE
+            b.pnu = #{pnu}
+            order by b.ownsp_ch_ymd
+    </select>
+
+    <!-- pnu code를 이용한 건물정보 조회 -->
+    <select id="findBuildingInformation" resultType="buildingInformation">
+        SELECT
+            b.pnu,
+            b.building_nm AS buildingName,
+            b.main_purps_nm as mainPurpsName,
+            b.building_land_area as buildingLandArea,
+            b.mgm_bldrgst as mgmBldrgst,
+            b.collection as registerType,
+            b.building_area as buildingArea,
+            b.building_floor_area AS buildingFloorArea,
+            b.dry_ratio as dryRatio,
+            b.floor_area_ratio as floorAreaRatio,
+            b.hprc_year as baseYear,
+            b.base_mon as baseMonth,
+            b.hprc AS jiga,
+            b.pyo_yn as stdYN
+        FROM
+            public.vw_build_hprc b
+        WHERE
+            b.pnu = #{pnu}
+        order by b.hprc_year
+    </select>
+
+    <select id="findParcelBaseInformation" resultType="parcelBaseInformation">
+        SELECT
+            b.pnu,
+            b.jimk AS jimkCode,
+            b.jimk_nm as jimkName,
+            b.own_gbn as ownCode,
+            b.own_gbn_nm as ownName,
+            b.ownr_addr as ownrAddress,
+            b.area as area,
+            b.main_purps_nm as mainPurpsName,
+            b.dry_ratio as dryRatio,
+            b.building_area as buildingArea,
+            b.floor_area_ratio as floorAreaRatio,
+            b.building_land_area as buildingLandArea,
+            b.base_year as baseYear,
+            b.base_mon as baseMonth,
+            b.pyo_yn as stdYN,
+            b.jiga as jiga
+        FROM
+            public.vw_cbnd_lrgtn_build_jiga b
+        WHERE
+            b.pnu = #{pnu}
+            order by b.base_year
+    </select>
+</mapper>

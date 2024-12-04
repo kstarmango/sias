@@ -29,7 +29,6 @@
         LEFT JOIN addresses a ON u.user_id = a.user_id
         WHERE u.user_id = #{id}
     </select>
-    -->
 
     <resultMap type="YearMonthValue" id="yearMonthValue">
         <result column="baseYear" property="baseYear"/>
@@ -37,6 +36,7 @@
         <result column="jiga" property="jiga"/>
         <result column="stdYN" property="stdYN"/>
     </resultMap>
+
 
     <resultMap type="ParcelBaseInformation" id="parcelBaseInformation">
         <result column="pnu" property="pnu"/>
@@ -47,7 +47,7 @@
         <result column="ownrAddress" property="ownrAddress"/>
         <collection property="jigaList" resultMap="yearMonthValue" />
     </resultMap>
-
+    -->
 
     <!-- umd code를 이용한 토지지목 분석 -->
     <select id="findJimkByAdm" resultType="landuseAnalysisResultDto">
@@ -64,11 +64,11 @@
                 ST_SetSRID(jk.geom, 5186),
                 (
                     SELECT
-                        ST_Transform(geom, 5186) AS transformed_geom
+                        ST_SetSRID(geom, 5186)
                     FROM
-                        public.adm
+                        public.lp_adm_emd
                     WHERE
-                        adm.sp_b_code = #{umdCode}  <!-- 매개변수 바인딩 -->
+                        lp_adm_emd.emd_cd = #{umdCode}
                     LIMIT 1
                 )
             )
@@ -90,11 +90,11 @@
                 ST_SetSRID(jk.geom, 5186),
                 (
                     SELECT
-                        ST_Transform(geom, 5186) AS transformed_geom
+                        ST_SetSRID(geom, 5186)
                     FROM
-                        public.adm
+                        public.lp_adm_emd
                     WHERE
-                        adm.sp_b_code = #{umdCode}  <!-- 매개변수 바인딩 -->
+                        lp_adm_emd.emd_cd = #{umdCode}
                     LIMIT 1
                 )
             )
@@ -136,25 +136,25 @@
     </select>
 
     <!-- user click point(x, y)를 이용한 필지정보 분석 -->
-    <select id="findParcelInformation" resultType="parcelBaseInformation">
-        SELECT
-            jk.pnu,
-            jk.jimk AS jimkCode,
-            jk.jimk_nm as jimkName,
-            jk.own_gbn as ownCode,
-            jk.own_gbn_nm as ownName,
-            jk.ownr_addr as ownrAddress,
-
-            jk.base_year as baseYear,
-            jk.base_mon as baseMonth,
-            jk.jiga as jiga
+<!--    <select id="findParcelInformation" resultType="parcelBaseInformation">-->
+<!--        SELECT-->
+<!--            jk.pnu,-->
+<!--            jk.jimk AS jimkCode,-->
+<!--            jk.jimk_nm as jimkName,-->
+<!--            jk.own_gbn as ownCode,-->
+<!--            jk.own_gbn_nm as ownName,-->
 <!--            jk.ownr_addr as ownrAddress,-->
-        FROM
-            public.vw_lrgtn101_cbnd_jiga jk
-        WHERE
-            ST_Intersects(
-                ST_SetSRID(jk.geom, 5186),
-                ST_GeomFromText('${geomText}', 5186)
-            )
-    </select>
+
+<!--            jk.base_year as baseYear,-->
+<!--            jk.base_mon as baseMonth,-->
+<!--            jk.jiga as jiga-->
+<!--&lt;!&ndash;            jk.ownr_addr as ownrAddress,&ndash;&gt;-->
+<!--        FROM-->
+<!--            public.vw_lrgtn101_cbnd_jiga jk-->
+<!--        WHERE-->
+<!--            ST_Intersects(-->
+<!--                ST_SetSRID(jk.geom, 5186),-->
+<!--                ST_GeomFromText('${geomText}', 5186)-->
+<!--            )-->
+<!--    </select>-->
 </mapper>
