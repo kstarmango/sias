@@ -31,6 +31,7 @@ public class LanduseAnalysisTest {
 
         try {
             List<LanduseAnalysisResultDto> resultDtoList = landuseAnalysisRepository.findJimkByAdm(umdCode);
+
             summaryResult(resultDtoList);
 
         } catch (Exception ex) {

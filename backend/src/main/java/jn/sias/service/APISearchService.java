@@ -13,6 +13,7 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.cache.CacheManager;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.MediaType;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -48,6 +49,7 @@ public class APISearchService {
     private final String pageNodeKey = "page";
     private final String recordNodeKey = "record";
     private final String itemsNodeKey = "items";
+    private final String resultNodeKey = "result";
 
     private final WebClient webClient;
 
@@ -160,12 +162,52 @@ public class APISearchService {
         return results;
     }
 
-    @Cacheable(cacheNames = "cacheEmd", key = "#sgg")
+//    @Cacheable(cacheNames = "cacheEmd", key = "#sgg")
     public List<AddressItem> searchEMDParcel(String sgg, String emd, String detail) throws Exception {
 
         String queryStr = String.format("%s %s %s %s", sido, sgg, emd, detail);
         return searchDistrictDetails(addressType, queryStr, parcelCategory,
                 AddressItem.class, Comparator.comparing(Item::getId));
+    }
+
+    public String[] searchAddressByGeoCode(String geoCode) throws Exception {
+
+        VWorldAPIAddressBaseDto dto = VWorldAPIAddressBaseDto.builder()
+                                                            .point(geoCode)
+                                                            .key(key)
+                                                            .build();
+        MultiValueMap<String, String>  params = dto.toFormData();
+
+        Mono<String> resultMono = webClient.get()
+                .uri(uriBuilder -> uriBuilder
+                        .path("/req/address")
+                        .queryParams(params)
+                        .build())
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .bodyToMono(String.class)
+                .doOnError(e -> new RuntimeException(e.getMessage()));
+
+        String json = resultMono.block();
+
+        JsonNode rootNode = objectMapper.readTree(json);
+        List<GeoCodeAddressItem> result = convertJsonToList(rootNode, resultNodeKey, GeoCodeAddressItem.class);
+
+        return new String[] {result.get(0).getText(),
+                            result.size() == 1 ? new String() : result.get(1).getText()};
+    }
+
+    public<T extends Item> List<T> searchAddressDetails(String type, String query,
+                                                         String category, Class<T> clazz,
+                                                         Comparator<T> comparator) throws Exception {
+
+
+        VWorldAPISearchResultDto<T> resultDto = _searchDistrict(type, query, category, clazz);
+        List<T> districtList = resultDto.getItems().stream()
+                .sorted(comparator)
+                .collect(Collectors.toList());
+
+        return districtList;
     }
 
     public List<AddressItem> searchRoadAddress(SearchAPIDto searchDto) throws Exception {
@@ -241,6 +283,19 @@ public class APISearchService {
         String json = resultMono.block();
         return parseSearchResult(json, clazz);
     }
+//
+//    private <T> VWorldAPIAddressResultDto<T> parseAddressResult(String json, Class<T> clazz) throws Exception {
+//
+//        JsonNode rootNode = objectMapper.readTree(json);
+//        List<T> result = convertJsonToList(rootNode, resultNodeKey, clazz);
+//
+//        return VWorldAPIAddressResultDto.<T>builder()
+//                .result(result)
+//                .status("OK")
+//                .build();
+//    }
+
+
 
     private <T> VWorldAPISearchResultDto<T> parseSearchResult(String json, Class<T> clazz) throws Exception {
 

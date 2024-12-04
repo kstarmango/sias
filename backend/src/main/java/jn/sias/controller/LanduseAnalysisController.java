@@ -3,6 +3,8 @@ package jn.sias.controller;
 import jn.sias.domain.LanduseAnalysisResultDto;
 import jn.sias.dto.landuse.LanduseAnalysisRequestDto;
 import jn.sias.dto.landuse.LanduseAnalysisSummaryReport;
+import jn.sias.dto.vworld.SearchAPIDto;
+import jn.sias.service.APISearchService;
 import jn.sias.service.LanduseAnalysisService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -29,4 +31,14 @@ public class LanduseAnalysisController {
 
         return new ResponseEntity<>(resultReports, HttpStatus.OK);
     }
+
+    @PostMapping("parcel_info")
+    public ResponseEntity<Map<String, LanduseAnalysisSummaryReport>> getParcelInformation(
+            @RequestBody LanduseAnalysisRequestDto analysisInfo) throws Exception {
+
+        Map<String, LanduseAnalysisSummaryReport> resultReports = landuseAnalysisService.analysisLanduse(analysisInfo);
+
+        return new ResponseEntity<>(resultReports, HttpStatus.OK);
+    }
+
 }

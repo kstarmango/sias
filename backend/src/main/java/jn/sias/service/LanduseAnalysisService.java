@@ -4,6 +4,7 @@ import jn.sias.dto.landuse.LanduseAnalysisCode;
 import jn.sias.dto.landuse.LanduseAnalysisRequestDto;
 import jn.sias.domain.LanduseAnalysisResultDto;
 import jn.sias.repository.LanduseAnalysisRepository;
+import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,10 +17,22 @@ import jn.sias.dto.landuse.LanduseAnalysisSummaryReport;
 
 @Service
 @Slf4j
+@RequiredArgsConstructor
 public class LanduseAnalysisService {
+
+    private final APISearchService  apiSearchService;
 
     @Autowired
     private LanduseAnalysisRepository landuseAnalysisRepository;
+
+
+    public void getParcelInformation(String geomPt) throws Exception {
+
+        String[] addressResult = apiSearchService.searchAddressByGeoCode(geomPt);
+
+
+    }
+
 
     public Map<String, LanduseAnalysisSummaryReport> analysisLanduse(LanduseAnalysisRequestDto analysisInfo) throws Exception{
 

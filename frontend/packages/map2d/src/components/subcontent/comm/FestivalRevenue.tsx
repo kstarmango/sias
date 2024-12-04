@@ -14,10 +14,11 @@ import {Style, Fill, Stroke, Text} from "ol/style";
 
 import { AnalysisResultModalOpenState, festivalRevenueAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getFestivalListData, getFestivalYearList } from "@src/services/analyRequestApi";
-import { MapContext } from "@src/contexts/MapView2DContext";
 import Draw from "ol/interaction/Draw";
 import { FestivalRevenueAnalysisCondition } from "@src/types/analysis-condition";
 import axios from "axios";
+import { useMapContext } from "@src/context/MapContext";
+import { getTitleLayer } from "@src/utils/mapUtils";
 
 type Festival = {
   gid: number;
@@ -56,7 +57,7 @@ export const FestivalRevenue = () => {
   const [isJeonnamInclude, setIsJeonnamInclude] = useState<boolean>(false);
   const [weight, setWeight] = useState<boolean>(false);
 
-  const { map, getTitleLayer } = useContext(MapContext);
+  const { map } = useMapContext();
 
   const { data: festivalListData } = getFestivalListData(festivalYear) as { data: Festival[] };
   const { data: festivalYearList } = getFestivalYearList() as { data: string[] };
@@ -70,7 +71,7 @@ export const FestivalRevenue = () => {
   const handlePointTypeChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPointType(e.target.value);
     // 축제 지점 초기화
-    getTitleLayer('analysisInput')?.getSource()?.clear();
+    getTitleLayer(map,'analysisInput')?.getSource()?.clear();
     updateAnalysisCondition('radius', 100);
     setFestival({ gid: 0, title: '', x_coord: 0, y_coord: 0, host: '', startDate: '', endDate: '', yyyy: '', content: '', geom: '' });
   }
@@ -98,7 +99,7 @@ export const FestivalRevenue = () => {
       ) 
     });
 
-    const analysisSource = (getTitleLayer('analysisInput')?.getSource());
+    const analysisSource = getTitleLayer(map, 'analysisInput')?.getSource();
     analysisSource?.clear();
     analysisSource?.addFeature(newPoint);
 
@@ -129,14 +130,14 @@ export const FestivalRevenue = () => {
     // 축제 지점 좌표
     const pointCoordinates = festival.geom 
       ? (wktReader.readGeometry(festival.geom) as Point).getCoordinates()
-      : (getTitleLayer('analysisInput')?.getSource()?.getFeatures()[0]?.getGeometry() as Circle).getCenter();
+      : (getTitleLayer(map, 'analysisInput')?.getSource()?.getFeatures()[0]?.getGeometry() as Circle).getCenter();
 
     if(pointCoordinates && newBuffer){
       const newPoint = new Feature({ 
         geometry: new Circle(pointCoordinates, newBuffer)
       });
 
-      const inputLayer = getTitleLayer('analysisInput');
+      const inputLayer = getTitleLayer(map, 'analysisInput');
       inputLayer?.getSource()?.clear();
       inputLayer?.getSource()?.addFeature(newPoint);
     }
@@ -157,8 +158,8 @@ export const FestivalRevenue = () => {
 
     try {
       // 분석결과 초기화
-      getTitleLayer('analysisInput')?.getSource()?.clear();
-      getTitleLayer('festival_sales_all')?.getSource()?.clear();
+      getTitleLayer(map, 'analysisInput')?.getSource()?.clear();
+      getTitleLayer(map, 'festival_sales_all')?.getSource()?.clear();
 
       // start loading
       const data = {...festivalRevenueAnalysisCondition};
@@ -182,7 +183,7 @@ export const FestivalRevenue = () => {
     const interactions = map.getInteractions().getArray();
     const drawInteractions = interactions.filter(interaction => interaction.get('title') === 'Draw') as Draw[];
     drawInteractions.forEach(interaction => map.removeInteraction(interaction));
-    const analysisInputSource = getTitleLayer('analysisInput')?.getSource() as VectorSource<Feature<Geometry>>;
+    const analysisInputSource = getTitleLayer(map, 'analysisInput')?.getSource() as VectorSource<Feature<Geometry>>;
 
     const drawInteraction = new Draw({
       source: analysisInputSource,
@@ -208,8 +209,8 @@ export const FestivalRevenue = () => {
   useEffect(() => {
     return () => {
       // 분석결과 초기화
-      getTitleLayer('festival_revenue')?.getSource()?.clear();
-      getTitleLayer('analysisInput')?.getSource()?.clear();
+      getTitleLayer(map, 'festival_revenue')?.getSource()?.clear();
+      getTitleLayer(map, 'analysisInput')?.getSource()?.clear();
     }
   }, []);
 
@@ -406,7 +407,7 @@ export const FestivalRevenue = () => {
               </div>
             </div>
             <div className="button-wrapper">
-              <button type="button" className="normal-button cancel" onClick={() => getTitleLayer('analysisInput')?.getSource()?.clear()}>초기화</button>
+              <button type="button" className="normal-button cancel" onClick={() => getTitleLayer(map, 'analysisInput')?.getSource()?.clear()}>초기화</button>
               <button type="button" className="normal-button apply" onClick={selectSpatialPoint}>지점선택</button>
             </div>
           </div>

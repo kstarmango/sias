@@ -1,3 +1,6 @@
+import '../../public/css/font.css'
+import '../../public/css/setup.css'
+import '../../public/css/basic.css'
 import {Route, Routes} from "react-router-dom";
 import {MainLayout} from "@src/layouts";
 import {ProtectedRoute} from "@shared/components/routes";

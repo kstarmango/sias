@@ -1,0 +1,60 @@
+@font-face {
+  font-family: "s-core-light";
+  src: url("../font/scdream3-webfont.woff2") format("woff2"), url("../font/scdream3-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "s-core-regular";
+  src: url("../font/scdream4-webfont.woff2") format("woff2"), url("../font/scdream4-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "s-core-medium";
+  src: url("../font/scdream5-webfont.woff2") format("woff2"), url("../font/scdream5-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "s-core-bold";
+  src: url("../font/scdream6-webfont.woff2") format("woff2"), url("../font/scdream6-webfont.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "sbaggro";
+  src: url("../font/SBAggroMedium.woff2") format("woff2"), url("../font/SBAggroMedium.woff") format("woff");
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: "Montserrat-regular";
+  font-weight: 400;
+  font-style: normal;
+  src: url("../font/Montserrat-Regular.woff2") format("woff2"), url("../font/Montserrat-Regular.woff") format("woff");
+}
+@font-face {
+  font-family: "Montserrat-medium";
+  font-weight: 500;
+  font-style: normal;
+  src: url("../font/Montserrat-Medium.woff2") format("woff2"), url("../font/Montserrat-Medium.woff") format("woff");
+}
+@font-face {
+  font-family: "Montserrat-semibold";
+  font-weight: 600;
+  font-style: normal;
+  src: url("../font/Montserrat-SemiBold.woff2") format("woff2"), url("../font/Montserrat-SemiBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Montserrat-exbold";
+  font-weight: 800;
+  font-style: normal;
+  src: url("../font/Montserrat-ExtraBold.woff2") format("woff2"), url("../font/Montserrat-ExtraBold.woff") format("woff");
+}
+@font-face {
+  font-family: "Montserrat-black";
+  font-weight: 900;
+  font-style: normal;
+  src: url("../font/Montserrat-Black.woff2") format("woff2"), url("../font/Montserrat-Black.woff") format("woff");
+}/*# sourceMappingURL=font.css.map */

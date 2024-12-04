@@ -2,13 +2,15 @@ import "ol/ol.css";
 import WKT from "ol/format/WKT";
 import Feature from "ol/Feature";
 import { useRecoilState } from "recoil";
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 
-import { MapContext } from "@src/contexts/MapView2DContext";
 import { EmdInfo, LifeAnalysisCondition, SggInfo } from "@src/types/analysis-condition";
 import { lifeAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getLifeCatList, getSelEmd, getSelSgg, getSggList } from "@src/services/analyRequestApi";
 import { LIFE_SERVICE_VISUAL } from "@src/utils/analysis-constant";
+import { useMapContext } from "@src/context/MapContext";
+import { getTitleLayer } from "@src/utils/mapUtils";
+
 
 /**
  * 생활서비스 조회컴포넌트
@@ -20,7 +22,7 @@ export const LifeService = () => {
   // 분석조건 상태
   const [ lifeAnalysisCondition, setLifeAnalysisCondition ] = useRecoilState(lifeAnalysisConditionState);
   const { lifeServiceFacility, visualType } = lifeAnalysisCondition;
-  const { map, getTitleLayer } = useContext(MapContext);
+  const { map } = useMapContext();
 
   const setInputWkt = (value: string) => setLifeAnalysisCondition({...lifeAnalysisCondition, inputWkt: value});
   const setLifeServiceFacility = (value: LifeAnalysisCondition['lifeServiceFacility']) => setLifeAnalysisCondition({...lifeAnalysisCondition, lifeServiceFacility: value});
@@ -56,7 +58,7 @@ export const LifeService = () => {
       geometry: geom,
     });
 
-    const source = getTitleLayer('analysisInput')?.getSource();
+    const source = getTitleLayer(map, 'analysisInput')?.getSource();
     source?.clear();
     source?.addFeature(feature);
 
@@ -67,7 +69,7 @@ export const LifeService = () => {
   }
 
   return (
-    <div>
+    <>
       <div className="information">
         <div className="title info-icon">생활서비스</div>
         <div className="explanation">의료, 교육, 복지, 상업, 기타 생활서비스 데이터 조회 및 시각화를 수행하는 서비스 입니다.</div>
@@ -128,6 +130,6 @@ export const LifeService = () => {
           <span className="txt">조회</span>
         </button>
       </div>
-    </div>
+    </>
   );
 }

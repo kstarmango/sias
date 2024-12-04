@@ -15,8 +15,8 @@ public class LayerGroupsConfig {
 
     private List<LayerGroup> layerGroups;
 
-//    public List<LayerGroup> getLayerGroups() {
-//        return  this.layerGroups;
-//    }
+    public List<LayerGroup> getLayerGroups() {
+        return  this.layerGroups;
+    }
 
 }

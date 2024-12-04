@@ -5,10 +5,11 @@ import WKT from "ol/format/WKT";
 import Feature from "ol/Feature";
 
 import { getSelSgg } from "@src/services/analyRequestApi";
-import { MapContext } from "@src/contexts/MapView2DContext";
 import { EmdInfo, SggInfo } from "@src/types/analysis-condition";
 import { lifeVulnAnalysisConditionState } from "@src/stores/AnalysisCondition";
 import { getPopList, getPopTypeList, getSelEmd, getSggList, getWeakCatList } from "@src/services/analyRequestApi";
+import { useMapContext } from "@src/context/MapContext";
+import { getTitleLayer } from "@src/utils/mapUtils";
 
 /**
  * 취약지역 시설 분석 컴포넌트
@@ -21,7 +22,7 @@ export const LifeVulnArea = () => {
   // 분석조건 상태
   const [ lifeVulnAnalysisCondition, setLifeVulnAnalysisCondition ] = useRecoilState(lifeVulnAnalysisConditionState);
   const { gwangju, lifeServiceFacility, analysisPop } = lifeVulnAnalysisCondition;
-  const { map, getTitleLayer } = useContext(MapContext);
+  const { map } = useMapContext();
 
   const updateAnalysisCondition = useCallback((key: keyof typeof lifeVulnAnalysisCondition, value: any) => 
     setLifeVulnAnalysisCondition(prev => ({...prev, [key]: value})),
@@ -67,7 +68,7 @@ export const LifeVulnArea = () => {
       geometry: geom,
     });
 
-    const source = getTitleLayer('analysisInput')?.getSource();
+    const source = getTitleLayer(map, 'analysisInput')?.getSource();
     source?.clear();
     source?.addFeature(feature);
 
