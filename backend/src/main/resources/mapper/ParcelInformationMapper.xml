@@ -129,7 +129,7 @@
 
     <select id="findParcelPUNByPoint" resultType="pnuBase">
         select
-            pnu,  ST_AsText(jk.geom) AS geomText,
+            pnu,  ST_AsText(geom) AS geomText
         from
             lp_pa_cbnd c
         where

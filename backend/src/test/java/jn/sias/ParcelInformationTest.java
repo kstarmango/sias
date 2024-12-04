@@ -3,6 +3,7 @@ package jn.sias;
 import jn.sias.domain.*;
 import jn.sias.dto.landuse.BuildingRegisterDto;
 import jn.sias.dto.landuse.LandRegisterDto;
+import jn.sias.dto.landuse.OneParcelInformationDto;
 import jn.sias.dto.landuse.ParcelInformationDto;
 import jn.sias.repository.ParcelInformationRepository;
 import jn.sias.service.APISearchService;
@@ -64,14 +65,19 @@ public class ParcelInformationTest {
             List<OwnerShipShareChangeInformation> shareInfos = futureOwnrShare.get();
             List<LanduseInformation> data5 = futureLanduse.get();
 
-            ParcelInformationDto pInfo = ParcelInformationDto.buildFrom(arryAddress[0], arryAddress[1],
+            ParcelInformationDto parcelInformationDto = ParcelInformationDto.buildFrom(arryAddress[0], arryAddress[1],
                                                                             lInfos, bInfos);
 
-            LandRegisterDto pRegInfo = LandRegisterDto.buildFrom(arryAddress[0], arryAddress[1],
+            LandRegisterDto landRegisterDto = LandRegisterDto.buildFrom(arryAddress[0], arryAddress[1],
                                                     lInfos, bInfos, oInfos, shareInfos);
 
-            BuildingRegisterDto buildingDto = BuildingRegisterDto.buildFrom(arryAddress[0], arryAddress[1], bInfos);
+            BuildingRegisterDto buildingRegisterDto = BuildingRegisterDto.buildFrom(arryAddress[0], arryAddress[1], bInfos);
 
+            OneParcelInformationDto.builder()
+                    .parcelInformationDto(parcelInformationDto)
+                    .buildingRegisterDto(buildingRegisterDto)
+                    .landRegisterDto(landRegisterDto)
+                    .build();
             log.info("ParcelBaseInformation : {}", lInfos.size());
             log.info("BuildingInformation : {}", bInfos.size());
             log.info("OwnerShipChangeInformation : {}", oInfos.size());
