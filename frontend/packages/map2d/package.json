@@ -13,10 +13,7 @@
     "@turf/turf": "^7.1.0",
     "@types/node": "^22.10.1",
     "@types/proj4": "^2.5.5",
-    "highcharts": "^11.4.8",
-    "ol": "^10.3.0",
     "ol-ext": "^4.0.24",
-    "olcs": "catalog:",
-    "proj4": "^2.8.0"
+    "olcs": "catalog:"
   }
 }
