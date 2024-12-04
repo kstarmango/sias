@@ -11,5 +11,5 @@ export default defineConfig({
       {find: '@src', replacement: resolve(__dirname, './src')},
       {find: '@shared', replacement: resolve(__dirname, '../shared/src')},
     ],
-  }
+  },
 });

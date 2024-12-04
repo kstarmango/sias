@@ -19,61 +19,37 @@ layer-config:
       layers:
         - name: 연속지적도
           geo_layer: district_sgg
-          type: polyline
+          type: polygon
           color: "#770055"
     - name: 투자지구
       layers:
-        - name: 시군
-          geo_layer: district_sgg
-          type: polyline
-          color: "#770055"
-        - name: 읍면동
-          geo_layer: district_emd
-          type: polygon
-          color: "#770055"
-        - name: 리
-          geo_layer: district_ri
-          type: polygon
-          color: "#770055"
+#        - name: 시군
+#          geo_layer: district_sgg
+#          type: polyline
+#          color: "#770055"
     - name: 용도지역지구
       layers:
-        - name: 시군
-          geo_layer: district_sgg
-          type: polyline
-          color: "#770055"
-        - name: 읍면동
-          geo_layer: district_emd
+        - name: 농림지역
+          geo_layer: lt_c_uq113
           type: polygon
           color: "#770055"
-        - name: 리
-          geo_layer: district_ri
+        - name: 도시지역
+          geo_layer: lt_c_uq111
           type: polygon
           color: "#770055"
     - name: 생활인구
       layers:
-        - name: 시군
-          geo_layer: district_sgg
-          type: polyline
-          color: "#770055"
-        - name: 읍면동
-          geo_layer: district_emd
-          type: polygon
-          color: "#770055"
-        - name: 리
-          geo_layer: district_ri
-          type: polygon
-          color: "#770055"
+#        - name: 시군
+#          geo_layer: district_sgg
+#          type: polyline
+#          color: "#770055"
+#        - name: 읍면동
+#          geo_layer: district_emd
+#          type: polygon
+#          color: "#770055"
     - name: 숲 속의 전남
       layers:
-        - name: 시군
-          geo_layer: district_sgg
-          type: polyline
-          color: "#770055"
-        - name: 읍면동
-          geo_layer: district_emd
-          type: polygon
-          color: "#770055"
-        - name: 리
-          geo_layer: district_ri
-          type: polygon
-          color: "#770055"
+#        - name: 시군
+#          geo_layer: district_sgg
+#          type: polyline
+#          color: "#770055"

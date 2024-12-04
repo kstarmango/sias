@@ -7,6 +7,8 @@ server:
     relaxed-query-chars: "|,{,},[,]"
 
 spring:
+  config:
+    import: layer-config-dev.yml
   application:
     name: Spatial Information Analysis System
   datasource:
