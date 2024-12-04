@@ -124,7 +124,7 @@
          public.vw_landuse_pnu b
         WHERE
             b.pnu = #{pnu}
-<!--            order by b.ownsp_ch_ymd-->
+            order by b.ins_date
     </select>
 
     <select id="findParcelPUNByPoint" resultType="pnuBase">

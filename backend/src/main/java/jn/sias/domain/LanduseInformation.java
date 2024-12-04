@@ -12,4 +12,26 @@ public class LanduseInformation {
     private String aprvYN;
     private String useZoneCode;
     private String useZoneCodeName;
+
+    public void convertYNCode() {
+
+        if(aprvYN.compareToIgnoreCase("Y") == 0) {
+            aprvYN = "승인";
+        } else if (aprvYN.compareToIgnoreCase("N") == 0) {
+            aprvYN = "미승인";
+        }
+
+        switch (chltYN) {
+            case "1":
+                chltYN = "포함";
+                break;
+
+            case "2":
+                chltYN = "저촉";
+                break;
+            case "3":
+                chltYN = "접함";
+                break;
+        }
+    }
 }
